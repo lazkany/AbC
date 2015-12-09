@@ -52,6 +52,7 @@ public class Example_1 {
 			expose.add(a1);
 			try {
 				Broadcast(any, expose, "test_1", null);
+				Broadcast(any, expose, "test_2", null);
 			} catch (AbCAttributeTypeException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -79,6 +80,8 @@ public class Example_1 {
 		protected void doRun() throws InterruptedException {
 			// TODO Auto-generated method stub
 
+			 System.out.println(this.name + " => received: " +receive(any, null));
+		
 			 System.out.println(this.name + " => received: " +receive(any, null));
 
 		}
@@ -136,7 +139,7 @@ public class Example_1 {
 		c1.start();
 		c2.start();
 		c3.start();
-		System.out.println(c1.getStore().toString());
+		//System.out.println(c1.getStore().toString());
 		Thread.sleep(3000);
 
 	}

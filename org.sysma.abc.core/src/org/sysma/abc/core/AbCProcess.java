@@ -23,8 +23,8 @@ public abstract class AbCProcess implements Runnable {
 //	protected Queue<AbCAction> actions = new LinkedList<AbCAction>();
 	protected String name;
 	protected int id;
-	private boolean waitingMessage;
-	private AbCMessage receivedMessage;
+//	private boolean waitingMessage;
+	private Queue<AbCMessage> receivedMessage=new LinkedList<>();
 
 	
 //	/**
@@ -216,24 +216,25 @@ public abstract class AbCProcess implements Runnable {
 	}
 
 	protected synchronized Object receive( GroupPredicate predicate , HashMap<Attribute<?>, Object> update ) throws InterruptedException {
-		this.waitingMessage = true;
-		Object value = null;
-		while (value == null) {						//CHANGE>> changed the condition was "!="
-			while (this.receivedMessage == null) {
+		//this.waitingMessage = true;
+		//Object value = null;
+		//while (value == null) {						//CHANGE>> changed the condition was "!="
+			while (this.receivedMessage.isEmpty()) {
 				wait();
 			}
-			value = this.receivedMessage.getValue(predicate);
-			this.receivedMessage = null;
-		}
-		this.waitingMessage = false;
-		return value;		
+		//	value = this.receivedMessage.getValue(predicate);
+			//this.receivedMessage = null;
+		//}
+		//this.waitingMessage = false;
+		
+		return this.receivedMessage.poll().getValue(predicate);		
 	}
 	
 	protected synchronized void receive(AbCMessage message) {
-		if (waitingMessage) {
-			receivedMessage = message;
+		//if (waitingMessage) {
+			receivedMessage.add(message);
 			notifyAll();
-		}
+		//}
 	}
 
 	// public void exec(AbCProcess p) throws InterruptedException {
