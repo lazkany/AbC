@@ -10,23 +10,27 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.sysma.abc.grpPredicate;
+package org.sysma.abc.core.grpPredicate;
+
+import java.util.HashMap;
 
 import org.sysma.abc.core.AbCStore;
+
+
 
 /**
  * @author Michele Loreti
  *
  */
-public class NoComponent extends GroupPredicate {
+public class AnyComponent extends GroupPredicate {
 
-	public NoComponent() {
-		super(GroupPredicate.PredicateType.FALSE);
+	public AnyComponent() {
+		super(GroupPredicate.PredicateType.TRUE);
 	}
 
 	@Override
 	public boolean isSatisfiedBy(AbCStore store) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -34,17 +38,17 @@ public class NoComponent extends GroupPredicate {
 		if (obj == null) {
 			return false;
 		}
-		return obj instanceof NoComponent;
+		return obj instanceof AnyComponent;
 	}
 
 	@Override
 	public int hashCode() {
-		return "false".hashCode();
+		return "true".hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return "false";
+		return "true";
 	}
 	
 	

@@ -9,7 +9,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
-import org.sysma.abc.grpPredicate.GroupPredicate;
+import org.sysma.abc.core.grpPredicate.GroupPredicate;
 
 /**
  * @author Yehia Abd Alrahman

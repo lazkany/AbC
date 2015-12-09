@@ -6,7 +6,7 @@ package org.sysma.abc.core;
 import java.util.Hashtable;
 
 import org.sysma.abc.core.exceptions.DuplicateNameException;
-import org.sysma.abc.grpPredicate.GroupPredicate;
+import org.sysma.abc.core.grpPredicate.GroupPredicate;
 
 /**
  * @author Yehia Abd Alrahman

@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
-import org.sysma.abc.grpPredicate.GroupPredicate;
+import org.sysma.abc.core.grpPredicate.GroupPredicate;
 
 /**
  * @author Yehia Abd Alrahman

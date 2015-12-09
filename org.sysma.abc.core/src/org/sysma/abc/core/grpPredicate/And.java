@@ -10,27 +10,30 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.sysma.abc.grpPredicate;
+package org.sysma.abc.core.grpPredicate;
 
 import java.util.HashMap;
 
-import org.sysma.abc.core.Attribute;
-import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
+
 import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
 /**
  * @author Michele Loreti
  *
  */
-public class IsGreaterOrEqualThan extends GroupPredicate {
+public class And extends GroupPredicate {
 
-	private Number value;
-	private String attribute;
+	private GroupPredicate left;
+	private GroupPredicate right;
 
-	public IsGreaterOrEqualThan( String attribute , Number value ) {
-		super( GroupPredicate.PredicateType.ISGEQ );
-		this.attribute = attribute;
-		this.value = value;
+	public And( GroupPredicate left , GroupPredicate right ) {
+		super( GroupPredicate.PredicateType.AND );
+		if ((left == null)||(right==null)) {
+			throw new NullPointerException();
+		}
+		this.left = left;
+		this.right = right;
 	}
 
 	/* (non-Javadoc)
@@ -38,26 +41,7 @@ public class IsGreaterOrEqualThan extends GroupPredicate {
 	 */
 	@Override
 	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
-		Attribute<?> a=store.getAttribute(attribute);
-		if (a == null) {
-			return false;
-		}
-		Object v = store.getValue(a);
-		if (v == null) {
-			return false;
-		}
-		if (v instanceof Number) {
-			return ((Number) v).doubleValue() >= value.doubleValue();
-		}
-		return false;
-	}
-
-	public String getAttribute() {
-		return attribute;
-	}
-
-	public Number getValue() {
-		return value;
+		return left.isSatisfiedBy(store)&&right.isSatisfiedBy(store);
 	}
 
 	/* (non-Javadoc)
@@ -72,11 +56,8 @@ public class IsGreaterOrEqualThan extends GroupPredicate {
 			return true;
 		}
 		if (super.equals(obj)) {
-			IsGreaterOrEqualThan p = (IsGreaterOrEqualThan) obj;
-			if (!this.attribute.equals(p.attribute)) {
-				return false;
-			}
-			return (this.value==p.value)||((this.value != null)&&(this.value.equals(p.value)));
+			And p = (And) obj;
+			return left.equals(p.left)&&right.equals(p.right);
 		}
 		return false;
 	}
@@ -86,7 +67,7 @@ public class IsGreaterOrEqualThan extends GroupPredicate {
 	 */
 	@Override
 	public int hashCode() {
-		return attribute.hashCode()^value.hashCode();
+		return this.left.hashCode()^this.right.hashCode();
 	}
 
 	/* (non-Javadoc)
@@ -94,7 +75,14 @@ public class IsGreaterOrEqualThan extends GroupPredicate {
 	 */
 	@Override
 	public String toString() {
-		return attribute+">="+value.toString();
+		return "("+left.toString()+") && ("+right.toString()+")";
 	}
 
+	public GroupPredicate getLeft() {
+		return left;
+	}
+
+	public GroupPredicate getRight() {
+		return right;
+	}
 }

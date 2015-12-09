@@ -9,10 +9,10 @@ import java.util.Set;
 
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
-import org.sysma.abc.grpPredicate.AnyComponent;
-import org.sysma.abc.grpPredicate.GroupPredicate;
-import org.sysma.abc.grpPredicate.HasValue;
-import org.sysma.abc.grpPredicate.NoComponent;
+import org.sysma.abc.core.grpPredicate.AnyComponent;
+import org.sysma.abc.core.grpPredicate.GroupPredicate;
+import org.sysma.abc.core.grpPredicate.HasValue;
+import org.sysma.abc.core.grpPredicate.NoComponent;
 
 /**
  * @author Yehia Abd Alrahman

@@ -15,8 +15,8 @@ package org.sysma.abc.core;
 import java.util.HashMap;
 
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
-import org.sysma.abc.grpPredicate.And;
-import org.sysma.abc.grpPredicate.GroupPredicate;
+import org.sysma.abc.core.grpPredicate.And;
+import org.sysma.abc.core.grpPredicate.GroupPredicate;
 
 /**
  * @author Yehia Abd Alrahman

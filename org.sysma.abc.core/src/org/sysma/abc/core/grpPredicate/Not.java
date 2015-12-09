@@ -10,12 +10,11 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.sysma.abc.grpPredicate;
+package org.sysma.abc.core.grpPredicate;
 
 import java.util.HashMap;
 
 import org.sysma.abc.core.AbCStore;
-import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
 
@@ -24,19 +23,16 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
  * @author Michele Loreti
  *
  */
-public class IsGreaterThan extends GroupPredicate {
+public class Not extends GroupPredicate {
 
-	private Number value;
-	private String attribute;
+	private GroupPredicate arg;
 
-	public IsGreaterThan( String attribute , Number value ) {
-		super( GroupPredicate.PredicateType.ISGTR );
-		this.attribute = attribute;
-		if (value != null) {
-			this.value = value;
-		} else {
-			this.value = 0;
+	public Not( GroupPredicate arg ) {
+		super( GroupPredicate.PredicateType.NOT );
+		if ((arg == null)) {
+			throw new NullPointerException();
 		}
+		this.arg = arg;
 	}
 
 	/* (non-Javadoc)
@@ -44,20 +40,7 @@ public class IsGreaterThan extends GroupPredicate {
 	 */
 	@Override
 	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
-		Attribute<?> a=store.getAttribute(attribute);
-		Object v = store.getValue(a);
-		if (v instanceof Number) {
-			return ((Number) v).doubleValue() > value.doubleValue();
-		}
-		return false;
-	}
-
-	public String getAttribute() {
-		return attribute;
-	}
-
-	public Number getValue() {
-		return value;
+		return !arg.isSatisfiedBy(store);
 	}
 
 	/* (non-Javadoc)
@@ -72,11 +55,8 @@ public class IsGreaterThan extends GroupPredicate {
 			return true;
 		}
 		if (super.equals(obj)) {
-			IsGreaterThan p = (IsGreaterThan) obj;
-			if (!this.attribute.equals(p.attribute)) {
-				return false;
-			}
-			return (this.value==p.value)||((this.value != null)&&(this.value.equals(p.value)));
+			Not p = (Not) obj;
+			return arg.equals(p.arg);
 		}
 		return false;
 	}
@@ -86,7 +66,7 @@ public class IsGreaterThan extends GroupPredicate {
 	 */
 	@Override
 	public int hashCode() {
-		return attribute.hashCode()^(value==null?0:value.hashCode());
+		return ~this.arg.hashCode();
 	}
 
 	/* (non-Javadoc)
@@ -94,7 +74,11 @@ public class IsGreaterThan extends GroupPredicate {
 	 */
 	@Override
 	public String toString() {
-		return attribute+">"+value;
+		return "!("+arg.toString()+")";
+	}
+
+	public GroupPredicate getArgument() {
+		return arg;
 	}
 
 }

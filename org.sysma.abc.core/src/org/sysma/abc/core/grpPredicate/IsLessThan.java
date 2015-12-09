@@ -10,11 +10,10 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.sysma.abc.grpPredicate;
-
-import java.util.HashMap;
+package org.sysma.abc.core.grpPredicate;
 
 import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
 
@@ -23,16 +22,15 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
  * @author Michele Loreti
  *
  */
-public class Not extends GroupPredicate {
+public class IsLessThan extends GroupPredicate {
 
-	private GroupPredicate arg;
+	private Number value;
+	private String attribute;
 
-	public Not( GroupPredicate arg ) {
-		super( GroupPredicate.PredicateType.NOT );
-		if ((arg == null)) {
-			throw new NullPointerException();
-		}
-		this.arg = arg;
+	public IsLessThan( String attribute , Number value ) {
+		super( GroupPredicate.PredicateType.ISLES );
+		this.attribute = attribute;
+		this.value = value;
 	}
 
 	/* (non-Javadoc)
@@ -40,7 +38,23 @@ public class Not extends GroupPredicate {
 	 */
 	@Override
 	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
-		return !arg.isSatisfiedBy(store);
+		Attribute<?> a=store.getAttribute(attribute);
+		if (a == null) {
+			return false;
+		}
+		Object v = store.getValue(a);
+		if (v instanceof Number) {
+			return ((Number) v).doubleValue() < value.doubleValue();
+		}
+		return false;
+	}
+
+	public String getAttribute() {
+		return attribute;
+	}
+
+	public Number getValue() {
+		return value;
 	}
 
 	/* (non-Javadoc)
@@ -55,8 +69,11 @@ public class Not extends GroupPredicate {
 			return true;
 		}
 		if (super.equals(obj)) {
-			Not p = (Not) obj;
-			return arg.equals(p.arg);
+			IsLessThan p = (IsLessThan) obj;
+			if (!this.attribute.equals(p.attribute)) {
+				return false;
+			}
+			return (this.value==p.value)||((this.value != null)&&(this.value.equals(p.value)));
 		}
 		return false;
 	}
@@ -66,7 +83,7 @@ public class Not extends GroupPredicate {
 	 */
 	@Override
 	public int hashCode() {
-		return ~this.arg.hashCode();
+		return attribute.hashCode()^(value==null?0:value.hashCode());
 	}
 
 	/* (non-Javadoc)
@@ -74,11 +91,6 @@ public class Not extends GroupPredicate {
 	 */
 	@Override
 	public String toString() {
-		return "!("+arg.toString()+")";
+		return attribute+"<"+value;
 	}
-
-	public GroupPredicate getArgument() {
-		return arg;
-	}
-
 }

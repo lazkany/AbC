@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.sysma.abc.grpPredicate;
+package org.sysma.abc.core.grpPredicate;
 
 import java.util.HashMap;
 
