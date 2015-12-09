@@ -30,27 +30,31 @@ public class VirtualPort extends AbCPort {
 		this.address = new VirtualPortAddress(portId);
 	}
 
-	@Override
-	protected void send(GroupPredicate predicate, AbCStore store, Object value) {
-		HashMap<Object, AbCStore> map = new HashMap<>();
-		map.put(value, store);
-		for (AbCComponent n : nodes.values()) {
-			try {
-
-				if (predicate.isSatisfiedBy(n.getStore())) {
-					n.setUpcomming(map);
-
-				}
-			} catch (AbCAttributeTypeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+//	@Override
+//	protected void send(GroupPredicate predicate, AbCStore store, Object value) {
+//		HashMap<Object, AbCStore> map = new HashMap<>();
+//		map.put(value, store);
+//		for (AbCComponent n : nodes.values()) {
+//			try {
+//
+//				if (predicate.isSatisfiedBy(n.getStore())) {
+//					n.setUpcomming(map);
+//
+//				}
+//			} catch (AbCAttributeTypeException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
 	@Override
 	public Address getAddress() {
 		return address;
+	}
+
+	@Override
+	protected void doSend() {
 	}
 
 }

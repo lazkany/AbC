@@ -4,23 +4,28 @@
 package org.sysma.abc.core;
 
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 import org.sysma.abc.core.exceptions.DuplicateNameException;
-import org.sysma.abc.core.grpPredicate.GroupPredicate;
 
 /**
  * @author Yehia Abd Alrahman
  *
  */
-public class AbCPort {
+public abstract class AbCPort {
 
+	protected boolean isRunning;
 	protected Hashtable<String, AbCComponent> nodes;
-
+	protected LinkedList<AbCMessage> incomings; 
+	protected Thread portManager;
+	
 	/**
 	 * Constructs a new <code>AbstractPort</code>.
 	 */
 	public AbCPort() {
 		this.nodes = new Hashtable<String, AbCComponent>();
+		this.incomings = new LinkedList<>();
+		this.isRunning = false;
 	}
 
 	/**
@@ -28,29 +33,87 @@ public class AbCPort {
 	 * @throws DuplicateNameException
 	 */
 
-	public synchronized void register(AbCComponent comp) throws DuplicateNameException {
-		if (nodes.contains(comp.getName())) {
-			throw new DuplicateNameException();
+	public void register(AbCComponent comp) throws DuplicateNameException {
+		synchronized (nodes) {
+			if (nodes.contains(comp.getName())) {
+				throw new DuplicateNameException();
+			}
+			nodes.put(comp.getName(), comp);
 		}
-		nodes.put(comp.getName(), comp);
 	}
 
+	
+	public synchronized void start() {
+		this.isRunning = true;
+		if (portManager != null) {
+			this.portManager = new Thread(new PortManager());
+			this.portManager.start();
+		}
+	}
+	
+	public synchronized void stop() {
+		this.isRunning = false;
+		this.portManager = null;
+	}
+	
+	public boolean isRunning() {
+		return isRunning;
+	}
+	
 	/**
 	 * @return
 	 */
-	public Address getAddress() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public abstract Address getAddress();
 
 	/**
 	 * 
 	 */
-	protected void send(GroupPredicate predicate, AbCStore store, Object value) {
-		// TODO Auto-generated method stub
+	protected final synchronized void send(AbCMessage message) {
+		incomings.add(message);
+		doSend();
+		notifyAll();
+	}
+	
+	protected abstract void doSend();
+
+	private class PortManager implements Runnable {
+
+		@Override
+		public void run() {
+			while (isRunning) {
+				AbCMessage message = nextMessage();
+				if (message != null) {
+					handleMessage( message );
+				}
+			}			 
+		}
+		
 		
 	}
 
+	protected synchronized AbCMessage nextMessage() {
+		while (incomings.isEmpty()&&isRunning) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return null;
+			}
+		}
+		if (!isRunning) {
+			return null;
+		}
+		return incomings.poll();
+	}
+
+	protected void handleMessage(AbCMessage message) {
+		synchronized (nodes) {
+			for (AbCComponent c : nodes.values()) {
+				if ((message.getSender() != c)&&(message.isAReceiverFor(c.getStore()))) {
+					c.receive( message );
+				}
+			}
+		}
+	}
 	
 	
 

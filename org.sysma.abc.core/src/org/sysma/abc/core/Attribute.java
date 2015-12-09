@@ -52,6 +52,10 @@ public class Attribute<T> {
 	public T castTo(Object o) {
 		return clazz.cast(o);
 	}
+
+	public boolean isValidValue(Object value) {
+		return clazz.isInstance(value);
+	}
 	
 	
 	

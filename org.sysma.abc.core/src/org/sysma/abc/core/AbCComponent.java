@@ -22,8 +22,7 @@ import org.sysma.abc.core.grpPredicate.GroupPredicate;
 public class AbCComponent {
 
 	protected AbCStore store;
-	protected Queue<HashMap<Object, AbCStore>> upcomming = new LinkedList<HashMap<Object, AbCStore>>();
-
+	
 	protected String nameString;// this name is used to help creating unique
 								// fresh names
 	protected LinkedList<AbCProcess> processes;
@@ -35,27 +34,27 @@ public class AbCComponent {
 	protected Executor executor = Executors.newCachedThreadPool();
 	protected LinkedList<AbCPort> ports;
 
-	/**
-	 * @return the upcomming
-	 * @throws InterruptedException
-	 */
-	public synchronized HashMap<Object, AbCStore> getUpcomming() throws InterruptedException {
-		while (upcomming.isEmpty()) {
-			wait();
-		}
-		return upcomming.peek();
-	}
-
-	/**
-	 * @param upcomming
-	 *            the upcomming to set
-	 */
-	public synchronized void setUpcomming(HashMap<Object, AbCStore> upcommingMsg) {
-		this.upcomming.clear();
-		;
-		this.upcomming.add(upcommingMsg);
-		notifyAll();
-	}
+//	/**
+//	 * @return the upcomming
+//	 * @throws InterruptedException
+//	 */
+//	public synchronized HashMap<Object, AbCStore> getUpcomming() throws InterruptedException {
+//		while (upcomming.isEmpty()) {
+//			wait();
+//		}
+//		return upcomming.peek();
+//	}
+//
+//	/**
+//	 * @param upcomming
+//	 *            the upcomming to set
+//	 */
+//	public synchronized void setUpcomming(HashMap<Object, AbCStore> upcommingMsg) {
+//		this.upcomming.clear();
+//		;
+//		this.upcomming.add(upcommingMsg);
+//		notifyAll();
+//	}
 
 	/**
 	 * @return the processes
@@ -77,27 +76,29 @@ public class AbCComponent {
 		return this.nameString;
 	}
 
-	public Object Broadcastoutput(AbCProcess process, GroupPredicate predicate, AbCStore store, Object value,
-			HashMap<Attribute<Object>, Object> update) throws AbCAttributeTypeException {
+	public synchronized void send(GroupPredicate predicate, AbCStore store, Object value,
+			HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
 
+		AbCMessage message = new AbCMessage(this,value, predicate, store);
+		
 		for (AbCPort port : ports) {
-			port.send(predicate, store, value);
+			port.send(message);
 		}
 		this.storeUpdate(update);
-		return true;
+
 	}
 
-	public Object Broadcastinput(AbCProcess process, GroupPredicate predicate, AbCStore store,
-			Object value, HashMap<Attribute<Object>, Object> update)
-					throws InterruptedException, AbCAttributeTypeException {
-		HashMap<Object, AbCStore> temp = getUpcomming();
-		AbCStore upcomingStore = (AbCStore) temp.values().toArray()[0];
-		if (!predicate.isSatisfiedBy(upcomingStore)) {
-			Broadcastinput(process, predicate, store, value, update);
-		}
-
-		return temp.keySet().toArray()[0];
-	}
+//	public Object Broadcastinput(AbCProcess process, GroupPredicate predicate, AbCStore store,
+//			Object value, HashMap<Attribute<Object>, Object> update)
+//					throws InterruptedException, AbCAttributeTypeException {
+//		HashMap<Object, AbCStore> temp = getUpcomming();
+//		AbCStore upcomingStore = (AbCStore) temp.values().toArray()[0];
+//		if (!predicate.isSatisfiedBy(upcomingStore)) {
+//			Broadcastinput(process, predicate, store, value, update);
+//		}
+//
+//		return temp.keySet().toArray()[0];
+//	}
 
 	public synchronized void addPort(AbCPort p) throws DuplicateNameException {
 		p.register(this);
@@ -126,9 +127,9 @@ public class AbCComponent {
 		return store;
 	}
 
-	public <T> AbCStore ExposedStore(Set<Attribute<T>> exposed) throws AbCAttributeTypeException {
+	public AbCStore exposedStore(Set<Attribute<?>> exposed) throws AbCAttributeTypeException {
 		AbCStore temp = new AbCStore();
-		for (Attribute<T> att : exposed) {
+		for (Attribute<?> att : exposed) {
 
 			temp.setValue(att, store.getValue(att));
 		}
@@ -206,10 +207,9 @@ public class AbCComponent {
 		return state;
 	}
 
-	public <T> void storeUpdate(HashMap<Attribute<T>, T> update) throws AbCAttributeTypeException {
+	public <T> void storeUpdate(HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
 		if (update != null) {
-			for (Attribute<T> att : update.keySet()) {
-
+			for (Attribute<?> att : update.keySet()) {
 				store.setValue(att, update.get(att));
 			}
 		}
@@ -248,6 +248,13 @@ public class AbCComponent {
 		while (getState() != state) {
 			wait();
 		}
+	}
+
+	public synchronized void receive(AbCMessage message) {
+		for (AbCProcess p : processes) {
+			p.receive(message);
+		}
+		
 	}
 
 }

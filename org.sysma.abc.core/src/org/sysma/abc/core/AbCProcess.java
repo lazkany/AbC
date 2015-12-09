@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+import javax.sql.rowset.spi.SyncResolver;
+
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 
@@ -18,25 +20,27 @@ import org.sysma.abc.core.grpPredicate.GroupPredicate;
 public abstract class AbCProcess implements Runnable {
 
 	private AbCComponent component;
-	protected Queue<AbCAction> actions = new LinkedList<AbCAction>();
+//	protected Queue<AbCAction> actions = new LinkedList<AbCAction>();
 	protected String name;
 	protected int id;
+	private boolean waitingMessage;
+	private AbCMessage receivedMessage;
 
 	
-	/**
-	 * @return the actions
-	 */
-	protected Queue<AbCAction> getActions() {
-		return actions;
-	}
-
-	/**
-	 * @param actions
-	 *            the actions to set
-	 */
-	protected void insertAction(AbCAction action) {
-		this.actions.add(action);
-	}
+//	/**
+//	 * @return the actions
+//	 */
+//	protected Queue<AbCAction> getActions() {
+//		return actions;
+//	}
+//
+//	/**
+//	 * @param actions
+//	 *            the actions to set
+//	 */
+//	protected void insertAction(AbCAction action) {
+//		this.actions.add(action);
+//	}
 
 	public AbCProcess(String name) {
 		this.name = name;
@@ -47,10 +51,10 @@ public abstract class AbCProcess implements Runnable {
 		this.component = component;
 	}
 
-	public void addAction(AbCAction action) {
-		actions.add(action);
-	}
-
+//	public void addAction(AbCAction action) {
+//		actions.add(action);
+//	}
+//
 	public int GetProcessId() {
 		return this.id;
 	}
@@ -100,38 +104,19 @@ public abstract class AbCProcess implements Runnable {
 
 	/**
 	 * @param predicate
-	 * @param value
-	 * @return
-	 * @throws InterruptedException
-	 * @throws AbCAttributeTypeException 
-	 */
-	protected Object receive(GroupPredicate predicate, Object value, HashMap<Attribute<Object>, Object> update)
-			throws InterruptedException, AbCAttributeTypeException {
-		// TODO Auto-generated method stub
-		// TODO GET STORE
-		AbCStore store = this.component.getStore();
-
-		// TODO recieve the broadcast
-		return component.Broadcastinput(this, predicate, store, value, update);
-
-		// TODO update the store
-	}
-
-	/**
-	 * @param predicate
 	 * @param s
 	 * @param value
 	 * @return
 	 * @throws AbCAttributeTypeException
 	 */
-	protected Object Broadcast(GroupPredicate predicate, Set<Attribute<Object>> s, Object value,
-			HashMap<Attribute<Object>, Object> update) throws AbCAttributeTypeException {
+	protected void Broadcast(GroupPredicate predicate, Set<Attribute<Object>> s, Object value,
+			HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
 		// TODO Auto-generated method stub
 		// TODO Compute the exposed store
 		AbCStore store = this.ExposedStore(s);
 		// AbCStore store = new AbCStore();
 		// TODO update the store
-		return component.Broadcastoutput(this, predicate, store, value, update);
+		component.send(predicate, store, value, update);
 	}
 
 	/*
@@ -177,6 +162,29 @@ public abstract class AbCProcess implements Runnable {
 	 * 
 	 */
 	protected abstract void doRun() throws Exception;
+	
+	
+	/*
+	 * P = { p_1 }( x ).( x+1 )@{ p_2 }.P
+	 * 
+	 * class P extends AbCProcess {
+	 * 
+	 * 	protected void doRun() {
+	 *    exexuteP();
+	 *  }
+	 *  
+	 *  private executeP() {
+	 *    double x = receive( [| p_1 |] );
+	 *    broadcast( x+1 , [| p_2 |] );
+	 *    executeP();
+	 *  }
+	 *  
+	 *  
+	 * 
+	 * 
+	 * }
+	 * 
+	 */
 
 	/**
 	 * 
@@ -205,6 +213,27 @@ public abstract class AbCProcess implements Runnable {
 
 	public void suspend(long time) throws InterruptedException {
 		component.suspend(time);
+	}
+
+	protected synchronized Object receive( GroupPredicate predicate , HashMap<Attribute<?>, Object> update ) throws InterruptedException {
+		this.waitingMessage = true;
+		Object value = null;
+		while (value != null) {
+			while (this.receivedMessage == null) {
+				wait();
+			}
+			value = this.receivedMessage.getValue(predicate);
+			this.receivedMessage = null;
+		}
+		this.waitingMessage = false;
+		return value;		
+	}
+	
+	protected synchronized void receive(AbCMessage message) {
+		if (waitingMessage) {
+			receivedMessage = message;
+			notifyAll();
+		}
 	}
 
 	// public void exec(AbCProcess p) throws InterruptedException {

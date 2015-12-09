@@ -50,7 +50,10 @@ public class AbCStore {
 		
 	}
 	
-	public <T> void setValue( Attribute<T> attribute , T value ) throws AbCAttributeTypeException {
+	public void setValue( Attribute<?> attribute , Object value ) throws AbCAttributeTypeException {
+		if (!attribute.isValidValue(value)) {
+			throw new AbCAttributeTypeException();
+		}
 		if (isConsistent(attribute)) {
 			data.put(attribute.getName(), value);		
 		} else {
