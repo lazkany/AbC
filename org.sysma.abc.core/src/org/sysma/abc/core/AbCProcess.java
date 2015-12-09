@@ -119,7 +119,7 @@ public abstract class AbCProcess implements Runnable {
 		// TODO update the store
 		if (predicate.isSatisfiedBy(this.component.getStore())) { 			//CHANGE> Send the message also to co-located processes
 			this.component.receive(new AbCMessage(this.component, value, predicate, store));
-			this.receivedMessage.clear(); // Ensure that the sender queue is empty.
+			this.receivedMessage.poll(); // Ensure that the sender queue is empty.
 		}
 		component.send(predicate, store, value, update);
 		
