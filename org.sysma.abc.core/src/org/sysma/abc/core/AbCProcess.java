@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.ToDoubleBiFunction;
 
 import javax.sql.rowset.spi.SyncResolver;
 
@@ -116,7 +117,12 @@ public abstract class AbCProcess implements Runnable {
 		AbCStore store = this.ExposedStore(s);
 		// AbCStore store = new AbCStore();
 		// TODO update the store
+		if (predicate.isSatisfiedBy(this.component.getStore())) { 			//CHANGE> Send the message also to co-located processes
+			this.component.receive(new AbCMessage(this.component, value, predicate, store));
+			this.receivedMessage.clear(); // Ensure that the sender queue is empty.
+		}
 		component.send(predicate, store, value, update);
+		
 	}
 
 	/*
@@ -226,7 +232,10 @@ public abstract class AbCProcess implements Runnable {
 			//this.receivedMessage = null;
 		//}
 		//this.waitingMessage = false;
-		
+		if (this.receivedMessage.peek().getValue(predicate)==null) { 		//CHANGE> To model the blocking nature of receive
+			this.receivedMessage.poll();
+			receive( predicate ,  update );
+		}
 		return this.receivedMessage.poll().getValue(predicate);		
 	}
 	
