@@ -45,7 +45,7 @@ public abstract class AbCPort {
 	
 	public synchronized void start() {
 		this.isRunning = true;
-		if (portManager != null) {
+		if (portManager == null) { 								//CHANGE>> changed the condition was "!="
 			this.portManager = new Thread(new PortManager());
 			this.portManager.start();
 		}
@@ -70,11 +70,11 @@ public abstract class AbCPort {
 	 */
 	protected final synchronized void send(AbCMessage message) {
 		incomings.add(message);
-		doSend();
+		doSend(message);
 		notifyAll();
 	}
 	
-	protected abstract void doSend();
+	protected abstract void doSend(AbCMessage message);
 
 	private class PortManager implements Runnable {
 

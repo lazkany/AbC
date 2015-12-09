@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
@@ -22,7 +21,7 @@ import org.sysma.abc.core.grpPredicate.GroupPredicate;
 public class AbCComponent {
 
 	protected AbCStore store;
-	
+
 	protected String nameString;// this name is used to help creating unique
 								// fresh names
 	protected LinkedList<AbCProcess> processes;
@@ -34,27 +33,29 @@ public class AbCComponent {
 	protected Executor executor = Executors.newCachedThreadPool();
 	protected LinkedList<AbCPort> ports;
 
-//	/**
-//	 * @return the upcomming
-//	 * @throws InterruptedException
-//	 */
-//	public synchronized HashMap<Object, AbCStore> getUpcomming() throws InterruptedException {
-//		while (upcomming.isEmpty()) {
-//			wait();
-//		}
-//		return upcomming.peek();
-//	}
-//
-//	/**
-//	 * @param upcomming
-//	 *            the upcomming to set
-//	 */
-//	public synchronized void setUpcomming(HashMap<Object, AbCStore> upcommingMsg) {
-//		this.upcomming.clear();
-//		;
-//		this.upcomming.add(upcommingMsg);
-//		notifyAll();
-//	}
+	// /**
+	// * @return the upcomming
+	// * @throws InterruptedException
+	// */
+	// public synchronized HashMap<Object, AbCStore> getUpcomming() throws
+	// InterruptedException {
+	// while (upcomming.isEmpty()) {
+	// wait();
+	// }
+	// return upcomming.peek();
+	// }
+	//
+	// /**
+	// * @param upcomming
+	// * the upcomming to set
+	// */
+	// public synchronized void setUpcomming(HashMap<Object, AbCStore>
+	// upcommingMsg) {
+	// this.upcomming.clear();
+	// ;
+	// this.upcomming.add(upcommingMsg);
+	// notifyAll();
+	// }
 
 	/**
 	 * @return the processes
@@ -79,26 +80,28 @@ public class AbCComponent {
 	public synchronized void send(GroupPredicate predicate, AbCStore store, Object value,
 			HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
 
-		AbCMessage message = new AbCMessage(this,value, predicate, store);
-		
+		AbCMessage message = new AbCMessage(this, value, predicate, store);
+
 		for (AbCPort port : ports) {
 			port.send(message);
 		}
+
 		this.storeUpdate(update);
 
 	}
 
-//	public Object Broadcastinput(AbCProcess process, GroupPredicate predicate, AbCStore store,
-//			Object value, HashMap<Attribute<Object>, Object> update)
-//					throws InterruptedException, AbCAttributeTypeException {
-//		HashMap<Object, AbCStore> temp = getUpcomming();
-//		AbCStore upcomingStore = (AbCStore) temp.values().toArray()[0];
-//		if (!predicate.isSatisfiedBy(upcomingStore)) {
-//			Broadcastinput(process, predicate, store, value, update);
-//		}
-//
-//		return temp.keySet().toArray()[0];
-//	}
+	// public Object Broadcastinput(AbCProcess process, GroupPredicate
+	// predicate, AbCStore store,
+	// Object value, HashMap<Attribute<Object>, Object> update)
+	// throws InterruptedException, AbCAttributeTypeException {
+	// HashMap<Object, AbCStore> temp = getUpcomming();
+	// AbCStore upcomingStore = (AbCStore) temp.values().toArray()[0];
+	// if (!predicate.isSatisfiedBy(upcomingStore)) {
+	// Broadcastinput(process, predicate, store, value, update);
+	// }
+	//
+	// return temp.keySet().toArray()[0];
+	// }
 
 	public synchronized void addPort(AbCPort p) throws DuplicateNameException {
 		p.register(this);
@@ -161,7 +164,7 @@ public class AbCComponent {
 	 */
 	public void done(AbCProcess abCProcess) {
 		// TODO Auto-generated method stub
-	//	abCProcess.setProState(State.HALT);
+		// abCProcess.setProState(State.HALT);
 	}
 
 	/**
@@ -254,7 +257,7 @@ public class AbCComponent {
 		for (AbCProcess p : processes) {
 			p.receive(message);
 		}
-		
+
 	}
 
 }

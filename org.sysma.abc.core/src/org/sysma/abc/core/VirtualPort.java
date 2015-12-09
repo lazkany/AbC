@@ -28,6 +28,8 @@ public class VirtualPort extends AbCPort {
 
 	public VirtualPort(int portId) {
 		this.address = new VirtualPortAddress(portId);
+		isRunning=true;  									//CHANGE>>turn the port on
+		start();    										//CHANGE>>start the port
 	}
 
 //	@Override
@@ -54,7 +56,7 @@ public class VirtualPort extends AbCPort {
 	}
 
 	@Override
-	protected void doSend() {
+	protected void doSend(AbCMessage message) {
 	}
 
 }

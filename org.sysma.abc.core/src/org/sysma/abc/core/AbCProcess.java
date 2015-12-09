@@ -218,7 +218,7 @@ public abstract class AbCProcess implements Runnable {
 	protected synchronized Object receive( GroupPredicate predicate , HashMap<Attribute<?>, Object> update ) throws InterruptedException {
 		this.waitingMessage = true;
 		Object value = null;
-		while (value != null) {
+		while (value == null) {						//CHANGE>> changed the condition was "!="
 			while (this.receivedMessage == null) {
 				wait();
 			}
