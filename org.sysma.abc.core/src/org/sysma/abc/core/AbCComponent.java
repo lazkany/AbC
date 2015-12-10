@@ -255,7 +255,10 @@ public class AbCComponent {
 
 	public synchronized void receive(AbCMessage message) {
 		for (AbCProcess p : processes) {
-			p.receive(message);
+			if (p.getProcessType()=="receiver") {			//CHANGE> Messages are only sent to receiving processes
+				p.receive(message);
+			}
+			
 		}
 
 	}

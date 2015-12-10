@@ -28,45 +28,13 @@ public class Example_1 {
 	public static GroupPredicate no = new NoComponent();
 	public static GroupPredicate any = new AnyComponent();
 
-	public static class Broadcaster extends AbCProcess {
+	public static class Process_1 extends AbCProcess {
 
 		/**
 		 * @param name
 		 */
-		public Broadcaster(String name) {
+		public Process_1(String name) {
 			super(name);
-			// TODO Auto-generated constructor stub
-
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.sysma.abc.core.AbCProcess#doRun()
-		 */
-		@Override
-		protected void doRun() {
-			// TODO Auto-generated method stub
-			Set<Attribute<Object>> expose = new HashSet<>();
-			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
-			expose.add(a1);
-			try {
-				Broadcast(any, expose, "test_1", null);
-				Broadcast(any, expose, "test_2", null);
-			} catch (AbCAttributeTypeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public static class Receiver extends AbCProcess {
-
-		/**
-		 * @param name
-		 */
-		public Receiver(String name) {
-			super(null, name);
 			// TODO Auto-generated constructor stub
 
 		}
@@ -79,10 +47,49 @@ public class Example_1 {
 		@Override
 		protected void doRun() throws InterruptedException {
 			// TODO Auto-generated method stub
+			Set<Attribute<Object>> expose = new HashSet<>();
+			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
+			expose.add(a1);
+			try {
+				Broadcast(any, expose, "test_send", null);
+				System.out.println(this.name + " => received: " +receive(any, null));
+				//System.out.println(this.name + " => received: " +receive(any, null));
+			//	Broadcast(any, expose, "test_2", null);
+			} catch (AbCAttributeTypeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
-			 System.out.println(this.name + " => received: " +receive(any, null));
-		
-			 System.out.println(this.name + " => received: " +receive(any, null));
+	public static class Process_2 extends AbCProcess {
+
+		/**
+		 * @param name
+		 */
+		public Process_2(String name) {
+			super(null, name);
+			// TODO Auto-generated constructor stub
+
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.sysma.abc.core.AbCProcess#doRun()
+		 */
+		@Override
+		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+			// TODO Auto-generated method stub
+			Set<Attribute<Object>> expose = new HashSet<>();
+			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
+			expose.add(a1);
+
+//			 System.out.println(this.name + " => received: " +receive(any, null));
+//		
+//			 System.out.println(this.name + " => received: " +receive(any, null));
+			Broadcast(any, expose, "test_1", null);
+			Broadcast(any, expose, "test_2", null);
 
 		}
 	}
@@ -122,23 +129,24 @@ public class Example_1 {
 		AbCComponent c3 = new AbCComponent("C3", store3);
 		GroupPredicate checkpro = new HasValue("role", "rescuer");
 		GroupPredicate self = new HasValue("role", store2.getValue(a1));
-		Broadcaster brd = new Broadcaster("brd");
-		Receiver rcv1 = new Receiver("rcv1_c2");
-		Receiver rcv2 = new Receiver("rcv2_c3");
-		Receiver rcv3 = new Receiver("rcv3_c2");
-		Receiver rcv4 = new Receiver("rcv4_c1");
-		c1.addProcess(brd);
+		Process_1 brd1 = new Process_1("brd_1");
+		Process_1 brd2 = new Process_1("brd_2");
+		Process_2 rcv1 = new Process_2("rcv1_c2");
+		Process_2 rcv2 = new Process_2("rcv2_c3");
+		Process_2 rcv3 = new Process_2("rcv3_c2");
+		Process_2 rcv4 = new Process_2("rcv4_c1");
+		c1.addProcess(brd1);
 		c1.addProcess(rcv4);
-		c2.addProcess(rcv3);
+//		c2.addProcess(rcv3); 
 		c2.addProcess(rcv1);
-		c3.addProcess(rcv2);
+		//c3.addProcess(rcv2);
 		c1.addPort(vp);
 		c2.addPort(vp);
-		c3.addPort(vp);
+	//	c3.addPort(vp);
 		//vp.start();
 		c1.start();
 		c2.start();
-		c3.start();
+	//	c3.start();
 		//System.out.println(c1.getStore().toString());
 		Thread.sleep(3000);
 
