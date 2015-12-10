@@ -22,8 +22,8 @@ public class AbCComponent {
 
 	protected AbCStore store;
 
-	protected String nameString;// this name is used to help creating unique
-								// fresh names
+	protected String nameString;
+								
 	protected LinkedList<AbCProcess> processes;
 	protected LinkedList<AbCProcess> waiting;
 	protected int waitingtime = 1000;

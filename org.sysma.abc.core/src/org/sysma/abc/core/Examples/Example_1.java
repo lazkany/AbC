@@ -143,7 +143,7 @@ public class Example_1 {
 		c1.addPort(vp);
 		c2.addPort(vp);
 	//	c3.addPort(vp);
-		//vp.start();
+		vp.start();
 		c1.start();
 		c2.start();
 	//	c3.start();
