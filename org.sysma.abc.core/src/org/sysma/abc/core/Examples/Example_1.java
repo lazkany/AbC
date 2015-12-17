@@ -10,7 +10,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
-import org.sysma.abc.core.VirtualPort;
+import org.sysma.abc.core.centralized.VirtualPort;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.grpPredicate.AnyComponent;

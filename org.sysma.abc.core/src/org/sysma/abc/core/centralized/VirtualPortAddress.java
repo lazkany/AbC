@@ -10,8 +10,9 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.sysma.abc.core;
+package org.sysma.abc.core.centralized;
 
+import org.sysma.abc.core.Address;
 
 /**
  * @author Michele Loreti

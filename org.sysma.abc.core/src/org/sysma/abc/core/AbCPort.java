@@ -6,19 +6,21 @@ package org.sysma.abc.core;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import org.sysma.abc.core.centralized.MessageReceiver;
+import org.sysma.abc.core.centralized.MessageSender;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 
 /**
  * @author Yehia Abd Alrahman
  *
  */
-public abstract class AbCPort {
+public abstract class AbCPort implements MessageReceiver, MessageSender {
 
 	protected boolean isRunning;
 	protected Hashtable<String, AbCComponent> nodes;
-	protected LinkedList<AbCMessage> incomings; 
+	protected LinkedList<AbCMessage> incomings;
 	protected Thread portManager;
-	
+
 	/**
 	 * Constructs a new <code>AbstractPort</code>.
 	 */
@@ -42,24 +44,23 @@ public abstract class AbCPort {
 		}
 	}
 
-	
 	public synchronized void start() {
 		this.isRunning = true;
-		if (portManager == null) { 								//CHANGE>> changed the condition was "!="
+		if (portManager == null) { // CHANGE>> changed the condition was "!="
 			this.portManager = new Thread(new PortManager());
 			this.portManager.start();
 		}
 	}
-	
+
 	public synchronized void stop() {
 		this.isRunning = false;
 		this.portManager = null;
 	}
-	
+
 	public boolean isRunning() {
 		return isRunning;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -68,12 +69,12 @@ public abstract class AbCPort {
 	/**
 	 * 
 	 */
-	protected final synchronized void send(AbCMessage message) {
+	protected synchronized void send(AbCMessage message) {
 		incomings.add(message);
 		doSend(message);
 		notifyAll();
 	}
-	
+
 	protected abstract void doSend(AbCMessage message);
 
 	private class PortManager implements Runnable {
@@ -83,16 +84,15 @@ public abstract class AbCPort {
 			while (isRunning) {
 				AbCMessage message = nextMessage();
 				if (message != null) {
-					handleMessage( message );
+					receiveMessage(message);
 				}
-			}			 
+			}
 		}
-		
-		
+
 	}
 
 	protected synchronized AbCMessage nextMessage() {
-		while (incomings.isEmpty()&&isRunning) {
+		while (incomings.isEmpty() && isRunning) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -104,17 +104,27 @@ public abstract class AbCPort {
 		}
 		return incomings.poll();
 	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.sysma.abc.core.centralized.MessageReceiver#receiveMessage(org.sysma.
+	 * abc.core.AbCMessage)
+	 */
+
+	public void receiveMessage(AbCMessage message) {
+		// TODO Auto-generated method stub
+		handleMessage(message);
+	}
 
 	protected void handleMessage(AbCMessage message) {
 		synchronized (nodes) {
 			for (AbCComponent c : nodes.values()) {
-				if ((message.getSender() != c)&&(message.isAReceiverFor(c.getStore()))) {
-					c.receive( message );
+				if ((message.getSender() != c) && (message.isAReceiverFor(c.getStore()))) {
+					c.receive(message);
 				}
 			}
 		}
 	}
-	
-	
 
 }

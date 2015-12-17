@@ -18,6 +18,38 @@ public class AbCStore {
 	
 	private Map<String,Attribute<?>> attributes;
 
+	/**
+	 * @return the data
+	 */
+	public Map<String, Object> getData() {
+		return data;
+	}
+
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(Map<String, Object> data) {
+		this.data = data;
+	}
+
+
+	/**
+	 * @return the attributes
+	 */
+	public Map<String, Attribute<?>> getAttributes() {
+		return attributes;
+	}
+
+
+	/**
+	 * @param attributes the attributes to set
+	 */
+	public void setAttributes(Map<String, Attribute<?>> attributes) {
+		this.attributes = attributes;
+	}
+
+
 	public AbCStore( ) {
 		this.data = new HashMap<>();
 		this.attributes = new HashMap<>();
