@@ -7,8 +7,7 @@ import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
 import org.sysma.abc.core.Attribute;
-import org.sysma.abc.core.abcfactoy.ClassTypeAdapter;
-import org.sysma.abc.core.abcfactoy.ClassTypeAdapterFactory;
+
 import org.sysma.abc.core.json.AttributeDeserializer;
 import org.sysma.abc.core.json.AttributeSerializer;
 
@@ -78,8 +77,8 @@ public class AbCFactory {
 		 
 		 // CLASS TYPE ADAPTER and CLASS FACTORY
 		 
-		 builder.registerTypeAdapterFactory(new ClassTypeAdapterFactory());
-		 builder.registerTypeAdapter(Class.class, new ClassTypeAdapter());
+//		 builder.registerTypeAdapterFactory(new ClassTypeAdapterFactory());
+//		 builder.registerTypeAdapter(Class.class, new ClassTypeAdapter());
 	}
 
 	/**

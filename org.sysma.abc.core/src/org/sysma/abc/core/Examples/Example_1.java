@@ -3,6 +3,7 @@
  */
 package org.sysma.abc.core.Examples;
 
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.abcfactoy.AbCFactory;
+
 import org.sysma.abc.core.centralized.VirtualPort;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
@@ -20,6 +22,8 @@ import org.sysma.abc.core.grpPredicate.HasValue;
 import org.sysma.abc.core.grpPredicate.NoComponent;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * @author Yehia Abd Alrahman
@@ -30,7 +34,8 @@ public class Example_1 {
 
 	public static GroupPredicate no = new NoComponent();
 	public static GroupPredicate any = new AnyComponent();
-
+	
+//	
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -150,9 +155,29 @@ public class Example_1 {
 //		c1.start();
 //		c2.start();
 	//	c3.start();
-		Gson gson=AbCFactory.getGSon();
+		Attribute<String> aa = new Attribute<String>("role", String.class);
+		//GsonBuilder gsonBuilder = new GsonBuilder();
+		 //gsonBuilder.registerTypeAdapterFactory(new ClassTypeAdapterFactory());
+		// gsonBuilder.registerTypeAdapter(Class.class, new ClassTypeAdapter());
+		 Gson gson = AbCFactory.getGSon();
+		 //Gson gson =gsonBuilder.create();
+		 
+		 Type type = new TypeToken<Attribute<String>>(){}.getType();
+		// String xString="yehia";
+		String json1 = gson.toJson(aa);
+		// String json = gson.toJson(xString, String.class);
+		 System.out.println(json1);
+		 Attribute<String> attribute=gson.fromJson(json1, type);
+		 System.out.println(attribute.getName());
+		 System.out.println(attribute.getAttributeType());
+		 System.out.println(a2.getName());
+		 System.out.println(a2.getAttributeType());
+	//System.out.println(gson.toJson(json,type));
+		 
+	//	 Try<String> xx=new Try<String>(String.class);
+	//	 String jString=gson.toJson(xx);
 		
-	System.out.println(gson.toJson(a1));
+		// String string=gson.toJson(sClass);
 		Thread.sleep(3000);
 
 	}

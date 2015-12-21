@@ -26,7 +26,7 @@ public class AttributeSerializer implements JsonSerializer<Attribute> {
 		
 		JsonObject json = new JsonObject();
 		json.add("name",new JsonPrimitive(src.getName()) );
-		json.add("clazz", AbCJsonUtil.jsonFromObject(src.getAttributeType(), context));
+		json.add("clazz", new JsonPrimitive(src.getAttributeType().getName()) );
 		return json;
 	}
 
