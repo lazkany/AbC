@@ -20,18 +20,18 @@ import com.google.gson.JsonParseException;
 public class  AttributeDeserializer<T> implements JsonDeserializer<Attribute<T>> {
 
 	@Override
-	public  Attribute<T> deserialize(JsonElement json, Type typeOfT,
+	public  Attribute deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 	//	Type attributeType = new TypeToken<Attribute<?>>() {}.getType();
 		if (!json.isJsonObject()) {
 			throw new JsonParseException("Unexpected JsonElement!");
 		}
 		JsonObject jo = (JsonObject) json;
-		if ((!jo.has("name"))||(!jo.has("value"))) {
-			throw new JsonParseException("Required attributes are not available!");
-		}
+//		if ((!jo.has("name"))||(!jo.has("value"))) {
+//			throw new JsonParseException("Required attributes are not available!");
+//		}
 		
-		return new Attribute<T>(jo.get("name").getAsString(), (Class<T>) AbCJsonUtil.objectFromJson(jo.get("clazz"), context));
+		return new Attribute(jo.get("name").getAsString(), (Class<T>) AbCJsonUtil.objectFromJson(jo.get("clazz"), context));
 		
 	}
 

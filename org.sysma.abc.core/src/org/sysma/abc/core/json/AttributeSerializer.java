@@ -18,12 +18,12 @@ import com.google.gson.reflect.TypeToken;
  * @author Yehia Abd Alrahman
  *
  */
-public class AttributeSerializer implements JsonSerializer<Attribute<?>> {
+public class AttributeSerializer implements JsonSerializer<Attribute> {
 
 	@Override
-	public JsonElement serialize(Attribute<?> src, Type typeOfSrc,
+	public JsonElement serialize(Attribute src, Type typeOfSrc,
 			JsonSerializationContext context) {
-		Type attributeType = new TypeToken<Attribute<?>>() {}.getType();
+		
 		JsonObject json = new JsonObject();
 		json.add("name",new JsonPrimitive(src.getName()) );
 		json.add("clazz", AbCJsonUtil.jsonFromObject(src.getAttributeType(), context));

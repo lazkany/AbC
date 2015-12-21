@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.abcfactoy.ClassTypeAdapter;
+import org.sysma.abc.core.abcfactoy.ClassTypeAdapterFactory;
 import org.sysma.abc.core.json.AttributeDeserializer;
 import org.sysma.abc.core.json.AttributeSerializer;
 
@@ -45,7 +47,7 @@ public class AbCFactory {
 		// builder.registerTypeHierarchyAdapter(Address.class, new
 		// AddressDeserializer());
 		 builder.registerTypeAdapter(Attribute.class, new
-		 AttributeDeserializer<Object>());
+		 AttributeDeserializer());
 		// builder.registerTypeAdapter(FormalTemplateField.class, new
 		// FormalTemplateFieldDeserializer());
 		// builder.registerTypeHierarchyAdapter(jRESPMessage.class, new
@@ -73,6 +75,11 @@ public class AbCFactory {
 		// builder.registerTypeAdapter(Tuple.class, new TupleSerializer());
 		// builder.registerTypeHierarchyAdapter(GroupPredicate.class , new
 		// GroupPredicateSerializer());
+		 
+		 // CLASS TYPE ADAPTER and CLASS FACTORY
+		 
+		 builder.registerTypeAdapterFactory(new ClassTypeAdapterFactory());
+		 builder.registerTypeAdapter(Class.class, new ClassTypeAdapter());
 	}
 
 	/**
@@ -87,6 +94,7 @@ public class AbCFactory {
 	public static void registerTypeAdapter(Type t, Object typeAdapter) {
 		if (builder == null) {
 			createBuilder();
+			
 		}
 		builder.registerTypeAdapter(t, typeAdapter);
 	}
