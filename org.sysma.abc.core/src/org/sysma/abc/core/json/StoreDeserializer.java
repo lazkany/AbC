@@ -1,18 +1,18 @@
 /**
  * 
  */
-package org.sysma.abc.core.gson;
+package org.sysma.abc.core.json;
 
 /**
  * @author Yehia Abd Alrahman
  *
  */
-public class StoreSerializer {
+public class StoreDeserializer {
 
 	/**
 	 * 
 	 */
-	public StoreSerializer() {
+	public StoreDeserializer() {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -26,7 +26,7 @@ public class AbCComponent {
 								
 	protected LinkedList<AbCProcess> processes;
 	protected LinkedList<AbCProcess> waiting;
-	protected int waitingtime = 1000;
+	
 	protected int processCounter = 0;
 	private ComponentState state;
 	protected int nameCounter = 0;

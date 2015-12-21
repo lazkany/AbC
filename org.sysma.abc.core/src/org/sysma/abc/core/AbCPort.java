@@ -7,14 +7,13 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 
 import org.sysma.abc.core.centralized.MessageReceiver;
-import org.sysma.abc.core.centralized.MessageSender;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 
 /**
  * @author Yehia Abd Alrahman
  *
  */
-public abstract class AbCPort implements MessageReceiver, MessageSender {
+public abstract class AbCPort implements MessageReceiver {
 
 	protected boolean isRunning;
 	protected Hashtable<String, AbCComponent> nodes;

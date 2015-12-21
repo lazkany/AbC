@@ -3,6 +3,7 @@
  */
 package org.sysma.abc.core;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
  * @author loreti
  *
  */
-public class AbCStore {
+public class AbCStore implements Serializable{
 	
 	private Map<String,Object> data;
 	

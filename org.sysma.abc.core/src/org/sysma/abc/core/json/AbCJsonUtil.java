@@ -10,7 +10,7 @@
  * Contributors:
  *      Michele Loreti
  */
-package org.sysma.abc.core.gson;
+package org.sysma.abc.core.json;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;

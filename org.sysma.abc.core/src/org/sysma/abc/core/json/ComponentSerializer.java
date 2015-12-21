@@ -1,18 +1,18 @@
 /**
  * 
  */
-package org.sysma.abc.core.gson;
+package org.sysma.abc.core.json;
 
 /**
  * @author Yehia Abd Alrahman
  *
  */
-public class AttributeDeserializer {
+public class ComponentSerializer {
 
 	/**
 	 * 
 	 */
-	public AttributeDeserializer() {
+	public ComponentSerializer() {
 		// TODO Auto-generated constructor stub
 	}
 

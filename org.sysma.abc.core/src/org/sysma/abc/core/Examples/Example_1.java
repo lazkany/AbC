@@ -10,6 +10,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.abcfactoy.AbCFactory;
 import org.sysma.abc.core.centralized.VirtualPort;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
@@ -17,6 +18,8 @@ import org.sysma.abc.core.grpPredicate.AnyComponent;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.grpPredicate.HasValue;
 import org.sysma.abc.core.grpPredicate.NoComponent;
+
+import com.google.gson.Gson;
 
 /**
  * @author Yehia Abd Alrahman
@@ -140,14 +143,16 @@ public class Example_1 {
 //		c2.addProcess(rcv3); 
 		c2.addProcess(rcv1);
 		//c3.addProcess(rcv2);
-		c1.addPort(vp);
-		c2.addPort(vp);
-	//	c3.addPort(vp);
-		vp.start();
-		c1.start();
-		c2.start();
+//		c1.addPort(vp);
+//		c2.addPort(vp);
+//	//	c3.addPort(vp);
+//		vp.start();
+//		c1.start();
+//		c2.start();
 	//	c3.start();
-		//System.out.println(c1.getStore().toString());
+		Gson gson=AbCFactory.getGSon();
+		
+	System.out.println(gson.toJson(a1));
 		Thread.sleep(3000);
 
 	}

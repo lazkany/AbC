@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sysma.abc.core.gson;
+package org.sysma.abc.core.json;
 
 import java.lang.reflect.Type;
 
@@ -20,10 +20,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-/**
- * @author Yehia Abd Alrahman
- *
- */
+
 public class PredicateSerializer implements JsonSerializer<GroupPredicate>{
 
 	@Override

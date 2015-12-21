@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sysma.abc.core.gson;
+package org.sysma.abc.core.json;
 
 /**
  * @author Yehia Abd Alrahman

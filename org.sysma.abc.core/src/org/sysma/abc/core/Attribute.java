@@ -3,30 +3,32 @@
  */
 package org.sysma.abc.core;
 
+import java.io.Serializable;
+
 /**
  * @author loreti
  *
  */
-public class Attribute<T> {
+public class Attribute<T> implements Serializable {
 
 	private String name;
-	
+
 	private Class<T> clazz;
-	
-	public Attribute( String name , Class<T> clazz ) {
+
+	public Attribute(String name, Class<T> clazz) {
 		this.name = name;
 		this.clazz = clazz;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
-	public Class<T> getAttributeType( ) {
+
+	public Class<T> getAttributeType() {
 		return clazz;
 	}
-	
-	public boolean check( Object o ) {
+
+	public boolean check(Object o) {
 		return clazz.isInstance(o);
 	}
 
@@ -39,14 +41,14 @@ public class Attribute<T> {
 	public boolean equals(Object obj) {
 		if (obj instanceof Attribute<?>) {
 			Attribute<?> other = (Attribute<?>) obj;
-			return this.name.equals(other.name)&&this.clazz.equals(other.clazz);
+			return this.name.equals(other.name) && this.clazz.equals(other.clazz);
 		}
 		return false;
 	}
 
 	@Override
 	public String toString() {
-		return name+"<"+clazz.getCanonicalName()+">";
+		return name + "<" + clazz.getCanonicalName() + ">";
 	}
 
 	public T castTo(Object o) {
@@ -56,7 +58,5 @@ public class Attribute<T> {
 	public boolean isValidValue(Object value) {
 		return clazz.isInstance(value);
 	}
-	
-	
-	
+
 }
