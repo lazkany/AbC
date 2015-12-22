@@ -167,17 +167,19 @@ public class Example_1 {
 		String json1 = gson.toJson(aa);
 		// String json = gson.toJson(xString, String.class);
 		 System.out.println(json1);
-		 Attribute<String> attribute=gson.fromJson(json1, type);
-		 System.out.println(attribute);
-		 System.out.println(attribute.getAttributeType());
+		// Attribute<String> attribute=gson.fromJson(json1, Attribute.class);
+		 System.out.println(gson.fromJson(json1, Attribute.class));
+		// System.out.println(attribute.getAttributeType());
 		 System.out.println(a2.getName());
 		 System.out.println(a2.getAttributeType());
 		 String storejsonString=gson.toJson(store1);
 		 System.out.println(storejsonString);
 		 AbCStore str=gson.fromJson(storejsonString, AbCStore.class);
 		 System.out.println(str.getAttributes());
+		 System.out.println(str.getAttribute("role"));
 		 System.out.println(store1.getAttributes());
 		 System.out.println(store1.getAttribute("role"));
+		// System.out.println(store1.getAttribute("role"));
 	//System.out.println(gson.toJson(json,type));
 		 
 	//	 Try<String> xx=new Try<String>(String.class);

@@ -19,17 +19,11 @@ import com.google.gson.JsonSerializer;
 public class StoreSerializer implements JsonSerializer<AbCStore> {
 
 	@Override
-	public JsonElement serialize(AbCStore src, Type typeOfSrc,
-			JsonSerializationContext context) {
-//		JsonArray data = new JsonArray();
-//		for (Object o : src.) {
-//			data.add(AbCJsonUtil.jsonFromObject(o, context));
-//		}
+	public JsonElement serialize(AbCStore src, Type typeOfSrc, JsonSerializationContext context) {
 		JsonObject json = new JsonObject();
-		json.add("data",AbCJsonUtil.jsonFromObject(src.getData(), context) );
-		json.add("attributes", AbCJsonUtil.jsonFromObject(src.getAttributes(), context) );
+		json.add("data", AbCJsonUtil.jsonFromObject(src.getData(), context));
+		json.add("attributes", AbCJsonUtil.jsonFromObject(src.getAttributes(), context));
 		return json;
 	}
-	
 
 }

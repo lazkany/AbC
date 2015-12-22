@@ -23,8 +23,8 @@ import com.google.gson.JsonParseException;
 public class StoreDeserializer implements JsonDeserializer<AbCStore> {
 
 	@Override
-	public  AbCStore deserialize(JsonElement json, Type typeOfT,
-			JsonDeserializationContext context) throws JsonParseException {
+	public AbCStore deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+			throws JsonParseException {
 
 		if (!json.isJsonObject()) {
 			throw new JsonParseException("Unexpected JsonElement!");
@@ -32,15 +32,13 @@ public class StoreDeserializer implements JsonDeserializer<AbCStore> {
 		JsonObject jo = (JsonObject) json;
 		if ((!jo.has("data"))) {
 			throw new JsonParseException("Required data are not available!");
-		}		
-		//try {
-		//	Class<?> c = Class.forName(jo.get("data").getAsString());
-			
-			return new AbCStore( (HashMap<String,Object>)AbCJsonUtil.objectFromJson(jo.get("data"), context),  (HashMap<String,Attribute<?>>)AbCJsonUtil.objectFromJson(jo.get("attributes"), context));
-//		} catch (ClassNotFoundException e) {
-//			throw new JsonParseException(e);
-//		}		
+		}
+
+//		return new AbCStore((HashMap<String, Object>) AbCJsonUtil.objectFromJson(jo.get("data"), context),
+//				(HashMap<String, Attribute<?>>) AbCJsonUtil.objectFromJson(jo.get("attributes"), context));
+		return new AbCStore((HashMap<String, Object>) context.deserialize(jo.get("data"), HashMap.class),
+				(HashMap<String, Attribute<?>>) context.deserialize(jo.get("attributes"), HashMap.class));
+
 	}
-	
 
 }
