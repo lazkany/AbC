@@ -6,10 +6,13 @@ package org.sysma.abc.core.abcfactoy;
 import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
+import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
 
 import org.sysma.abc.core.json.AttributeDeserializer;
 import org.sysma.abc.core.json.AttributeSerializer;
+import org.sysma.abc.core.json.StoreDeserializer;
+import org.sysma.abc.core.json.StoreSerializer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,6 +50,8 @@ public class AbCFactory {
 		// AddressDeserializer());
 		 builder.registerTypeAdapter(Attribute.class, new
 		 AttributeDeserializer());
+		 builder.registerTypeAdapter(AbCStore.class, new
+				 StoreDeserializer());
 		// builder.registerTypeAdapter(FormalTemplateField.class, new
 		// FormalTemplateFieldDeserializer());
 		// builder.registerTypeHierarchyAdapter(jRESPMessage.class, new
@@ -65,6 +70,8 @@ public class AbCFactory {
 		// ActualTemplateFieldSerializer());
 		 builder.registerTypeAdapter(Attribute.class, new
 		 AttributeSerializer());
+		 builder.registerTypeAdapter(AbCStore.class, new
+				 StoreSerializer());
 		// builder.registerTypeAdapter(FormalTemplateField.class, new
 		// FormalTemplateFieldSerializer());
 		// builder.registerTypeHierarchyAdapter(Template.class, new

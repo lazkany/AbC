@@ -51,12 +51,15 @@ public class AbCStore implements Serializable{
 	}
 
 
+	public AbCStore( Map<String,Object> data, Map<String,Attribute<?>> attributes ) {
+		this.data = data;
+		this.attributes = attributes;
+	}
+	
 	public AbCStore( ) {
 		this.data = new HashMap<>();
 		this.attributes = new HashMap<>();
 	}
-	
-	
 	protected boolean isConsistent( Attribute<?> attribute ) {
 		Attribute<?> old = attributes.get(attribute.getName());
 		if (old == null) {
