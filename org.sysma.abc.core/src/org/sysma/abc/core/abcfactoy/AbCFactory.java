@@ -49,7 +49,7 @@ public class AbCFactory {
 		// builder.registerTypeHierarchyAdapter(Address.class, new
 		// AddressDeserializer());
 		 builder.registerTypeAdapter(Attribute.class, new
-		 AttributeDeserializer());
+		 AttributeDeserializer<Object>());
 		 builder.registerTypeAdapter(AbCStore.class, new
 				 StoreDeserializer());
 		// builder.registerTypeAdapter(FormalTemplateField.class, new

@@ -155,29 +155,35 @@ public class Example_1 {
 //		c1.start();
 //		c2.start();
 	//	c3.start();
-		Attribute<String> aa = new Attribute<String>("role", String.class);
-		//GsonBuilder gsonBuilder = new GsonBuilder();
-		 //gsonBuilder.registerTypeAdapterFactory(new ClassTypeAdapterFactory());
-		// gsonBuilder.registerTypeAdapter(Class.class, new ClassTypeAdapter());
+		
+		
 		 Gson gson = AbCFactory.getGSon();
-		 //Gson gson =gsonBuilder.create();
 		 
-		 Type type = new TypeToken<Attribute<String>>(){}.getType();
-		// String xString="yehia";
-		String json1 = gson.toJson(aa);
-		// String json = gson.toJson(xString, String.class);
-		 System.out.println(json1);
-		// Attribute<String> attribute=gson.fromJson(json1, Attribute.class);
-		 System.out.println(gson.fromJson(json1, Attribute.class));
-		// System.out.println(attribute.getAttributeType());
-		 System.out.println(a2.getName());
-		 System.out.println(a2.getAttributeType());
+		 
+		// Type type = new TypeToken<Attribute<String>>(){}.getType();
+		 Attribute<String> aa = new Attribute<String>("role", String.class);
+		String json = gson.toJson(aa);
+		
+		 System.out.println(json);
+		 System.out.println(gson.fromJson(json, Attribute.class));
+		
+		 System.out.println("");
+		 
 		 String storejsonString=gson.toJson(store1);
 		 System.out.println(storejsonString);
+		 
 		 AbCStore str=gson.fromJson(storejsonString, AbCStore.class);
+		 System.out.println("");
+		 System.out.println(str);
+		 System.out.println(store1);
+		 
+		 System.out.println("");
 		 System.out.println(str.getAttributes());
-		 System.out.println(str.getAttribute("role"));
 		 System.out.println(store1.getAttributes());
+		 
+		 System.out.println("");
+		 System.out.println(str.getAttribute("role"));
+		 
 		 System.out.println(store1.getAttribute("role"));
 		// System.out.println(store1.getAttribute("role"));
 	//System.out.println(gson.toJson(json,type));
