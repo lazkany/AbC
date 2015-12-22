@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * @author Yehia Abd Alrahman
@@ -21,15 +20,12 @@ import com.google.gson.reflect.TypeToken;
 public class AttributeSerializer implements JsonSerializer<Attribute> {
 
 	@Override
-	public JsonElement serialize(Attribute src, Type typeOfSrc,
-			JsonSerializationContext context) {
-		
+	public JsonElement serialize(Attribute src, Type typeOfSrc, JsonSerializationContext context) {
+
 		JsonObject json = new JsonObject();
-		json.add("name",new JsonPrimitive(src.getName()) );
-		json.add("clazz", new JsonPrimitive(src.getAttributeType().getName()) );
+		json.add("name", new JsonPrimitive(src.getName()));
+		json.add("clazz", new JsonPrimitive(src.getAttributeType().getName()));
 		return json;
 	}
-
-	
 
 }

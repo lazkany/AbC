@@ -13,11 +13,11 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
  * @author loreti
  *
  */
-public class AbCStore implements Serializable{
-	
-	private Map<String,Object> data;
-	
-	private Map<String,Attribute<?>> attributes;
+public class AbCStore implements Serializable {
+
+	private Map<String, Object> data;
+
+	private Map<String, Attribute<?>> attributes;
 
 	/**
 	 * @return the data
@@ -26,14 +26,13 @@ public class AbCStore implements Serializable{
 		return data;
 	}
 
-
 	/**
-	 * @param data the data to set
+	 * @param data
+	 *            the data to set
 	 */
 	public void setData(Map<String, Object> data) {
 		this.data = data;
 	}
-
 
 	/**
 	 * @return the attributes
@@ -42,63 +41,64 @@ public class AbCStore implements Serializable{
 		return attributes;
 	}
 
-
 	/**
-	 * @param attributes the attributes to set
+	 * @param attributes
+	 *            the attributes to set
 	 */
 	public void setAttributes(Map<String, Attribute<?>> attributes) {
 		this.attributes = attributes;
 	}
 
-
-	public AbCStore( Map<String,Object> data, Map<String,Attribute<?>> attributes ) {
+	public AbCStore(Map<String, Object> data, Map<String, Attribute<?>> attributes) {
 		this.data = data;
 		this.attributes = attributes;
 	}
-	
-	public AbCStore( ) {
+
+	public AbCStore() {
 		this.data = new HashMap<>();
 		this.attributes = new HashMap<>();
 	}
-	protected boolean isConsistent( Attribute<?> attribute ) {
+
+	protected boolean isConsistent(Attribute<?> attribute) {
 		Attribute<?> old = attributes.get(attribute.getName());
 		if (old == null) {
 			attributes.put(attribute.getName(), attribute);
 			return true;
-		} 
+		}
 		return old.equals(attribute);
 	}
-	
+
 	public <T> T getValue(Attribute<T> attribute) throws AbCAttributeTypeException {
 		Object o = data.get(attribute.getName());
 		if (attribute.check(o)) {
-			return attribute.castTo( o );
+			return attribute.castTo(o);
 		}
 		throw new AbCAttributeTypeException();
 	}
-	
+
 	/**
 	 * @param n
 	 * @return an attribute with a name "n"
 	 */
-	public Attribute<?>  getAttribute(String n){
-		return  attributes.get(n);
-		
+	public Attribute<?> getAttribute(String n) {
+		return attributes.get(n);
+
 	}
-	
-	public void setValue( Attribute<?> attribute , Object value ) throws AbCAttributeTypeException {
+
+	public void setValue(Attribute<?> attribute, Object value) throws AbCAttributeTypeException {
 		if (!attribute.isValidValue(value)) {
 			throw new AbCAttributeTypeException();
 		}
 		if (isConsistent(attribute)) {
-			data.put(attribute.getName(), value);		
+			data.put(attribute.getName(), value);
 		} else {
 			throw new AbCAttributeTypeException();
 		}
 	}
+
 	@Override
 	public String toString() {
 		return data.toString();
 	}
-	
+
 }
