@@ -38,7 +38,7 @@ public class StoreDeserializer implements JsonDeserializer<AbCStore> {
 		for (Entry<String, JsonElement> item : jo.get("attributes").getAsJsonObject().entrySet()) {
 			hashItem.put(item.getKey(), context.deserialize(item.getValue(), Attribute.class));
 		}
-		return new AbCStore((HashMap<String, Object>) context.deserialize(jo.get("data"), HashMap.class), hashItem);
+		return new AbCStore((HashMap<String, Object>) AbCJsonUtil.objectFromJson(jo.get("data"), context), hashItem);
 
 	}
 

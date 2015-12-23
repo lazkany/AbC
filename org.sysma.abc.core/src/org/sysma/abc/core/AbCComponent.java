@@ -132,7 +132,7 @@ public class AbCComponent {
 	 */
 	@Override
 	public String toString() {
-		return store.toString() + ":" + processes.toString();
+		return nameString+":"+store.toString() + ":" + processes.toString();
 	}
 
 	/**

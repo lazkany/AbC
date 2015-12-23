@@ -22,7 +22,7 @@ public class StoreSerializer implements JsonSerializer<AbCStore> {
 	public JsonElement serialize(AbCStore src, Type typeOfSrc, JsonSerializationContext context) {
 		JsonObject json = new JsonObject();
 
-		json.add("data", context.serialize(src.getData()));
+		json.add("data", AbCJsonUtil.jsonFromObject(src.getData(),context));
 		json.add("attributes", context.serialize(src.getAttributes()));
 		return json;
 	}

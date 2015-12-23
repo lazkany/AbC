@@ -32,7 +32,7 @@ public class MessageDeserializer implements JsonDeserializer<AbCMessage> {
 		JsonObject jo = (JsonObject) json;
 
 		return new AbCMessage(context.deserialize(jo.get("sender"), AbCComponent.class),
-				jo.get("value").getAsString(),
+				context.deserialize(jo.get("value"),Object.class),
 				context.deserialize(jo.get("predicate"), GroupPredicate.class),
 				context.deserialize(jo.get("store"), AbCStore.class));
 
