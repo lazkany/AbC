@@ -7,13 +7,17 @@ import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
 import org.sysma.abc.core.AbCComponent;
+import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
-
+import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.json.AttributeDeserializer;
 import org.sysma.abc.core.json.AttributeSerializer;
 import org.sysma.abc.core.json.ComponentDeserializer;
 import org.sysma.abc.core.json.ComponentSerializer;
+import org.sysma.abc.core.json.MessageDeserializer;
+import org.sysma.abc.core.json.PredicateDeserializer;
+import org.sysma.abc.core.json.PredicateSerializer;
 import org.sysma.abc.core.json.StoreDeserializer;
 import org.sysma.abc.core.json.StoreSerializer;
 
@@ -51,18 +55,14 @@ public class AbCFactory {
 		// ActualTemplateFieldDeserializer());
 		// builder.registerTypeHierarchyAdapter(Address.class, new
 		// AddressDeserializer());
-		 builder.registerTypeAdapter(Attribute.class, new
-		 AttributeDeserializer<Object>());
-		 builder.registerTypeAdapter(AbCStore.class, new
-				 StoreDeserializer());
-		
-		 builder.registerTypeHierarchyAdapter(AbCComponent.class, new
-				 ComponentDeserializer());
-		// builder.registerTypeHierarchyAdapter(Template.class, new
-		// TemplateDeserializer());
+		builder.registerTypeAdapter(Attribute.class, new AttributeDeserializer<Object>());
+		builder.registerTypeAdapter(AbCStore.class, new StoreDeserializer());
+
+		builder.registerTypeAdapter(AbCComponent.class, new ComponentDeserializer());
+		builder.registerTypeAdapter(AbCMessage.class, new MessageDeserializer());
 		// builder.registerTypeAdapter(Tuple.class, new TupleDeserializer());
-		// builder.registerTypeHierarchyAdapter(GroupPredicate.class, new
-		// GroupPredicateDeserializer());
+		 builder.registerTypeAdapter(GroupPredicate.class, new
+				 PredicateDeserializer());
 		//
 		//
 		// //
@@ -70,12 +70,9 @@ public class AbCFactory {
 		// //
 		// builder.registerTypeAdapter(ActualTemplateField.class, new
 		// ActualTemplateFieldSerializer());
-		 builder.registerTypeAdapter(Attribute.class, new
-		 AttributeSerializer());
-		 builder.registerTypeAdapter(AbCStore.class, new
-				 StoreSerializer());
-		 builder.registerTypeAdapter(AbCComponent.class, new
-				 ComponentSerializer());
+		builder.registerTypeAdapter(Attribute.class, new AttributeSerializer());
+		builder.registerTypeAdapter(AbCStore.class, new StoreSerializer());
+		builder.registerTypeAdapter(AbCComponent.class, new ComponentSerializer());
 		// builder.registerTypeAdapter(FormalTemplateField.class, new
 		// FormalTemplateFieldSerializer());
 		// builder.registerTypeHierarchyAdapter(Template.class, new
@@ -83,13 +80,13 @@ public class AbCFactory {
 		// builder.registerTypeHierarchyAdapter(Address.class, new
 		// AddressSerializer());
 		// builder.registerTypeAdapter(Tuple.class, new TupleSerializer());
-		// builder.registerTypeHierarchyAdapter(GroupPredicate.class , new
-		// GroupPredicateSerializer());
-		 
-		 // CLASS TYPE ADAPTER and CLASS FACTORY
-		 
-//		 builder.registerTypeAdapterFactory(new ClassTypeAdapterFactory());
-//		 builder.registerTypeAdapter(Class.class, new ClassTypeAdapter());
+		 builder.registerTypeAdapter(GroupPredicate.class , new
+				 PredicateSerializer());
+
+		// CLASS TYPE ADAPTER and CLASS FACTORY
+
+		// builder.registerTypeAdapterFactory(new ClassTypeAdapterFactory());
+		// builder.registerTypeAdapter(Class.class, new ClassTypeAdapter());
 	}
 
 	/**
@@ -104,24 +101,7 @@ public class AbCFactory {
 	public static void registerTypeAdapter(Type t, Object typeAdapter) {
 		if (builder == null) {
 			createBuilder();
-			
-		}
-		builder.registerTypeAdapter(t, typeAdapter);
-	}
 
-	/**
-	 * Register a json serializer/deserializer for all the sub-types of
-	 * <code>t</code>.
-	 * 
-	 * @param t
-	 *            a type
-	 * @param typeAdapter
-	 *            adapter that will be used for serialization/deserialization of
-	 *            elements that has type <code>t</code>
-	 */
-	public static void registerTypeHierarchyAdapter(Type t, Object typeAdapter) {
-		if (builder == null) {
-			createBuilder();
 		}
 		builder.registerTypeAdapter(t, typeAdapter);
 	}
