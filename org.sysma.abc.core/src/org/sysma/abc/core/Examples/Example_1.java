@@ -3,16 +3,15 @@
  */
 package org.sysma.abc.core.Examples;
 
-import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.sysma.abc.core.AbCComponent;
+import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.abcfactoy.AbCFactory;
-
 import org.sysma.abc.core.centralized.VirtualPort;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
@@ -22,8 +21,6 @@ import org.sysma.abc.core.grpPredicate.HasValue;
 import org.sysma.abc.core.grpPredicate.NoComponent;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * @author Yehia Abd Alrahman
@@ -34,8 +31,8 @@ public class Example_1 {
 
 	public static GroupPredicate no = new NoComponent();
 	public static GroupPredicate any = new AnyComponent();
-	
-//	
+
+	//
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -60,9 +57,10 @@ public class Example_1 {
 			expose.add(a1);
 			try {
 				Broadcast(any, expose, "test_send", null);
-				System.out.println(this.name + " => received: " +receive(any, null));
-				//System.out.println(this.name + " => received: " +receive(any, null));
-			//	Broadcast(any, expose, "test_2", null);
+				System.out.println(this.name + " => received: " + receive(any, null));
+				// System.out.println(this.name + " => received: " +receive(any,
+				// null));
+				// Broadcast(any, expose, "test_2", null);
 			} catch (AbCAttributeTypeException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -93,9 +91,11 @@ public class Example_1 {
 			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 			expose.add(a1);
 
-//			 System.out.println(this.name + " => received: " +receive(any, null));
-//		
-//			 System.out.println(this.name + " => received: " +receive(any, null));
+			// System.out.println(this.name + " => received: " +receive(any,
+			// null));
+			//
+			// System.out.println(this.name + " => received: " +receive(any,
+			// null));
 			Broadcast(any, expose, "test_1", null);
 			Broadcast(any, expose, "test_2", null);
 
@@ -111,11 +111,12 @@ public class Example_1 {
 
 	/**
 	 * @param args
-	 * @throws AbCAttributeTypeException 
-	 * @throws DuplicateNameException 
-	 * @throws InterruptedException 
+	 * @throws AbCAttributeTypeException
+	 * @throws DuplicateNameException
+	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) throws AbCAttributeTypeException, DuplicateNameException, InterruptedException {
+	public static void main(String[] args)
+			throws AbCAttributeTypeException, DuplicateNameException, InterruptedException {
 		// TODO Auto-generated method stub
 		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 		Attribute<Object> a2 = new Attribute<Object>("status", Object.class);
@@ -145,58 +146,58 @@ public class Example_1 {
 		Process_2 rcv4 = new Process_2("rcv4_c1");
 		c1.addProcess(brd1);
 		c1.addProcess(rcv4);
-//		c2.addProcess(rcv3); 
+		// c2.addProcess(rcv3);
 		c2.addProcess(rcv1);
-		//c3.addProcess(rcv2);
-//		c1.addPort(vp);
-//		c2.addPort(vp);
-//	//	c3.addPort(vp);
-//		vp.start();
-//		c1.start();
-//		c2.start();
-	//	c3.start();
-		
-		
-		 Gson gson = AbCFactory.getGSon();
-		 
-		 
-		// Type type = new TypeToken<Attribute<String>>(){}.getType();
-		 Attribute<String> aa = new Attribute<String>("role", String.class);
+		// c3.addProcess(rcv2);
+		// c1.addPort(vp);
+		// c2.addPort(vp);
+		// // c3.addPort(vp);
+		// vp.start();
+		// c1.start();
+		// c2.start();
+		// c3.start();
+
+		//
+		Gson gson = AbCFactory.getGSon();
+		//
+		//
+		// // Type type = new TypeToken<Attribute<String>>(){}.getType();
+		Attribute<String> aa = new Attribute<String>("role", String.class);
 		String json = gson.toJson(aa);
-		
-		 System.out.println(json);
-		 System.out.println(gson.fromJson(json, Attribute.class));
-		
-		 System.out.println("");
-		 
-		 String storejsonString=gson.toJson(store1);
-		 System.out.println(storejsonString);
-		 
-		 AbCStore str=gson.fromJson(storejsonString, AbCStore.class);
-		 System.out.println("");
-		 System.out.println(str);
-		 System.out.println(store1);
-		 
-		 System.out.println("");
-		 System.out.println(str.getAttributes());
-		 System.out.println(store1.getAttributes());
-		 
-		 System.out.println("");
-		 System.out.println(str.getAttribute("role"));
-		 
-		 System.out.println(store1.getAttribute("role"));
-		 
-		 System.out.println("");
-		 System.out.println(gson.toJson(c1));
-		 String scomp=gson.toJson(c1);
-		 System.out.println(gson.fromJson(scomp,AbCComponent.class));
-		// System.out.println(store1.getAttribute("role"));
-	//System.out.println(gson.toJson(json,type));
-		 
-	//	 Try<String> xx=new Try<String>(String.class);
-	//	 String jString=gson.toJson(xx);
-		
-		// String string=gson.toJson(sClass);
+		//
+		System.out.println(json);
+		System.out.println(gson.fromJson(json, Attribute.class));
+		//
+		System.out.println("");
+		//
+		String storejsonString = gson.toJson(store1);
+		System.out.println(storejsonString);
+		//
+		AbCStore str = gson.fromJson(storejsonString, AbCStore.class);
+		System.out.println("");
+		System.out.println(str);
+		System.out.println(store1);
+		//
+		System.out.println("");
+		System.out.println(str.getAttributes());
+		System.out.println(store1.getAttributes());
+		//
+		System.out.println("");
+		System.out.println(str.getAttribute("role"));
+		//
+		System.out.println(store1.getAttribute("role"));
+		//
+		System.out.println("");
+		System.out.println(gson.toJson(c1));
+		String scomp = gson.toJson(c1);
+		System.out.println(gson.fromJson(scomp, AbCComponent.class));
+		AbCMessage msg = new AbCMessage(c1, "text_1", any, store1);
+		System.out.println("");
+		System.out.println(gson.toJson(msg));
+		System.out.println("");
+		String smsg = gson.toJson(msg);
+		System.out.println(gson.fromJson(smsg, AbCMessage.class));
+		System.out.println(msg);
 		Thread.sleep(3000);
 
 	}
