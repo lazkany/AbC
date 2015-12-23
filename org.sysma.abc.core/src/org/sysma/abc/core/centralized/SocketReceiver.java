@@ -34,7 +34,7 @@ public class SocketReceiver implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				System.out.println("Waiting for connections at "+ssocket.getInetAddress().getCanonicalHostName()+":"+ssocket.getLocalPort());
+				System.out.println("Waiting for messages at "+ssocket.getInetAddress().getCanonicalHostName()+":"+ssocket.getLocalPort());
 				Socket s = ssocket.accept();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				AbCMessage msg = gson.fromJson(reader, AbCMessage.class);

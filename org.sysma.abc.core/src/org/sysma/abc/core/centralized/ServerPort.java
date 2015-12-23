@@ -43,6 +43,7 @@ public class ServerPort implements MessageReceiver {
 		this.subscribe_socket = new ServerSocket(subscribe_port);
 		this.protocol_socket = new ServerSocket(protocol_port);
 		new Thread(new SocketReceiver(protocol_socket, this)).start();
+		new Thread( new RegistrationHandler()).start();
 	}
 
 	public void register(String clientName, InetSocketAddress clientAddress) throws DuplicateNameException {
@@ -89,7 +90,9 @@ public class ServerPort implements MessageReceiver {
 		public void run() {
 			while (true) {
 				try {
+					System.out.println("Waiting for subscriptions at "+subscribe_socket.getInetAddress().getCanonicalHostName()+":"+subscribe_socket.getLocalPort());
 					Socket socket = subscribe_socket.accept();
+					
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					String command = reader.readLine();
 					if ("REGISTER".equals(command)) {
