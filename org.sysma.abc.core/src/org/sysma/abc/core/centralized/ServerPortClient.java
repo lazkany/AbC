@@ -52,4 +52,14 @@ public class ServerPortClient extends AbCPort {
 		return serverAddress;
 	}
 
+	/**
+	 * @return the localAddress
+	 */
+	public ServerSocket getLocalAddress() {
+		return localAddress;
+	}
+
+	
+	
+
 }
