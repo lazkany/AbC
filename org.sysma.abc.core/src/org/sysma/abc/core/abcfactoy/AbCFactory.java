@@ -6,11 +6,14 @@ package org.sysma.abc.core.abcfactoy;
 import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
+import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
 
 import org.sysma.abc.core.json.AttributeDeserializer;
 import org.sysma.abc.core.json.AttributeSerializer;
+import org.sysma.abc.core.json.ComponentDeserializer;
+import org.sysma.abc.core.json.ComponentSerializer;
 import org.sysma.abc.core.json.StoreDeserializer;
 import org.sysma.abc.core.json.StoreSerializer;
 
@@ -52,10 +55,9 @@ public class AbCFactory {
 		 AttributeDeserializer<Object>());
 		 builder.registerTypeAdapter(AbCStore.class, new
 				 StoreDeserializer());
-		// builder.registerTypeAdapter(FormalTemplateField.class, new
-		// FormalTemplateFieldDeserializer());
-		// builder.registerTypeHierarchyAdapter(jRESPMessage.class, new
-		// MessageDeserializer());
+		
+		 builder.registerTypeHierarchyAdapter(AbCComponent.class, new
+				 ComponentDeserializer());
 		// builder.registerTypeHierarchyAdapter(Template.class, new
 		// TemplateDeserializer());
 		// builder.registerTypeAdapter(Tuple.class, new TupleDeserializer());
@@ -72,6 +74,8 @@ public class AbCFactory {
 		 AttributeSerializer());
 		 builder.registerTypeAdapter(AbCStore.class, new
 				 StoreSerializer());
+		 builder.registerTypeAdapter(AbCComponent.class, new
+				 ComponentSerializer());
 		// builder.registerTypeAdapter(FormalTemplateField.class, new
 		// FormalTemplateFieldSerializer());
 		// builder.registerTypeHierarchyAdapter(Template.class, new

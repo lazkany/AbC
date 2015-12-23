@@ -185,6 +185,11 @@ public class Example_1 {
 		 System.out.println(str.getAttribute("role"));
 		 
 		 System.out.println(store1.getAttribute("role"));
+		 
+		 System.out.println("");
+		 System.out.println(gson.toJson(c1));
+		 String scomp=gson.toJson(c1);
+		 System.out.println(gson.fromJson(scomp,AbCComponent.class));
 		// System.out.println(store1.getAttribute("role"));
 	//System.out.println(gson.toJson(json,type));
 		 

@@ -23,39 +23,15 @@ public class AbCComponent {
 	protected AbCStore store;
 
 	protected String nameString;
-								
+
 	protected LinkedList<AbCProcess> processes;
 	protected LinkedList<AbCProcess> waiting;
-	
+
 	protected int processCounter = 0;
 	private ComponentState state;
 	protected int nameCounter = 0;
 	protected Executor executor = Executors.newCachedThreadPool();
 	protected LinkedList<AbCPort> ports;
-
-	// /**
-	// * @return the upcomming
-	// * @throws InterruptedException
-	// */
-	// public synchronized HashMap<Object, AbCStore> getUpcomming() throws
-	// InterruptedException {
-	// while (upcomming.isEmpty()) {
-	// wait();
-	// }
-	// return upcomming.peek();
-	// }
-	//
-	// /**
-	// * @param upcomming
-	// * the upcomming to set
-	// */
-	// public synchronized void setUpcomming(HashMap<Object, AbCStore>
-	// upcommingMsg) {
-	// this.upcomming.clear();
-	// ;
-	// this.upcomming.add(upcommingMsg);
-	// notifyAll();
-	// }
 
 	/**
 	 * @return the processes
@@ -255,10 +231,12 @@ public class AbCComponent {
 
 	public synchronized void receive(AbCMessage message) {
 		for (AbCProcess p : processes) {
-			if (p.getProcessType()=="receiver") {			//CHANGE> Messages are only sent to receiving processes
+			if (p.getProcessType() == "receiver") { // CHANGE> Messages are only
+													// sent to receiving
+													// processes
 				p.receive(message);
 			}
-			
+
 		}
 
 	}
