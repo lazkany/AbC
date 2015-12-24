@@ -60,6 +60,19 @@ public class ServerPortClient extends AbCPort {
 	}
 
 	
-	
+	public void RemoteRegister(ServerPortAddress serverAdd) {
+		InetSocketAddress isc = serverAdd.getAddress();
+		Socket socket;
+		try {
+			socket = new Socket(isc.getAddress(), isc.getPort());
+			PrintWriter writer = new PrintWriter(socket.getOutputStream());
+			writer.println("REGISTER\n"+"Node"+this.getLocalAddress().getLocalPort()+"\n"+"0.0.0.0\n"+this.getLocalAddress().getLocalPort());
+			writer.close();
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

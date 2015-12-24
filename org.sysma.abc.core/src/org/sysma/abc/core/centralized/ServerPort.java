@@ -101,6 +101,7 @@ public class ServerPort implements MessageReceiver {
 						int port = Integer.parseInt(reader.readLine());
 						try {
 							register(name, new InetSocketAddress(host, port));
+							System.out.println(name+" /"+host+":"+port +" is registered");
 						} catch (DuplicateNameException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

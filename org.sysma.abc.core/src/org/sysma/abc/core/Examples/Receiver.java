@@ -3,7 +3,9 @@
  */
 package org.sysma.abc.core.Examples;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,8 +14,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
-import org.sysma.abc.core.Examples.Example_1.Process_1;
-import org.sysma.abc.core.Examples.Example_1.Process_2;
+import org.sysma.abc.core.Examples.Sender.Process_1;
 import org.sysma.abc.core.centralized.ServerPortAddress;
 import org.sysma.abc.core.centralized.ServerPortClient;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
@@ -26,7 +27,7 @@ import org.sysma.abc.core.grpPredicate.HasValue;
  * @author Yehia Abd Alrahman
  *
  */
-public class Client_2 {
+public class Receiver {
 	public static GroupPredicate any = new AnyComponent();
 
 	//
@@ -47,30 +48,44 @@ public class Client_2 {
 		 * @see org.sysma.abc.core.AbCProcess#doRun()
 		 */
 		@Override
-		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+		protected void doRun() throws InterruptedException {
 			// TODO Auto-generated method stub
 			Set<Attribute<Object>> expose = new HashSet<>();
 			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 			expose.add(a1);
-				Broadcast(any, expose, "test_send", null);
-			System.out.println(this.name + " => received: " + receive(any, null));
+			//	Broadcast(any, expose, "test_send", null);
+			while(true){
+				System.out.println(this.name + " => received: " + receive(any, null));
+			}
+			
 			// System.out.println(this.name + " => received: " +receive(any,
 			// null));
 			// Broadcast(any, expose, "test_2", null);
 		}
 	}
 
-
 	/**
 	 * @param args
-	 * @throws IOException 
-	 * @throws AbCAttributeTypeException 
+	 * @throws IOException
 	 * @throws DuplicateNameException 
+	 * @throws AbCAttributeTypeException 
 	 */
-	public static void main(String[] args) throws IOException, AbCAttributeTypeException, DuplicateNameException {
+	public static void main(String[] args) throws IOException, DuplicateNameException, AbCAttributeTypeException {
 		// TODO Auto-generated method stub
-		
-		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(1235));
+		System.out.println("Enter port number : ");
+		   int port = 0;
+		try{
+		    BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+		    port = Integer.parseInt(bufferRead.readLine());
+		    
+		   
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
+		cPortClient.RemoteRegister(new ServerPortAddress(9999));
 		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 		Attribute<Object> a2 = new Attribute<Object>("status", Object.class);
 		Attribute<Object> a3 = new Attribute<Object>("location", Object.class);
@@ -111,7 +126,8 @@ public class Client_2 {
 		// c3.start();
 		cPortClient.start();
 		c1.start();
-		//System.out.println(cPortClient.getAddress());
+	
+		System.out.println(cPortClient.getAddress());
 
 	}
 
