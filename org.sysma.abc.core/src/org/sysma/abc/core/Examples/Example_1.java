@@ -3,6 +3,11 @@
  */
 package org.sysma.abc.core.Examples;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,8 +15,12 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.Address;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.NetworkMessages.MsgCentralized;
 import org.sysma.abc.core.abcfactoy.AbCFactory;
+import org.sysma.abc.core.centralized.ServerPortAddress;
+import org.sysma.abc.core.centralized.ServerPortClient;
 import org.sysma.abc.core.centralized.VirtualPort;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
@@ -19,6 +28,7 @@ import org.sysma.abc.core.grpPredicate.AnyComponent;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.grpPredicate.HasValue;
 import org.sysma.abc.core.grpPredicate.NoComponent;
+import org.sysma.abc.core.json.MsgCenterDeserializer;
 
 import com.google.gson.Gson;
 
@@ -114,9 +124,10 @@ public class Example_1 {
 	 * @throws AbCAttributeTypeException
 	 * @throws DuplicateNameException
 	 * @throws InterruptedException
+	 * @throws IOException 
 	 */
 	public static void main(String[] args)
-			throws AbCAttributeTypeException, DuplicateNameException, InterruptedException {
+			throws AbCAttributeTypeException, DuplicateNameException, InterruptedException, IOException {
 		// TODO Auto-generated method stub
 		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 		Attribute<Object> a2 = new Attribute<Object>("status", Object.class);
@@ -198,6 +209,22 @@ public class Example_1 {
 		String smsg = gson.toJson(msg);
 		System.out.println(gson.fromJson(smsg, AbCMessage.class));
 		System.out.println(msg);
+		
+		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(1234));
+		ServerPortAddress addr=new ServerPortAddress(cPortClient.getLocalAddress().getInetAddress().getCanonicalHostName(),cPortClient.getLocalAddress().getLocalPort());
+		System.out.println(addr);
+		System.out.println(gson.toJson(addr));
+		System.out.println(gson.fromJson(gson.toJson(addr),Address.class));
+		 MsgCentralized message=new MsgCentralized(msg,addr);
+		System.out.println(gson.toJson(message));
+		//ServerSocket xServerSocket=new ServerSocket();
+		//xServerSocket.bind(new InetSocketAddress(cPortClient.getLocalAddress().getInetAddress().getCanonicalHostName(), 12344));
+		System.out.println(gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress());
+		System.out.println(message.getAddress());
+		//InetSocketAddress sAddress=gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress().;
+		boolean sAddress= gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress().getAddress().getAddress().equals(message.getAddress().getAddress().getAddress());
+		System.out.println(message.getAddress().getAddress().getAddress());
+		System.out.println(sAddress);
 		Thread.sleep(3000);
 
 	}

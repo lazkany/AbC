@@ -6,12 +6,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
 import org.sysma.abc.core.AbCMessage;
+import org.sysma.abc.core.NetworkMessages.MsgCentralized;
 import org.sysma.abc.core.abcfactoy.AbCFactory;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 
@@ -43,7 +45,7 @@ public class ServerPort implements MessageReceiver {
 		this.subscribe_socket = new ServerSocket(subscribe_port);
 		this.protocol_socket = new ServerSocket(protocol_port);
 		new Thread(new SocketReceiver(protocol_socket, this)).start();
-		new Thread( new RegistrationHandler()).start();
+		new Thread(new RegistrationHandler()).start();
 	}
 
 	public void register(String clientName, InetSocketAddress clientAddress) throws DuplicateNameException {
@@ -57,7 +59,7 @@ public class ServerPort implements MessageReceiver {
 		clients.remove(clientName);
 	}
 
-	private void dispatch(String clientName, AbCMessage message) throws IOException {
+	private void dispatch(String clientName, MsgCentralized message) throws IOException {
 		InetSocketAddress clientAddress = clients.get(clientName);
 		Socket socket = new Socket(clientAddress.getAddress(), clientAddress.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
@@ -66,22 +68,25 @@ public class ServerPort implements MessageReceiver {
 		socket.close();
 	}
 
-	private synchronized void broadcast(AbCMessage message) {
+	private synchronized void broadcast(MsgCentralized msg) {
 		for (String clientName : clients.keySet()) {
-			try {
-				dispatch(clientName, message);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (!clients.get(clientName).equals(msg.getAddress().getAddress())) {
+
+				try {
+					dispatch(clientName, msg);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+
 		}
 	}
 
 	@Override
-	public void receiveMessage(AbCMessage m) throws InterruptedException, IOException {
-
-		broadcast(m);
-
+	public void receiveMsg(MsgCentralized msgCentralized) {
+		// TODO Auto-generated method stub
+		broadcast(msgCentralized);
 	}
 
 	public class RegistrationHandler implements Runnable {
@@ -90,18 +95,21 @@ public class ServerPort implements MessageReceiver {
 		public void run() {
 			while (true) {
 				try {
-					System.out.println("Waiting for subscriptions at "+subscribe_socket.getInetAddress().getCanonicalHostName()+":"+subscribe_socket.getLocalPort());
+					System.out.println(
+							"Waiting for subscriptions at " + subscribe_socket.getInetAddress().getCanonicalHostName()
+									+ ":" + subscribe_socket.getLocalPort());
 					Socket socket = subscribe_socket.accept();
-					
+
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					String command = reader.readLine();
 					if ("REGISTER".equals(command)) {
 						String name = reader.readLine();
-						String host = reader.readLine();
+						InetAddress host = InetAddress.getByName(reader.readLine());
 						int port = Integer.parseInt(reader.readLine());
 						try {
+
 							register(name, new InetSocketAddress(host, port));
-							System.out.println(name+" /"+host+":"+port +" is registered");
+							System.out.println(name + " /" + host + ":" + port + " is registered");
 						} catch (DuplicateNameException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -122,4 +130,5 @@ public class ServerPort implements MessageReceiver {
 		}
 
 	}
+
 }

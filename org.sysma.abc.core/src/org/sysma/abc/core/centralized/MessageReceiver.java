@@ -5,6 +5,7 @@ package org.sysma.abc.core.centralized;
 import java.io.IOException;
 
 import org.sysma.abc.core.AbCMessage;
+import org.sysma.abc.core.NetworkMessages.MsgCentralized;
 
 /**
  * @author Yehia Abd Alrahman
@@ -12,6 +13,11 @@ import org.sysma.abc.core.AbCMessage;
  */
 public interface MessageReceiver {
 
-	public void receiveMessage(AbCMessage m) throws InterruptedException, IOException;
+	//public void receiveMessage(AbCMessage m) throws InterruptedException, IOException;
+
+	/**
+	 * @param msgCentralized
+	 */
+	public void receiveMsg(MsgCentralized msgCentralized) throws InterruptedException, IOException;
 
 }

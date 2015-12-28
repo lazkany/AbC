@@ -6,6 +6,7 @@ package org.sysma.abc.core;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import org.sysma.abc.core.NetworkMessages.MsgCentralized;
 import org.sysma.abc.core.centralized.MessageReceiver;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 
@@ -115,7 +116,11 @@ public abstract class AbCPort implements MessageReceiver {
 		// TODO Auto-generated method stub
 		handleMessage(message);
 	}
-
+	public void receiveMsg(MsgCentralized message) {
+		// TODO Auto-generated method stub
+		AbCMessage msg=message.getMsg();
+		receiveMessage(msg);
+	}
 	protected void handleMessage(AbCMessage message) {
 		synchronized (nodes) {
 			for (AbCComponent c : nodes.values()) {

@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.sysma.abc.core.AbCMessage;
+import org.sysma.abc.core.NetworkMessages.MsgCentralized;
 import org.sysma.abc.core.abcfactoy.AbCFactory;
 
 import com.google.gson.Gson;
@@ -17,7 +17,7 @@ public class SocketReceiver implements Runnable {
 	 * 
 	 */
 	private ServerSocket ssocket;
-	
+
 	private Gson gson = AbCFactory.getGSon();
 
 	private MessageReceiver receiver;
@@ -25,7 +25,7 @@ public class SocketReceiver implements Runnable {
 	/**
 	 * @param socketPort
 	 */
-	public SocketReceiver(ServerSocket ssocket , MessageReceiver receiver ) {
+	public SocketReceiver(ServerSocket ssocket, MessageReceiver receiver) {
 		this.ssocket = ssocket;
 		this.receiver = receiver;
 	}
@@ -34,11 +34,14 @@ public class SocketReceiver implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				System.out.println("Waiting for messages at "+ssocket.getInetAddress().getCanonicalHostName()+":"+ssocket.getLocalPort());
+				System.out.println("Waiting for messages at " + ssocket.getInetAddress().getCanonicalHostName() + ":"
+						+ ssocket.getLocalPort());
 				Socket s = ssocket.accept();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				AbCMessage msg = gson.fromJson(reader, AbCMessage.class);
-				receiver.receiveMessage(msg);
+				// AbCMessage msg = gson.fromJson(reader, AbCMessage.class);
+				MsgCentralized msgCentralized = gson.fromJson(reader, MsgCentralized.class);
+
+				receiver.receiveMsg(msgCentralized);
 				reader.close();
 				s.close();
 			} catch (IOException e) {
@@ -50,5 +53,5 @@ public class SocketReceiver implements Runnable {
 			}
 		}
 	}
-	
+
 }

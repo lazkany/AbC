@@ -6,6 +6,7 @@ package org.sysma.abc.core.Examples;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,9 +51,9 @@ public class Receiver {
 		@Override
 		protected void doRun() throws InterruptedException {
 			// TODO Auto-generated method stub
-			Set<Attribute<Object>> expose = new HashSet<>();
-			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
-			expose.add(a1);
+//			Set<Attribute<Object>> expose = new HashSet<>();
+//			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
+//			expose.add(a1);
 			//	Broadcast(any, expose, "test_send", null);
 			while(true){
 				System.out.println(this.name + " => received: " + receive(any, null));
@@ -127,7 +128,7 @@ public class Receiver {
 		cPortClient.start();
 		c1.start();
 	
-		System.out.println(cPortClient.getAddress());
+		System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
 
 	}
 

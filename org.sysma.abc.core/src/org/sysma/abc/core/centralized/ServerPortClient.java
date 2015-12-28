@@ -11,6 +11,7 @@ import java.net.Socket;
 import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.AbCPort;
 import org.sysma.abc.core.Address;
+import org.sysma.abc.core.NetworkMessages.MsgCentralized;
 import org.sysma.abc.core.abcfactoy.AbCFactory;
 
 import com.google.gson.Gson;
@@ -32,12 +33,16 @@ public class ServerPortClient extends AbCPort {
 
 	@Override
 	protected void doSend(AbCMessage message) {
+		
 		InetSocketAddress isc = serverAddress.getAddress();
 		Socket socket;
+		MsgCentralized msgCentralized=new MsgCentralized(message, new ServerPortAddress(this.localAddress.getInetAddress().getHostAddress(),this.localAddress.getLocalPort()));
+		
 		try {
 			socket = new Socket(isc.getAddress(), isc.getPort());
 			PrintWriter writer = new PrintWriter(socket.getOutputStream());
-			writer.println(gson.toJson(message));
+			//System.out.println(gson.toJson(msgCentralized));
+			writer.println(gson.toJson(msgCentralized));
 			writer.close();
 			socket.close();
 		} catch (IOException e) {
@@ -66,7 +71,7 @@ public class ServerPortClient extends AbCPort {
 		try {
 			socket = new Socket(isc.getAddress(), isc.getPort());
 			PrintWriter writer = new PrintWriter(socket.getOutputStream());
-			writer.println("REGISTER\n"+"Node"+this.getLocalAddress().getLocalPort()+"\n"+"0.0.0.0\n"+this.getLocalAddress().getLocalPort());
+			writer.println("REGISTER\n"+"Node"+this.localAddress.getLocalPort()+"\n"+this.localAddress.getInetAddress().getHostAddress()+"\n"+this.localAddress.getLocalPort());
 			writer.close();
 			socket.close();
 		} catch (IOException e) {

@@ -9,13 +9,19 @@ import java.util.logging.Logger;
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.Address;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.NetworkMessages.MsgCentralized;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
+import org.sysma.abc.core.json.AddressDeserializer;
+import org.sysma.abc.core.json.AddressSerializer;
 import org.sysma.abc.core.json.AttributeDeserializer;
 import org.sysma.abc.core.json.AttributeSerializer;
 import org.sysma.abc.core.json.ComponentDeserializer;
 import org.sysma.abc.core.json.ComponentSerializer;
 import org.sysma.abc.core.json.MessageDeserializer;
+import org.sysma.abc.core.json.MsgCenterDeserializer;
+import org.sysma.abc.core.json.MsgCenterSerializer;
 import org.sysma.abc.core.json.PredicateDeserializer;
 import org.sysma.abc.core.json.PredicateSerializer;
 import org.sysma.abc.core.json.StoreDeserializer;
@@ -53,14 +59,15 @@ public class AbCFactory {
 		//
 		// builder.registerTypeAdapter(ActualTemplateField.class, new
 		// ActualTemplateFieldDeserializer());
-		// builder.registerTypeHierarchyAdapter(Address.class, new
-		// AddressDeserializer());
+		 builder.registerTypeHierarchyAdapter(Address.class, new
+		 AddressDeserializer());
 		builder.registerTypeAdapter(Attribute.class, new AttributeDeserializer<Object>());
 		builder.registerTypeAdapter(AbCStore.class, new StoreDeserializer());
 
 		builder.registerTypeAdapter(AbCComponent.class, new ComponentDeserializer());
 		builder.registerTypeAdapter(AbCMessage.class, new MessageDeserializer());
-		// builder.registerTypeAdapter(Tuple.class, new TupleDeserializer());
+		 builder.registerTypeAdapter(MsgCentralized.class, new MsgCenterDeserializer());
+		// builder.registerTypeAdapter(ServerSocket.class, new ServerSocketDeserializer());
 		 builder.registerTypeAdapter(GroupPredicate.class, new
 				 PredicateDeserializer());
 		//
@@ -68,17 +75,17 @@ public class AbCFactory {
 		// //
 		// // JSon Serializers
 		// //
-		// builder.registerTypeAdapter(ActualTemplateField.class, new
-		// ActualTemplateFieldSerializer());
+		 builder.registerTypeAdapter(MsgCentralized.class, new
+				 MsgCenterSerializer());
 		builder.registerTypeAdapter(Attribute.class, new AttributeSerializer());
 		builder.registerTypeAdapter(AbCStore.class, new StoreSerializer());
 		builder.registerTypeAdapter(AbCComponent.class, new ComponentSerializer());
-		// builder.registerTypeAdapter(FormalTemplateField.class, new
-		// FormalTemplateFieldSerializer());
+		// builder.registerTypeAdapter(ServerSocket.class, new
+		//		 ServerSocketSerializer());
 		// builder.registerTypeHierarchyAdapter(Template.class, new
 		// TemplateSerializer());
-		// builder.registerTypeHierarchyAdapter(Address.class, new
-		// AddressSerializer());
+		 builder.registerTypeHierarchyAdapter(Address.class, new
+				 AddressSerializer());
 		// builder.registerTypeAdapter(Tuple.class, new TupleSerializer());
 		 builder.registerTypeAdapter(GroupPredicate.class , new
 				 PredicateSerializer());

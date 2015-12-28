@@ -56,9 +56,10 @@ public class Sender {
 			expose.add(a1);
 			while (true) {
 				Broadcast(any, expose, "test_send", null);
+				System.out.println(this.name + " => received: " + receive(any, null));
 			}
 				
-			//System.out.println(this.name + " => received: " + receive(any, null));
+			
 			// System.out.println(this.name + " => received: " +receive(any,
 			// null));
 			// Broadcast(any, expose, "test_2", null);
