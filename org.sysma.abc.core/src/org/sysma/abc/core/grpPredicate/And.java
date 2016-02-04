@@ -15,7 +15,7 @@ package org.sysma.abc.core.grpPredicate;
 import java.util.HashMap;
 
 
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
 /**
@@ -40,7 +40,7 @@ public class And extends GroupPredicate {
 	 * @see org.cmg.resp.topology.GroupPredicate#evaluate(java.util.HashMap)
 	 */
 	@Override
-	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
+	public boolean isSatisfiedBy(AbCEnvironment store) throws AbCAttributeTypeException {
 		return left.isSatisfiedBy(store)&&right.isSatisfiedBy(store);
 	}
 	

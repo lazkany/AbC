@@ -6,7 +6,7 @@ package org.sysma.abc.core.json;
 import java.lang.reflect.Type;
 
 import org.sysma.abc.core.AbCComponent;
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -29,7 +29,7 @@ public class ComponentDeserializer implements JsonDeserializer<AbCComponent> {
 		}
 		JsonObject jo = (JsonObject) json;
 
-		return new AbCComponent(jo.get("name").getAsString(), context.deserialize(jo.get("store"), AbCStore.class));
+		return new AbCComponent(jo.get("name").getAsString(), context.deserialize(jo.get("store"), AbCEnvironment.class));
 
 	}
 

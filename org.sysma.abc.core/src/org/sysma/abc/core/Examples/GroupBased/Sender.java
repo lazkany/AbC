@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCProcess;
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.Examples.Example_1.Process_1;
 import org.sysma.abc.core.Examples.Example_1.Process_2;
@@ -92,15 +92,15 @@ public class Sender {
 		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 		Attribute<Object> a2 = new Attribute<Object>("status", Object.class);
 		Attribute<Object> a3 = new Attribute<Object>("location", Object.class);
-		AbCStore store1 = new AbCStore();
+		AbCEnvironment store1 = new AbCEnvironment();
 		store1.setValue(a1, "explorer");
 		store1.setValue(a2, "on");
 		store1.setValue(a3, "<2,5>");
-		AbCStore store2 = new AbCStore();
+		AbCEnvironment store2 = new AbCEnvironment();
 		store2.setValue(a1, "rescuer");
 		store2.setValue(a2, "off");
 		store2.setValue(a3, "<3,4>");
-		AbCStore store3 = new AbCStore();
+		AbCEnvironment store3 = new AbCEnvironment();
 		store3.setValue(a1, "charcher");
 		store3.setValue(a2, "off");
 		store3.setValue(a3, "<1,6>");

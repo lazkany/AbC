@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.Attribute;
 
 import com.google.gson.JsonDeserializationContext;
@@ -20,11 +20,11 @@ import com.google.gson.JsonParseException;
  * @author Yehia Abd Alrahman
  *
  */
-public class StoreDeserializer implements JsonDeserializer<AbCStore> {
+public class StoreDeserializer implements JsonDeserializer<AbCEnvironment> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public AbCStore deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+	public AbCEnvironment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
 
 		if (!json.isJsonObject()) {
@@ -38,7 +38,7 @@ public class StoreDeserializer implements JsonDeserializer<AbCStore> {
 		for (Entry<String, JsonElement> item : jo.get("attributes").getAsJsonObject().entrySet()) {
 			hashItem.put(item.getKey(), context.deserialize(item.getValue(), Attribute.class));
 		}
-		return new AbCStore((HashMap<String, Object>) AbCJsonUtil.objectFromJson(jo.get("data"), context), hashItem);
+		return new AbCEnvironment((HashMap<String, Object>) AbCJsonUtil.objectFromJson(jo.get("data"), context), hashItem);
 
 	}
 

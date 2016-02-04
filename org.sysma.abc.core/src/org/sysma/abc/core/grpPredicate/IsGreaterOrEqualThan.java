@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 
 /**
  * @author Michele Loreti
@@ -39,7 +39,7 @@ public class IsGreaterOrEqualThan extends GroupPredicate {
 	 * @see org.cmg.resp.topology.GroupPredicate#evaluate(java.util.HashMap)
 	 */
 	@Override
-	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
+	public boolean isSatisfiedBy(AbCEnvironment store) throws AbCAttributeTypeException {
 		Attribute<?> a = store.getAttribute(attribute);
 		if (a == null) {
 			return false;

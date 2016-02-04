@@ -12,7 +12,7 @@
  */
 package org.sysma.abc.core.grpPredicate;
 
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 
 /**
  * @author Michele Loreti
@@ -25,7 +25,7 @@ public class NoComponent extends GroupPredicate {
 	}
 
 	@Override
-	public boolean isSatisfiedBy(AbCStore store) {
+	public boolean isSatisfiedBy(AbCEnvironment store) {
 		return false;
 	}
 

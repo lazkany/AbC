@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCMessage;
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 
 import com.google.gson.JsonDeserializationContext;

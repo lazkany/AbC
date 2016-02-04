@@ -19,7 +19,7 @@ import org.sysma.abc.core.grpPredicate.GroupPredicate;
  */
 public class AbCComponent {
 
-	protected AbCStore store;
+	protected AbCEnvironment store;
 
 	protected String nameString;
 
@@ -39,7 +39,7 @@ public class AbCComponent {
 		return processes;
 	}
 
-	public AbCComponent(String name, AbCStore store) {
+	public AbCComponent(String name, AbCEnvironment store) {
 		this.nameString = name;
 		this.state = ComponentState.READY;
 		this.store = store;
@@ -52,15 +52,15 @@ public class AbCComponent {
 		return this.nameString;
 	}
 
-	public synchronized void send(GroupPredicate predicate, Object value,
-			HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
+	public synchronized void send(GroupPredicate predicate, Object value, HashMap<Attribute<?>, Object> update)
+			throws AbCAttributeTypeException {
 
 		AbCMessage message = new AbCMessage(this, value, predicate);
-		this.storeUpdate(update);
+
 		for (AbCPort port : ports) {
 			port.send(message);
 		}
-
+		this.storeUpdate(update);
 	}
 
 	// public Object Broadcastinput(AbCProcess process, GroupPredicate
@@ -99,12 +99,12 @@ public class AbCComponent {
 
 	}
 
-	public AbCStore getStore() {
+	public AbCEnvironment getStore() {
 		return store;
 	}
 
-	public AbCStore exposedStore(Set<Attribute<?>> exposed) throws AbCAttributeTypeException {
-		AbCStore temp = new AbCStore();
+	public AbCEnvironment exposedStore(Set<Attribute<?>> exposed) throws AbCAttributeTypeException {
+		AbCEnvironment temp = new AbCEnvironment();
 		for (Attribute<?> att : exposed) {
 
 			temp.setValue(att, store.getValue(att));
@@ -113,7 +113,7 @@ public class AbCComponent {
 
 	}
 
-	protected void setStore(AbCStore store) {
+	protected void setStore(AbCEnvironment store) {
 		this.store = store;
 	}
 

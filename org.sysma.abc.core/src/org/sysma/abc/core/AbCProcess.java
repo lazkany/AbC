@@ -76,7 +76,7 @@ public abstract class AbCProcess implements Runnable {
 		return this.component;
 	}
 
-	protected AbCStore getStore() {
+	protected AbCEnvironment getStore() {
 		return component.store;
 	}
 
@@ -88,8 +88,8 @@ public abstract class AbCProcess implements Runnable {
 	// }
 	// }
 
-	public <T> AbCStore ExposedStore(Set<Attribute<T>> exposed) throws AbCAttributeTypeException {
-		AbCStore temp = new AbCStore();
+	public <T> AbCEnvironment ExposedStore(Set<Attribute<T>> exposed) throws AbCAttributeTypeException {
+		AbCEnvironment temp = new AbCEnvironment();
 		for (Attribute<T> att : exposed) {
 
 			temp.setValue(att, component.store.getValue(att));
@@ -230,7 +230,7 @@ public abstract class AbCProcess implements Runnable {
 	}
 
 	protected synchronized Object receive(GroupPredicate predicate, HashMap<Attribute<?>, Object> update)
-			throws InterruptedException {
+			throws InterruptedException, AbCAttributeTypeException {
 		// this.waitingMessage = true;
 		// Object value = null;
 		// while (value == null) { //CHANGE>> changed the condition was "!="
@@ -253,6 +253,7 @@ public abstract class AbCProcess implements Runnable {
 			this.receivedMessage.poll();
 			receive(predicate, update);
 		}
+		this.component.storeUpdate(update);
 		return this.receivedMessage.poll().getValue(predicate);
 	}
 

@@ -15,7 +15,7 @@ package org.sysma.abc.core.grpPredicate;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
 
@@ -42,7 +42,7 @@ public abstract class GroupPredicate implements Serializable {
 
 	private PredicateType type;
 	
-	public abstract boolean isSatisfiedBy( AbCStore store ) throws AbCAttributeTypeException;
+	public abstract boolean isSatisfiedBy( AbCEnvironment store ) throws AbCAttributeTypeException;
 	public abstract boolean evaluate( Object v );
 
 	public GroupPredicate( PredicateType type ) {

@@ -14,7 +14,7 @@ package org.sysma.abc.core.grpPredicate;
 
 import java.util.HashMap;
 
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
@@ -35,7 +35,7 @@ public class HasValue extends GroupPredicate {
 	}
 
 	@Override
-	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
+	public boolean isSatisfiedBy(AbCEnvironment store) throws AbCAttributeTypeException {
 		Attribute<?> a = store.getAttribute(attribute);
 		if (a == null) {
 			return false;

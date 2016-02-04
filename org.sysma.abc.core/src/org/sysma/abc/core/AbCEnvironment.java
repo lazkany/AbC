@@ -13,7 +13,7 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
  * @author loreti
  *
  */
-public class AbCStore implements Serializable {
+public class AbCEnvironment implements Serializable {
 
 	private Map<String, Object> data;
 
@@ -49,12 +49,12 @@ public class AbCStore implements Serializable {
 		this.attributes = attributes;
 	}
 
-	public AbCStore(Map<String, Object> data, Map<String, Attribute<?>> attributes) {
+	public AbCEnvironment(Map<String, Object> data, Map<String, Attribute<?>> attributes) {
 		this.data = data;
 		this.attributes = attributes;
 	}
 
-	public AbCStore() {
+	public AbCEnvironment() {
 		this.data = new HashMap<>();
 		this.attributes = new HashMap<>();
 	}

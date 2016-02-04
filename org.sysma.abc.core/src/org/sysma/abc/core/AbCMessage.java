@@ -27,7 +27,7 @@ public class AbCMessage {
 		
 	}
 
-	public boolean isAReceiverFor(AbCStore store) {
+	public boolean isAReceiverFor(AbCEnvironment store) {
 		try {
 			return predicate.isSatisfiedBy(store);
 		} catch (AbCAttributeTypeException e) {

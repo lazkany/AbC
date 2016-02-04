@@ -14,7 +14,7 @@ package org.sysma.abc.core.grpPredicate;
 
 import java.util.HashMap;
 
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 
 
 
@@ -29,7 +29,7 @@ public class AnyComponent extends GroupPredicate {
 	}
 
 	@Override
-	public boolean isSatisfiedBy(AbCStore store) {
+	public boolean isSatisfiedBy(AbCEnvironment store) {
 		return true;
 	}
 	/* (non-Javadoc)

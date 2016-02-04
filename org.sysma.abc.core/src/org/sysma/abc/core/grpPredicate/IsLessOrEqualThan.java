@@ -14,7 +14,7 @@ package org.sysma.abc.core.grpPredicate;
 
 import java.util.HashMap;
 
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
@@ -39,7 +39,7 @@ public class IsLessOrEqualThan extends GroupPredicate {
 	 * @see org.cmg.resp.topology.GroupPredicate#evaluate(java.util.HashMap)
 	 */
 	@Override
-	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
+	public boolean isSatisfiedBy(AbCEnvironment store) throws AbCAttributeTypeException {
 		Attribute<?> a = store.getAttribute(attribute);
 		Object v = (a != null ? store.getValue(a) : null);
 		if ((v != null) && (v instanceof Number)) {

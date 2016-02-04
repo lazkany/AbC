@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCMessage;
-import org.sysma.abc.core.AbCStore;
+import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.Address;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.NetworkMessages.MsgCentralized;
@@ -62,7 +62,7 @@ public class AbCFactory {
 		 builder.registerTypeHierarchyAdapter(Address.class, new
 		 AddressDeserializer());
 		builder.registerTypeAdapter(Attribute.class, new AttributeDeserializer<Object>());
-		builder.registerTypeAdapter(AbCStore.class, new StoreDeserializer());
+		builder.registerTypeAdapter(AbCEnvironment.class, new StoreDeserializer());
 
 		builder.registerTypeAdapter(AbCComponent.class, new ComponentDeserializer());
 		builder.registerTypeAdapter(AbCMessage.class, new MessageDeserializer());
@@ -78,7 +78,7 @@ public class AbCFactory {
 		 builder.registerTypeAdapter(MsgCentralized.class, new
 				 MsgCenterSerializer());
 		builder.registerTypeAdapter(Attribute.class, new AttributeSerializer());
-		builder.registerTypeAdapter(AbCStore.class, new StoreSerializer());
+		builder.registerTypeAdapter(AbCEnvironment.class, new StoreSerializer());
 		builder.registerTypeAdapter(AbCComponent.class, new ComponentSerializer());
 		// builder.registerTypeAdapter(ServerSocket.class, new
 		//		 ServerSocketSerializer());
