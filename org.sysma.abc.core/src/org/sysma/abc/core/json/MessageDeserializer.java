@@ -33,8 +33,7 @@ public class MessageDeserializer implements JsonDeserializer<AbCMessage> {
 
 		return new AbCMessage(context.deserialize(jo.get("sender"), AbCComponent.class),
 				context.deserialize(jo.get("value"),Object.class),
-				context.deserialize(jo.get("predicate"), GroupPredicate.class),
-				context.deserialize(jo.get("store"), AbCStore.class));
+				context.deserialize(jo.get("predicate"), GroupPredicate.class));
 
 	}
 

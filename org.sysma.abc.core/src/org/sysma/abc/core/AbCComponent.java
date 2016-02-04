@@ -52,16 +52,14 @@ public class AbCComponent {
 		return this.nameString;
 	}
 
-	public synchronized void send(GroupPredicate predicate, AbCStore store, Object value,
+	public synchronized void send(GroupPredicate predicate, Object value,
 			HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
 
-		AbCMessage message = new AbCMessage(this, value, predicate, store);
-
+		AbCMessage message = new AbCMessage(this, value, predicate);
+		this.storeUpdate(update);
 		for (AbCPort port : ports) {
 			port.send(message);
 		}
-
-		this.storeUpdate(update);
 
 	}
 
@@ -131,7 +129,7 @@ public class AbCComponent {
 	 */
 	@Override
 	public String toString() {
-		return nameString+":"+store.toString() + ":" + processes.toString();
+		return nameString + ":" + store.toString() + ":" + processes.toString();
 	}
 
 	/**

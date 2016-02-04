@@ -122,7 +122,7 @@ public abstract class AbCProcess implements Runnable {
 		// TODO Auto-generated method stub
 		// TODO Compute the exposed store
 		this.processType = "sender";							//CHANGE> A process has to declare its type
-		AbCStore store = new AbCStore();
+		//AbCStore store = new AbCStore();
 		// AbCStore store = new AbCStore();
 		// TODO update the store
 		if (predicate.isSatisfiedBy(this.component.getStore())) { // CHANGE>
@@ -131,11 +131,11 @@ public abstract class AbCProcess implements Runnable {
 																	// also to
 																	// co-located
 																	// processes
-			this.component.receive(new AbCMessage(this.component, value, predicate, store));
+			this.component.receive(new AbCMessage(this.component, value, predicate));
 			this.receivedMessage.poll(); // Ensure that the sender queue is
 											// empty.
 		}
-		component.send(predicate, store, value, update);
+		component.send(predicate, value, update);
 
 	}
 

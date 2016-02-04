@@ -8,7 +8,7 @@ import org.sysma.abc.core.grpPredicate.GroupPredicate;
 
 /**
  * @author loreti
- *
+ * @author Yehia Abd Alrahman
  */
 public class AbCMessage {
 
@@ -18,13 +18,13 @@ public class AbCMessage {
 
 	private GroupPredicate predicate;
 
-	private AbCStore store;
+	
 
-	public AbCMessage(AbCComponent sender, Object value, GroupPredicate predicate, AbCStore store) {
+	public AbCMessage(AbCComponent sender, Object value, GroupPredicate predicate) {
 		this.sender = sender;
 		this.value = value;
 		this.predicate = predicate;
-		this.store = store;
+		
 	}
 
 	public boolean isAReceiverFor(AbCStore store) {
@@ -53,7 +53,7 @@ public class AbCMessage {
 	 */
 	@Override
 	public String toString() {
-		return "AbCMessage [sender=" + sender + ", value=" + value + ", predicate=" + predicate + ", store=" + store
+		return "AbCMessage [sender=" + sender + ", value=" + value + ", predicate=" + predicate + ", store="
 				+ "]";
 	}
 
