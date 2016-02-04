@@ -16,29 +16,29 @@ import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
-
-
 /**
  * @author Michele Loreti
- *
+ * @author Yehia Abd Alrahman
  */
 public class IsLessThan extends GroupPredicate {
 
 	private Number value;
 	private String attribute;
 
-	public IsLessThan( String attribute , Number value ) {
-		super( GroupPredicate.PredicateType.ISLES );
+	public IsLessThan(String attribute, Number value) {
+		super(GroupPredicate.PredicateType.ISLES);
 		this.attribute = attribute;
 		this.value = value;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.cmg.resp.topology.GroupPredicate#evaluate(java.util.HashMap)
 	 */
 	@Override
 	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
-		Attribute<?> a=store.getAttribute(attribute);
+		Attribute<?> a = store.getAttribute(attribute);
 		if (a == null) {
 			return false;
 		}
@@ -49,6 +49,34 @@ public class IsLessThan extends GroupPredicate {
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.sysma.abc.core.grpPredicate.GroupPredicate#evaluate(java.lang.Object)
+	 */
+	@Override
+	public boolean evaluate(Object v) {
+		// TODO Auto-generated method stub
+		String atrString=attribute.substring(1);
+		String val=v.toString();
+		val = val.replaceAll("\\s+", "");
+		int index=Integer.parseInt(atrString);
+		String[] ary = val.toString().split(",");
+		if (ary[index] == null) {
+			return false;
+		}
+		try {
+			if (ary.length-1>=index) {
+				return Double.parseDouble(ary[index]) < value.doubleValue();
+			}
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
+
 	public String getAttribute() {
 		return attribute;
 	}
@@ -57,7 +85,9 @@ public class IsLessThan extends GroupPredicate {
 		return value;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.cmg.resp.topology.GroupPredicate#equals(java.lang.Object)
 	 */
 	@Override
@@ -73,24 +103,28 @@ public class IsLessThan extends GroupPredicate {
 			if (!this.attribute.equals(p.attribute)) {
 				return false;
 			}
-			return (this.value==p.value)||((this.value != null)&&(this.value.equals(p.value)));
+			return (this.value == p.value) || ((this.value != null) && (this.value.equals(p.value)));
 		}
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		return attribute.hashCode()^(value==null?0:value.hashCode());
+		return attribute.hashCode() ^ (value == null ? 0 : value.hashCode());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return attribute+"<"+value;
+		return attribute + "<" + value;
 	}
 }

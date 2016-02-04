@@ -1,11 +1,12 @@
 /**
  * 
  */
-package org.sysma.abc.core.Examples.broadcast;
+package org.sysma.abc.core.Examples.GroupBased;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,8 +15,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
-import org.sysma.abc.core.Examples.Example_1.Process_1;
-import org.sysma.abc.core.Examples.Example_1.Process_2;
+//import org.sysma.abc.core.Examples.broadcast.broadcast.Process_1;
 import org.sysma.abc.core.centralized.ServerPortAddress;
 import org.sysma.abc.core.centralized.ServerPortClient;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
@@ -28,7 +28,7 @@ import org.sysma.abc.core.grpPredicate.HasValue;
  * @author Yehia Abd Alrahman
  *
  */
-public class Sender {
+public class Receiver {
 	public static GroupPredicate any = new AnyComponent();
 
 	//
@@ -49,17 +49,15 @@ public class Sender {
 		 * @see org.sysma.abc.core.AbCProcess#doRun()
 		 */
 		@Override
-		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+		protected void doRun() throws InterruptedException {
 			// TODO Auto-generated method stub
-			Set<Attribute<Object>> expose = new HashSet<>();
-			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
-			expose.add(a1);
-		//	int[] x={1,2,3};
-			//while (true) {
-				Send(any, "a,rescuer,yehia", null);
-				//System.out.println(this.name + " => received: " + receive(any, null));
-			//}
-				
+//			Set<Attribute<Object>> expose = new HashSet<>();
+//			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
+//			expose.add(a1);
+			//	Broadcast(any, expose, "test_send", null);
+			while(true){
+				System.out.println(this.name + " => received: " + receive(any, null));
+			}
 			
 			// System.out.println(this.name + " => received: " +receive(any,
 			// null));
@@ -67,14 +65,13 @@ public class Sender {
 		}
 	}
 
-
 	/**
 	 * @param args
-	 * @throws IOException 
-	 * @throws AbCAttributeTypeException 
+	 * @throws IOException
 	 * @throws DuplicateNameException 
+	 * @throws AbCAttributeTypeException 
 	 */
-	public static void main(String[] args) throws IOException, AbCAttributeTypeException, DuplicateNameException {
+	public static void main(String[] args) throws IOException, DuplicateNameException, AbCAttributeTypeException {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		   int port = 0;
@@ -82,7 +79,7 @@ public class Sender {
 		    BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 		    port = Integer.parseInt(bufferRead.readLine());
 		    
-		    
+		   
 		}
 		catch(IOException e)
 		{
@@ -130,7 +127,8 @@ public class Sender {
 		// c3.start();
 		cPortClient.start();
 		c1.start();
-		System.out.println(cPortClient.getAddress());
+	
+		System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
 
 	}
 

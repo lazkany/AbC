@@ -20,7 +20,7 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
 /**
  * @author Michele Loreti
- *
+ * @author Yehia Abd Alrahman
  */
 public class And extends GroupPredicate {
 
@@ -42,6 +42,15 @@ public class And extends GroupPredicate {
 	@Override
 	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
 		return left.isSatisfiedBy(store)&&right.isSatisfiedBy(store);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.sysma.abc.core.grpPredicate.GroupPredicate#evaluate(java.lang.Object)
+	 */
+	@Override
+	public boolean evaluate(Object v) {
+		// TODO Auto-generated method stub
+		return left.evaluate(v)&&right.evaluate(v);
 	}
 
 	/* (non-Javadoc)
@@ -85,4 +94,6 @@ public class And extends GroupPredicate {
 	public GroupPredicate getRight() {
 		return right;
 	}
+
+	
 }

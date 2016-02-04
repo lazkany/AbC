@@ -36,11 +36,8 @@ public class AbCMessage {
 	}
 
 	public Object getValue(GroupPredicate predicate) {
-		try {
-			if (predicate.isSatisfiedBy(store)) {
-				return value;
-			}
-		} catch (AbCAttributeTypeException e) {
+		if (predicate.evaluate(value)) {
+			return value;
 		}
 		return null;
 	}

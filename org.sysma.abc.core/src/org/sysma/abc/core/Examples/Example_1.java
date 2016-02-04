@@ -27,6 +27,7 @@ import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.grpPredicate.AnyComponent;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.grpPredicate.HasValue;
+import org.sysma.abc.core.grpPredicate.IsGreaterOrEqualThan;
 import org.sysma.abc.core.grpPredicate.NoComponent;
 import org.sysma.abc.core.json.MsgCenterDeserializer;
 
@@ -66,7 +67,7 @@ public class Example_1 {
 			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 			expose.add(a1);
 			try {
-				Broadcast(any, expose, "test_send", null);
+				Send(any, "test_send", null);
 				System.out.println(this.name + " => received: " + receive(any, null));
 				// System.out.println(this.name + " => received: " +receive(any,
 				// null));
@@ -106,8 +107,8 @@ public class Example_1 {
 			//
 			// System.out.println(this.name + " => received: " +receive(any,
 			// null));
-			Broadcast(any, expose, "test_1", null);
-			Broadcast(any, expose, "test_2", null);
+			Send(any,  "test_1", null);
+			Send(any,  "test_2", null);
 
 		}
 	}
@@ -175,57 +176,62 @@ public class Example_1 {
 		// // Type type = new TypeToken<Attribute<String>>(){}.getType();
 		Attribute<String> aa = new Attribute<String>("role", String.class);
 		String json = gson.toJson(aa);
+		GroupPredicate gr = new HasValue("$1", "rescuer");
+		GroupPredicate great=new IsGreaterOrEqualThan("$1",0);
+		//gr.evaluate("rescuer");
+		//System.out.println(gr.evaluate("ex"));
+		System.out.println(great.evaluate("a,  1,yehia"));
 		//
-		System.out.println(json);
-		System.out.println(gson.fromJson(json, Attribute.class));
-		//
-		System.out.println("");
-		//
-		String storejsonString = gson.toJson(store1);
-		System.out.println(storejsonString);
-		//
-		AbCStore str = gson.fromJson(storejsonString, AbCStore.class);
-		System.out.println("");
-		System.out.println(str);
-		System.out.println(store1);
-		//
-		System.out.println("");
-		System.out.println(str.getAttributes());
-		System.out.println(store1.getAttributes());
-		//
-		System.out.println("");
-		System.out.println(str.getAttribute("role"));
-		//
-		System.out.println(store1.getAttribute("role"));
-		//
-		System.out.println("");
-		System.out.println(gson.toJson(c1));
-		String scomp = gson.toJson(c1);
-		System.out.println(gson.fromJson(scomp, AbCComponent.class));
-		AbCMessage msg = new AbCMessage(c1, "text_1", any, store1);
-		System.out.println("");
-		System.out.println(gson.toJson(msg));
-		System.out.println("");
-		String smsg = gson.toJson(msg);
-		System.out.println(gson.fromJson(smsg, AbCMessage.class));
-		System.out.println(msg);
-		
-		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(1234));
-		ServerPortAddress addr=new ServerPortAddress(cPortClient.getLocalAddress().getInetAddress().getCanonicalHostName(),cPortClient.getLocalAddress().getLocalPort());
-		System.out.println(addr);
-		System.out.println(gson.toJson(addr));
-		System.out.println(gson.fromJson(gson.toJson(addr),Address.class));
-		 MsgCentralized message=new MsgCentralized(msg,addr);
-		System.out.println(gson.toJson(message));
-		//ServerSocket xServerSocket=new ServerSocket();
-		//xServerSocket.bind(new InetSocketAddress(cPortClient.getLocalAddress().getInetAddress().getCanonicalHostName(), 12344));
-		System.out.println(gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress());
-		System.out.println(message.getAddress());
-		//InetSocketAddress sAddress=gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress().;
-		boolean sAddress= gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress().getAddress().getAddress().equals(message.getAddress().getAddress().getAddress());
-		System.out.println(message.getAddress().getAddress().getAddress());
-		System.out.println(sAddress);
-		Thread.sleep(3000);
+//		System.out.println(json);
+//		System.out.println(gson.fromJson(json, Attribute.class));
+//		//
+//		System.out.println("");
+//		//
+//		String storejsonString = gson.toJson(store1);
+//		System.out.println(storejsonString);
+//		//
+//		AbCStore str = gson.fromJson(storejsonString, AbCStore.class);
+//		System.out.println("");
+//		System.out.println(str);
+//		System.out.println(store1);
+//		//
+//		System.out.println("");
+//		System.out.println(str.getAttributes());
+//		System.out.println(store1.getAttributes());
+//		//
+//		System.out.println("");
+//		System.out.println(str.getAttribute("role"));
+//		//
+//		System.out.println(store1.getAttribute("role"));
+//		//
+//		System.out.println("");
+//		System.out.println(gson.toJson(c1));
+//		String scomp = gson.toJson(c1);
+//		System.out.println(gson.fromJson(scomp, AbCComponent.class));
+//		AbCMessage msg = new AbCMessage(c1, "text_1", any, store1);
+//		System.out.println("");
+//		System.out.println(gson.toJson(msg));
+//		System.out.println("");
+//		String smsg = gson.toJson(msg);
+//		System.out.println(gson.fromJson(smsg, AbCMessage.class));
+//		System.out.println(msg);
+//		
+//		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(1234));
+//		ServerPortAddress addr=new ServerPortAddress(cPortClient.getLocalAddress().getInetAddress().getCanonicalHostName(),cPortClient.getLocalAddress().getLocalPort());
+//		System.out.println(addr);
+//		System.out.println(gson.toJson(addr));
+//		System.out.println(gson.fromJson(gson.toJson(addr),Address.class));
+//		 MsgCentralized message=new MsgCentralized(msg,addr);
+//		System.out.println(gson.toJson(message));
+//		//ServerSocket xServerSocket=new ServerSocket();
+//		//xServerSocket.bind(new InetSocketAddress(cPortClient.getLocalAddress().getInetAddress().getCanonicalHostName(), 12344));
+//		System.out.println(gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress());
+//		System.out.println(message.getAddress());
+//		//InetSocketAddress sAddress=gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress().;
+//		boolean sAddress= gson.fromJson(gson.toJson(message), MsgCentralized.class).getAddress().getAddress().getAddress().equals(message.getAddress().getAddress().getAddress());
+//		System.out.println(message.getAddress().getAddress().getAddress());
+//		System.out.println(sAddress);
+		//Thread.sleep(3000);
 
 	}
 

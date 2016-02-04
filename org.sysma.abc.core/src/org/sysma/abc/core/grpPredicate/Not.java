@@ -17,25 +17,25 @@ import java.util.HashMap;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
-
-
 /**
  * @author Michele Loreti
- *
+ * @author Yehia Abd Alrahman
  */
 public class Not extends GroupPredicate {
 
 	private GroupPredicate arg;
 
-	public Not( GroupPredicate arg ) {
-		super( GroupPredicate.PredicateType.NOT );
+	public Not(GroupPredicate arg) {
+		super(GroupPredicate.PredicateType.NOT);
 		if ((arg == null)) {
 			throw new NullPointerException();
 		}
 		this.arg = arg;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.cmg.resp.topology.GroupPredicate#evaluate(java.util.HashMap)
 	 */
 	@Override
@@ -43,7 +43,21 @@ public class Not extends GroupPredicate {
 		return !arg.isSatisfiedBy(store);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.sysma.abc.core.grpPredicate.GroupPredicate#evaluate(java.lang.Object)
+	 */
+	@Override
+	public boolean evaluate(Object v) {
+		// TODO Auto-generated method stub
+		return !arg.evaluate(v);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.cmg.resp.topology.GroupPredicate#equals(java.lang.Object)
 	 */
 	@Override
@@ -61,7 +75,9 @@ public class Not extends GroupPredicate {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -69,12 +85,14 @@ public class Not extends GroupPredicate {
 		return ~this.arg.hashCode();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "!("+arg.toString()+")";
+		return "!(" + arg.toString() + ")";
 	}
 
 	public GroupPredicate getArgument() {

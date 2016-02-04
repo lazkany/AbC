@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sysma.abc.core.Examples.broadcast;
+package org.sysma.abc.core.Examples.GroupBased;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,9 +54,8 @@ public class Sender {
 			Set<Attribute<Object>> expose = new HashSet<>();
 			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 			expose.add(a1);
-		//	int[] x={1,2,3};
 			//while (true) {
-				Send(any, "a,rescuer,yehia", null);
+				Send(any, "test_send", null);
 				//System.out.println(this.name + " => received: " + receive(any, null));
 			//}
 				

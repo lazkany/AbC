@@ -16,7 +16,7 @@ import org.sysma.abc.core.AbCStore;
 
 /**
  * @author Michele Loreti
- *
+ * @author Yehia Abd Alrahman
  */
 public class NoComponent extends GroupPredicate {
 
@@ -26,6 +26,18 @@ public class NoComponent extends GroupPredicate {
 
 	@Override
 	public boolean isSatisfiedBy(AbCStore store) {
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.sysma.abc.core.grpPredicate.GroupPredicate#evaluate(java.lang.Object)
+	 */
+	@Override
+	public boolean evaluate(Object v) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -46,7 +58,5 @@ public class NoComponent extends GroupPredicate {
 	public String toString() {
 		return "false";
 	}
-	
-	
 
 }

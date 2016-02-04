@@ -20,7 +20,7 @@ import org.sysma.abc.core.AbCStore;
 
 /**
  * @author Michele Loreti
- *
+ * @author Yehia Abd Alrahman
  */
 public class AnyComponent extends GroupPredicate {
 
@@ -32,7 +32,14 @@ public class AnyComponent extends GroupPredicate {
 	public boolean isSatisfiedBy(AbCStore store) {
 		return true;
 	}
-
+	/* (non-Javadoc)
+	 * @see org.sysma.abc.core.grpPredicate.GroupPredicate#evaluate(java.lang.Object)
+	 */
+	@Override
+	public boolean evaluate(Object v) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {

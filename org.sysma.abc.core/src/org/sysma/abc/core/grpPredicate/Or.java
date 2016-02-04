@@ -17,35 +17,49 @@ import java.util.HashMap;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
-
-
 /**
  * @author Michele Loreti
- *
+ * @author Yehia Abd Alrahman
  */
 public class Or extends GroupPredicate {
 
 	private GroupPredicate left;
 	private GroupPredicate right;
 
-	public Or( GroupPredicate left , GroupPredicate right ) {
-		super( GroupPredicate.PredicateType.OR );
-		if ((left == null)||(right==null)) {
+	public Or(GroupPredicate left, GroupPredicate right) {
+		super(GroupPredicate.PredicateType.OR);
+		if ((left == null) || (right == null)) {
 			throw new NullPointerException();
 		}
 		this.left = left;
 		this.right = right;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.cmg.resp.topology.GroupPredicate#evaluate(java.util.HashMap)
 	 */
 	@Override
 	public boolean isSatisfiedBy(AbCStore store) throws AbCAttributeTypeException {
-		return left.isSatisfiedBy(store)||right.isSatisfiedBy(store);
+		return left.isSatisfiedBy(store) || right.isSatisfiedBy(store);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.sysma.abc.core.grpPredicate.GroupPredicate#evaluate(java.lang.Object)
+	 */
+	@Override
+	public boolean evaluate(Object v) {
+		// TODO Auto-generated method stub
+		return left.evaluate(v) || right.evaluate(v);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.cmg.resp.topology.GroupPredicate#equals(java.lang.Object)
 	 */
 	@Override
@@ -58,25 +72,29 @@ public class Or extends GroupPredicate {
 		}
 		if (super.equals(obj)) {
 			Or p = (Or) obj;
-			return left.equals(p.left)&&right.equals(p.right);
+			return left.equals(p.left) && right.equals(p.right);
 		}
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		return this.left.hashCode()^this.right.hashCode();
+		return this.left.hashCode() ^ this.right.hashCode();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "("+left.toString()+") || ("+right.toString()+")";
+		return "(" + left.toString() + ") || (" + right.toString() + ")";
 	}
 
 	public GroupPredicate getLeft() {

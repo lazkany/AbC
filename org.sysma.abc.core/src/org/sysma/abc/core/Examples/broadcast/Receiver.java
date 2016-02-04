@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.sql.Array;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,8 +56,9 @@ public class Receiver {
 //			Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
 //			expose.add(a1);
 			//	Broadcast(any, expose, "test_send", null);
+			GroupPredicate gr = new HasValue("$1", "rescuer");
 			while(true){
-				System.out.println(this.name + " => received: " + receive(any, null));
+				System.out.println(this.name + " => received: " + receive(gr, null));
 			}
 			
 			// System.out.println(this.name + " => received: " +receive(any,

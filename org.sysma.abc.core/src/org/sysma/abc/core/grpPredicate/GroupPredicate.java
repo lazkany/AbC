@@ -22,7 +22,7 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 
 /**
  * @author Michele Loreti
- *
+ * @author Yehia Abd Alrahman
  */
 
 public abstract class GroupPredicate implements Serializable {
@@ -43,6 +43,7 @@ public abstract class GroupPredicate implements Serializable {
 	private PredicateType type;
 	
 	public abstract boolean isSatisfiedBy( AbCStore store ) throws AbCAttributeTypeException;
+	public abstract boolean evaluate( Object v );
 
 	public GroupPredicate( PredicateType type ) {
 		this.type = type;

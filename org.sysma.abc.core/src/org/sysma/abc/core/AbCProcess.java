@@ -117,12 +117,12 @@ public abstract class AbCProcess implements Runnable {
 	 * @return
 	 * @throws AbCAttributeTypeException
 	 */
-	protected void Broadcast(GroupPredicate predicate, Set<Attribute<Object>> s, Object value,
+	protected void Send(GroupPredicate predicate, Object value,
 			HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
 		// TODO Auto-generated method stub
 		// TODO Compute the exposed store
 		this.processType = "sender";							//CHANGE> A process has to declare its type
-		AbCStore store = this.ExposedStore(s);
+		AbCStore store = new AbCStore();
 		// AbCStore store = new AbCStore();
 		// TODO update the store
 		if (predicate.isSatisfiedBy(this.component.getStore())) { // CHANGE>
