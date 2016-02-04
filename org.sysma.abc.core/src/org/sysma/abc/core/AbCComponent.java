@@ -5,7 +5,6 @@ package org.sysma.abc.core;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

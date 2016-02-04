@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sysma.abc.core.Examples;
+package org.sysma.abc.core.Examples.broadcast;
 
 import java.io.BufferedReader;
 import java.io.IOException;

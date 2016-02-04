@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sysma.abc.core.Examples;
+package org.sysma.abc.core.Examples.broadcast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.AbCStore;
 import org.sysma.abc.core.Attribute;
-import org.sysma.abc.core.Examples.Sender.Process_1;
+//import org.sysma.abc.core.Examples.broadcast.broadcast.Process_1;
 import org.sysma.abc.core.centralized.ServerPortAddress;
 import org.sysma.abc.core.centralized.ServerPortClient;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
