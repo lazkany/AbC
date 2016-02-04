@@ -66,7 +66,7 @@ public class Receiver_1 {
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
 		AbCEnvironment store1 = new AbCEnvironment();
 		AbCComponent c1 = new AbCComponent("C1", store1);
-		Process_1 brd1 = new Process_1("rcv_1");
+		Process_1 brd1 = new Process_1("rcv_2");
 		c1.addProcess(brd1);
 		c1.addPort(cPortClient);
 		cPortClient.start();
