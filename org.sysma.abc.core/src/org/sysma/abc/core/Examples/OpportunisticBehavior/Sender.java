@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sysma.abc.core.Examples.PublishSubscribe;
+package org.sysma.abc.core.Examples.OpportunisticBehavior;
 
 import java.io.BufferedReader;
 import java.io.IOException;
