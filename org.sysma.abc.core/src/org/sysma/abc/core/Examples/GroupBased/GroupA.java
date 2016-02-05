@@ -39,7 +39,10 @@ public class GroupA {
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
+			while(true){
 			Send(TOgrpB, "MSG" + "," + this.getComponent().getStore().getValue("group"), null);
+			Thread.sleep(4000);
+			}
 		}
 	}
 
