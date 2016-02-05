@@ -1,105 +1,140 @@
 <!doctype html>
-<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
-<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on https://github.com/jonrohan -->
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>AbC by lazkany</title>
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
-  <link rel="stylesheet" href="stylesheets/github-dark.css">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="javascripts/script.js"></script>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-  <title>AbC</title>
-  <meta name="description" content="The Implementation of AbC Linguistic Primitives ">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>AbC</h1>
+        <p>The Implementation of AbC Linguistic Primitives </p>
+        <p class="view"><a href="https://github.com/lazkany/AbC">View the Project on GitHub <small>lazkany/AbC</small></a></p>
+        <ul>
+          <li><a href="https://github.com/lazkany/AbC/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/lazkany/AbC/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/lazkany/AbC">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>
+<a id="attribute-based-communication" class="anchor" href="#attribute-based-communication" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attribute-based Communication.</h3>
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://guides.github.com/features/mastering-markdown/">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.
+`public class GroupB {
+    public static GroupPredicate FromgrpA = new HasValue("$1", "A");
+    public static class Process_1 extends AbCProcess {</p>
 
-</head>
+<pre><code>    /**
+     * @param name
+     * @throws AbCAttributeTypeException
+     */
+    public Process_1(String name) throws AbCAttributeTypeException {
+        super(name);
+        // TODO Auto-generated constructor stub
+    }
 
-<body>
+    @Override
+    protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+        while(true){
+        System.out.println(this.name + " =&gt; received: " + receive(FromgrpA, null));
+        }
 
-  <div class="wrapper">
-    <header>
-      <h1 class="title">AbC</h1>
-    </header>
-    <div id="container">
-      <p class="tagline">The Implementation of AbC Linguistic Primitives </p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/lazkany/AbC/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/lazkany/AbC/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/lazkany/AbC" class="code">View AbC on GitHub</a>
-        </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
-          <h3>
-<a id="attribute-based-communication" class="anchor" href="#attribute-based-communication" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attribute-based Communication.</h3>
+    }
+}
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://guides.github.com/features/mastering-markdown/">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.</p>
+/**
+ * @param args
+ * @throws IOException
+ * @throws DuplicateNameException
+ * @throws AbCAttributeTypeException
+ */
+public static void main(String[] args) throws IOException, DuplicateNameException, AbCAttributeTypeException {
+    // TODO Auto-generated method stub
+    System.out.println("Enter port number : ");
+    int port = 0;
+    try {
+        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+        port = Integer.parseInt(bufferRead.readLine());
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
+    cPortClient.RemoteRegister(new ServerPortAddress(9999));
+    Process_1 rcv = new Process_1("rcv_1");
+    AbCEnvironment store1 = new AbCEnvironment();
+    Attribute&lt;Object&gt; a1 = new Attribute&lt;Object&gt;("group", Object.class);
+    store1.setValue(a1, "B");
+    AbCComponent c1 = new AbCComponent("C1", store1);
+    c1.addProcess(rcv);
+    c1.addPort(cPortClient);
+    cPortClient.start();
+    c1.start();
+    System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
+
+}
+</code></pre>
+
+<p>}
+`</p>
 
 <h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designer Templates</h3>
 
 <p>We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.</p>
 
 <h3>
-<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating pages manually</h3>
+<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating pages manually</h3>
 
 <p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
 
 <h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>You can <a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#mentioning-users-and-teams" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
 
 <h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
 
 <h3>
-<a id="support-or-contact-1" class="anchor" href="#support-or-contact-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="support-or-contact-1" class="anchor" href="#support-or-contact-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
 
 <h3>
-<a id="support-or-contact-2" class="anchor" href="#support-or-contact-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="support-or-contact-2" class="anchor" href="#support-or-contact-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
 
 <h3>
-<a id="support-or-contact-3" class="anchor" href="#support-or-contact-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="support-or-contact-3" class="anchor" href="#support-or-contact-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
 
 <h3>
-<a id="support-or-contact-4" class="anchor" href="#support-or-contact-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="support-or-contact-4" class="anchor" href="#support-or-contact-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
-        </article>
-      </div>
+      </section>
     </div>
     <footer>
-      <div class="owner">
-      <p><a href="https://github.com/lazkany" class="avatar"><img src="https://avatars0.githubusercontent.com/u/9892259?v=3&amp;s=60" width="48" height="48"></a> <a href="https://github.com/lazkany">lazkany</a> maintains <a href="https://github.com/lazkany/AbC">AbC</a></p>
-
-
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
+      <p>Project maintained by <a href="https://github.com/lazkany">lazkany</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
     </footer>
-  </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/lazkany/AbC/tarball/master" class="tar">tar</a><a href="https://github.com/lazkany/AbC/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
-  </div>
-
-  
-</body>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
 </html>
