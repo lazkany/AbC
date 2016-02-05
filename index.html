@@ -1,93 +1,28 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset="UTF-8">
     <title>AbC by lazkany</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-dark.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>AbC</h1>
-        <p>The Implementation of AbC Linguistic Primitives </p>
-        <p class="view"><a href="https://github.com/lazkany/AbC">View the Project on GitHub <small>lazkany/AbC</small></a></p>
-        <ul>
-          <li><a href="https://github.com/lazkany/AbC/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/lazkany/AbC/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/lazkany/AbC">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
+    <section class="page-header">
+      <h1 class="project-name">AbC</h1>
+      <h2 class="project-tagline">The Implementation of AbC Linguistic Primitives </h2>
+      <a href="https://github.com/lazkany/AbC" class="btn">View on GitHub</a>
+      <a href="https://github.com/lazkany/AbC/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/lazkany/AbC/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h3>
 <a id="attribute-based-communication" class="anchor" href="#attribute-based-communication" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attribute-based Communication.</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://guides.github.com/features/mastering-markdown/">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.
-`public class GroupB {
-    public static GroupPredicate FromgrpA = new HasValue("$1", "A");
-    public static class Process_1 extends AbCProcess {</p>
-
-<pre><code>    /**
-     * @param name
-     * @throws AbCAttributeTypeException
-     */
-    public Process_1(String name) throws AbCAttributeTypeException {
-        super(name);
-        // TODO Auto-generated constructor stub
-    }
-
-    @Override
-    protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-        while(true){
-        System.out.println(this.name + " =&gt; received: " + receive(FromgrpA, null));
-        }
-
-    }
-}
-
-/**
- * @param args
- * @throws IOException
- * @throws DuplicateNameException
- * @throws AbCAttributeTypeException
- */
-public static void main(String[] args) throws IOException, DuplicateNameException, AbCAttributeTypeException {
-    // TODO Auto-generated method stub
-    System.out.println("Enter port number : ");
-    int port = 0;
-    try {
-        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-        port = Integer.parseInt(bufferRead.readLine());
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
-    cPortClient.RemoteRegister(new ServerPortAddress(9999));
-    Process_1 rcv = new Process_1("rcv_1");
-    AbCEnvironment store1 = new AbCEnvironment();
-    Attribute&lt;Object&gt; a1 = new Attribute&lt;Object&gt;("group", Object.class);
-    store1.setValue(a1, "B");
-    AbCComponent c1 = new AbCComponent("C1", store1);
-    c1.addProcess(rcv);
-    c1.addPort(cPortClient);
-    cPortClient.start();
-    c1.start();
-    System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
-
-}
-</code></pre>
-
-<p>}
-`</p>
+<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://www.youtube.com/watch?v=_rlISmjK9FY">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.</p>
 
 <h3>
 <a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designer Templates</h3>
@@ -97,7 +32,8 @@ public static void main(String[] args) throws IOException, DuplicateNameExceptio
 <h3>
 <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating pages manually</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.
+<a href="https://www.youtube.com">https://www.youtube.com</a></p>
 
 <h3>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
@@ -128,13 +64,15 @@ public static void main(String[] args) throws IOException, DuplicateNameExceptio
 <a id="support-or-contact-4" class="anchor" href="#support-or-contact-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/lazkany">lazkany</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/lazkany/AbC">AbC</a> is maintained by <a href="https://github.com/lazkany">lazkany</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
   </body>
 </html>
