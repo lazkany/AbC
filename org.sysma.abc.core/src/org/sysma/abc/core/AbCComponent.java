@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
+import org.sysma.abc.core.grpPredicate.NoComponent;
 
 /**
  * @author Yehia Abd Alrahman
@@ -56,9 +57,10 @@ public class AbCComponent {
 			throws AbCAttributeTypeException {
 
 		AbCMessage message = new AbCMessage(this, value, predicate);
-
-		for (AbCPort port : ports) {
-			port.send(message);
+		if (!predicate.equals(new NoComponent())) {
+			for (AbCPort port : ports) {
+				port.send(message);
+			}
 		}
 		this.storeUpdate(update);
 	}

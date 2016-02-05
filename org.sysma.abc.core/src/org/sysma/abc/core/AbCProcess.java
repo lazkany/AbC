@@ -13,6 +13,7 @@ import javax.sql.rowset.spi.SyncResolver;
 
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
+import org.sysma.abc.core.grpPredicate.NoComponent;
 
 /**
  * @author Yehia Abd Alrahman
@@ -26,7 +27,7 @@ public abstract class AbCProcess implements Runnable {
 	protected int id;
 	// private boolean waitingMessage;
 	private Queue<AbCMessage> receivedMessage = new LinkedList<>();
-	private String processType="";
+	private String processType = "";
 
 	// /**
 	// * @return the actions
@@ -117,24 +118,27 @@ public abstract class AbCProcess implements Runnable {
 	 * @return
 	 * @throws AbCAttributeTypeException
 	 */
-	protected void Send(GroupPredicate predicate, Object value,
-			HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
+	protected void Send(GroupPredicate predicate, Object value, HashMap<Attribute<?>, Object> update)
+			throws AbCAttributeTypeException {
 		// TODO Auto-generated method stub
 		// TODO Compute the exposed store
-		this.processType = "sender";							//CHANGE> A process has to declare its type
-		//AbCStore store = new AbCStore();
+		this.processType = "sender"; // CHANGE> A process has to declare its
+										// type
+		// AbCStore store = new AbCStore();
 		// AbCStore store = new AbCStore();
 		// TODO update the store
-		if (predicate.isSatisfiedBy(this.component.getStore())) { // CHANGE>
-																	// Send the
-																	// message
-																	// also to
-																	// co-located
-																	// processes
-			this.component.receive(new AbCMessage(this.component, value, predicate));
-			this.receivedMessage.poll(); // Ensure that the sender queue is
-											// empty.
-		}
+		// if (predicate.isSatisfiedBy(this.component.getStore())) { // CHANGE>
+		// // Send the
+		// // message
+		// // also to
+		// // co-located
+		// // processes
+		// this.component.receive(new AbCMessage(this.component, value,
+		// predicate));
+		// this.receivedMessage.poll(); // Ensure that the sender queue is
+		// // empty.
+		// }
+
 		component.send(predicate, value, update);
 
 	}
@@ -234,7 +238,8 @@ public abstract class AbCProcess implements Runnable {
 		// this.waitingMessage = true;
 		// Object value = null;
 		// while (value == null) { //CHANGE>> changed the condition was "!="
-		this.processType = "receiver";						//CHANGE> A process has to declare its type
+		this.processType = "receiver"; // CHANGE> A process has to declare its
+										// type
 		while (this.receivedMessage.isEmpty()) {
 			wait();
 		}
