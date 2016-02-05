@@ -1,38 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>AbC by lazkany</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-dark.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>AbC by lazkany</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>AbC</h1>
-        <p>The Implementation of AbC Linguistic Primitives </p>
-        <p class="view"><a href="https://github.com/lazkany/AbC">View the Project on GitHub <small>lazkany/AbC</small></a></p>
-        <ul>
-          <li><a href="https://github.com/lazkany/AbC/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/lazkany/AbC/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/lazkany/AbC">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>AbC</h1>
+          <h2>The Implementation of AbC Linguistic Primitives </h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/lazkany/AbC/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/lazkany/AbC/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/lazkany/AbC" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h3>
 <a id="attribute-based-communication" class="anchor" href="#attribute-based-communication" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attribute-based Communication.</h3>
 
-<p>AbC is a process calculus for attribute-based communication. An AbC system consists of a set of parallel agents each of which is equipped with a set of attributes. Communication takes place in an implicit multicast fashion, and interactions among agents are dynamically established by taking into account "connections" as determined by predicates over the attributes of agents.
-<a href="https://dl.dropboxusercontent.com/s/uoujeolcwc3me9x/Golden%20advace.mp4?dl=0">try</a>
-In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. In the following sections, we show how to program with AbC primitives naturally and easily. </p>
+<p>AbC is a process calculus for attribute-based communication. An AbC system consists of a set of parallel agents each of which is equipped with a set of attributes. Communication takes place in an implicit multicast fashion, and interactions among agents are dynamically established by taking into account "connections" as determined by predicates over the attributes of agents.</p>
+
+<p>In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. In the following sections, we show how to program with AbC primitives naturally and easily. </p>
 
 <h3>
 <a id="implementation-structure" class="anchor" href="#implementation-structure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Implementation Structure</h3>
@@ -89,14 +93,14 @@ You can <a href="https://help.github.com/articles/basic-writing-and-formatting-s
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/lazkany">lazkany</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-              <script type="text/javascript">
+        </section>
+
+        <footer>
+          AbC is maintained by <a href="https://github.com/lazkany">lazkany</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -107,5 +111,7 @@ You can <a href="https://help.github.com/articles/basic-writing-and-formatting-s
             } catch(err) {}
           </script>
 
+      </div>
+    </div>
   </body>
 </html>
