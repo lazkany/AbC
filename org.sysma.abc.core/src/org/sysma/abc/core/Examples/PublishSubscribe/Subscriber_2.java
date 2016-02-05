@@ -25,7 +25,6 @@ import org.sysma.abc.core.grpPredicate.HasValue;
  *
  */
 public class Subscriber_2 {
-	public static Attribute<Object> a1 = new Attribute<Object>("subscription", Object.class);
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -34,15 +33,12 @@ public class Subscriber_2 {
 		 */
 		public Process_1(String name) throws AbCAttributeTypeException {
 			super(name);
-			// TODO Auto-generated constructor stub
-			
+			// TODO Auto-generated constructor stub			
 		}
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-
-			GroupPredicate subscription = new HasValue("$1", this.getComponent().getValue(a1));
-
+			GroupPredicate subscription = new HasValue("$1", this.getComponent().getStore().getValue("subscription"));
 			System.out.println(this.name + " => received: " + receive(subscription, null));
 
 		}
@@ -67,11 +63,12 @@ public class Subscriber_2 {
 		}
 		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
-		Process_1 brd1 = new Process_1("rcv_1");
+		Process_1 subscriber2 = new Process_1("subscriber_2");
 		AbCEnvironment store1 = new AbCEnvironment();
+		Attribute<Object> a1 = new Attribute<Object>("subscription", Object.class);
 		store1.setValue(a1, "Movies");
 		AbCComponent c1 = new AbCComponent("C1", store1);
-		c1.addProcess(brd1);
+		c1.addProcess(subscriber2);
 		c1.addPort(cPortClient);
 		cPortClient.start();
 		c1.start();

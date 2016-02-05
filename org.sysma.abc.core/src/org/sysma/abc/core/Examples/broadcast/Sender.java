@@ -33,15 +33,12 @@ public class Sender {
 		public Process_1(String name) {
 			super(name);
 			// TODO Auto-generated constructor stub
-
 		}
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
-
 			Send(any, "a,v", null);
-
 		}
 	}
 
@@ -66,8 +63,8 @@ public class Sender {
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
 		AbCEnvironment store1 = new AbCEnvironment();
 		AbCComponent c1 = new AbCComponent("C1", store1);
-		Process_1 brd1 = new Process_1("brd_1");
-		c1.addProcess(brd1);
+		Process_1 snd = new Process_1("snd_1");
+		c1.addProcess(snd);
 		c1.addPort(cPortClient);
 		cPortClient.start();
 		c1.start();

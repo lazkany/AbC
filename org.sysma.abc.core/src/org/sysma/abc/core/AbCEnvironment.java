@@ -75,6 +75,14 @@ public class AbCEnvironment implements Serializable {
 		}
 		throw new AbCAttributeTypeException();
 	}
+	public Object getValue(String attribute) throws AbCAttributeTypeException {
+		Object o = data.get(attribute);
+		if (o!=null) {
+			return o;
+		}
+		return null;
+		
+	}
 
 	/**
 	 * @param n
@@ -91,6 +99,16 @@ public class AbCEnvironment implements Serializable {
 		}
 		if (isConsistent(attribute)) {
 			data.put(attribute.getName(), value);
+		} else {
+			throw new AbCAttributeTypeException();
+		}
+	}
+	public void setValue(String attribute, Object value) throws AbCAttributeTypeException {
+		if (!attributes.get(attribute).isValidValue(value)) {
+			throw new AbCAttributeTypeException();
+		}
+		if (isConsistent(attributes.get(attribute))) {
+			data.put(attribute, value);
 		} else {
 			throw new AbCAttributeTypeException();
 		}

@@ -25,8 +25,6 @@ import org.sysma.abc.core.grpPredicate.GroupPredicate;
  */
 public class Publisher {
 	public static GroupPredicate any = new AnyComponent();
-	public static Attribute<Object> a1 = new Attribute<Object>("topic", Object.class);
-
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -36,15 +34,12 @@ public class Publisher {
 		public Process_1(String name) throws AbCAttributeTypeException {
 			super(name);
 			// TODO Auto-generated constructor stub
-
 		}
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
-
-			Send(any, "msg," + this.getComponent().getValue(a1), null);
-
+			Send(any, "msg," + this.getComponent().getStore().getValue("topic"), null);
 		}
 	}
 
@@ -69,6 +64,7 @@ public class Publisher {
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
 		Process_1 Publisher = new Process_1("Publish_1");
 		AbCEnvironment store1 = new AbCEnvironment();
+		Attribute<Object> a1 = new Attribute<Object>("topic", Object.class);
 		store1.setValue(a1, "Movies");
 		AbCComponent c1 = new AbCComponent("C1", store1);
 		c1.addProcess(Publisher);

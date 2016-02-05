@@ -32,14 +32,12 @@ public class Receiver_1 {
 		public Process_1(String name) {
 			super(name);
 			// TODO Auto-generated constructor stub
-
 		}
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 
 			GroupPredicate channel = new HasValue("$0", "a");
-
 			System.out.println(this.name + " => received: " + receive(channel, null));
 
 		}
@@ -66,8 +64,8 @@ public class Receiver_1 {
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
 		AbCEnvironment store1 = new AbCEnvironment();
 		AbCComponent c1 = new AbCComponent("C1", store1);
-		Process_1 brd1 = new Process_1("rcv_2");
-		c1.addProcess(brd1);
+		Process_1 rcv1 = new Process_1("rcv_1");
+		c1.addProcess(rcv1);
 		c1.addPort(cPortClient);
 		cPortClient.start();
 		c1.start();

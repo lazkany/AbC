@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sysma.abc.core.Examples.broadcast;
+package org.sysma.abc.core.Examples.AttributeBased;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,11 +11,13 @@ import java.net.ServerSocket;
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
+import org.sysma.abc.core.Attribute;
 //import org.sysma.abc.core.Examples.broadcast.broadcast.Process_1;
 import org.sysma.abc.core.centralized.ServerPortAddress;
 import org.sysma.abc.core.centralized.ServerPortClient;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
+import org.sysma.abc.core.grpPredicate.And;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.grpPredicate.HasValue;
 
@@ -23,24 +25,22 @@ import org.sysma.abc.core.grpPredicate.HasValue;
  * @author Yehia Abd Alrahman
  *
  */
-public class Receiver_2 {
+public class Rescuer {
+	public static GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));
 	public static class Process_1 extends AbCProcess {
 
 		/**
 		 * @param name
+		 * @throws AbCAttributeTypeException
 		 */
-		public Process_1(String name) {
+		public Process_1(String name) throws AbCAttributeTypeException {
 			super(name);
 			// TODO Auto-generated constructor stub
-
 		}
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-
-			GroupPredicate channel = new HasValue("$0", "c");
-
-			System.out.println(this.name + " => received: " + receive(channel, null));
+			System.out.println(this.name + " => received: " + receive(andPrd, null));
 
 		}
 	}
@@ -64,10 +64,12 @@ public class Receiver_2 {
 		}
 		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
+		Process_1 rescuer = new Process_1("rescuer_1");
 		AbCEnvironment store1 = new AbCEnvironment();
+		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
+		store1.setValue(a1, "rescuer");
 		AbCComponent c1 = new AbCComponent("C1", store1);
-		Process_1 rcv2 = new Process_1("rcv_2");
-		c1.addProcess(rcv2);
+		c1.addProcess(rescuer);
 		c1.addPort(cPortClient);
 		cPortClient.start();
 		c1.start();
