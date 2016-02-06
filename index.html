@@ -68,10 +68,13 @@
 <h3>
 <a id="attribute-based-interaction" class="anchor" href="#attribute-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attribute-based Interaction</h3>
 
-<p>In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. In the following sections, we show how to program with AbC primitives naturally and easily.
-  <img src="https://dl.dropboxusercontent.com/s/e1w8f2qxge2m3rt/attribute.png?dl=0" alt=""> </p>
+<p>Now we show the basic idea of attribute-based communication through a swarm robot scenario. We have four kinds of robots: Explorer, Helper, Rescuer, and Charger. The explorer robot is searching for victims in a disaster arena; the helper robot is helping other rescuers to rescue a victim; the rescuer robot already found the victim and waits until sufficient number of robots arrives to start rescuing; The charger robot is waiting for requests for charging from explorers. They all exchange information through the message broker as shown below.</p>
 
-<p>In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. In the following sections, we show how to program with AbC primitives naturally and easily.</p>
+<p><img src="https://dl.dropboxusercontent.com/s/e1w8f2qxge2m3rt/attribute.png?dl=0" alt=""> </p>
+
+<p>The behaviour of the explorer robot is simple, it sends queries for information about victims to nearby rescuers or helpers. It sends its Id, a qry request, and its role. In our implementation values are sent as a sequence of strings separated with comma ",". The predicate should be as follows: </p>
+
+<p>GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));</p>
 
 <p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/AttributeBased">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=QfbCYoRgE3s&amp;feature=youtu.be">Video Demo</a></p>
