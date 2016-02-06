@@ -58,15 +58,26 @@
 
 <ul>
 <li>Create a Java class with a main method.</li>
-<li>Create a Java class each process type in your model (This class should extend the AbCProcess class and override doRun() method). The doRun() should contain the behaviour of your process.</li>
-<li>In the main method, instantiate your processes, instantiate the classes AbCEnvironment, Attribute, and AbCComponent, assign attributes to the environment, the environment to the component, and processes to the component. Notice that the method addProcess() put processes in parallel. For instant, if you have component C1, then 
-C1.addProcess(P1);
-C1.addProcess(P2);
-equal of having P1 and P2 in parallel within component C1.</li>
+<li>Create a Java class for each process type in your model (This class should extend the AbCProcess class and override doRun() method). The doRun() should contain the behaviour of your process.</li>
+<li>In the main method, instantiate your processes, instantiate the classes AbCEnvironment, Attribute, and AbCComponent, assign attributes to the environment, the environment to the component, and processes to the component. Notice that the method addProcess() put processes in parallel. For instant, if you have component C1, then </li>
+</ul>
+
+<p>C1.addProcess(P1);</p>
+
+<p>C1.addProcess(P2);</p>
+
+<p>equal of having P1 and P2 in parallel within component C1.</p>
+
+<ul>
 <li>Add a client port to your component (C1.addPort(cPortClient)).</li>
-<li>Start the execution of your component by the following methods
-            cPortClient.start();
-    c1.start();</li>
+<li>
+<p>Start the execution of your component by the following methods</p>
+
+<pre><code>        cPortClient.start();
+
+c1.start();
+</code></pre>
+</li>
 <li>This is it!
 ### Attribute-based Interaction
 In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. In the following sections, we show how to program with AbC primitives naturally and easily.
