@@ -19,6 +19,7 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.grpPredicate.HasValue;
+import org.sysma.abc.core.grpPredicate.Or;
 
 /**
  * @author Yehia Abd Alrahman
@@ -38,8 +39,8 @@ public class Subscriber_1 {
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			GroupPredicate subscription = new HasValue("$1", this.getComponent().getStore().getValue("subscription"));
-			System.out.println(this.name + " => received: " + receive(subscription, null));
+			GroupPredicate subscribe = new Or(new HasValue("$1", this.getComponent().getStore().getValue("subscription")), new HasValue("$2", this.getComponent().getStore().getValue("subscription")));
+			System.out.println(this.name + " => received: " + receive(subscribe, null));
 
 		}
 	}

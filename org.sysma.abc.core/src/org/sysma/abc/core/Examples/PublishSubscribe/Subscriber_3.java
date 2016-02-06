@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sysma.abc.core.Examples.AttributeBased;
+package org.sysma.abc.core.Examples.PublishSubscribe;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,33 +17,30 @@ import org.sysma.abc.core.centralized.ServerPortAddress;
 import org.sysma.abc.core.centralized.ServerPortClient;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
-import org.sysma.abc.core.grpPredicate.And;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.grpPredicate.HasValue;
+import org.sysma.abc.core.grpPredicate.Or;
 
 /**
  * @author Yehia Abd Alrahman
  *
  */
-public class Helping {
-	public static GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));
-
+public class Subscriber_3 {
 	public static class Process_1 extends AbCProcess {
 
 		/**
 		 * @param name
-		 * @throws AbCAttributeTypeException
+		 * @throws AbCAttributeTypeException 
 		 */
 		public Process_1(String name) throws AbCAttributeTypeException {
 			super(name);
-			// TODO Auto-generated constructor stub
-
+			// TODO Auto-generated constructor stub			
 		}
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-
-			System.out.println(this.name + " => received: " + receive(andPrd, null));
+			GroupPredicate subscribe = new Or(new HasValue("$1", this.getComponent().getStore().getValue("subscription")), new HasValue("$2", this.getComponent().getStore().getValue("subscription")));
+			System.out.println(this.name + " => received: " + receive(subscribe, null));
 
 		}
 	}
@@ -67,12 +64,12 @@ public class Helping {
 		}
 		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
-		Process_1 helping = new Process_1("helping_1");
+		Process_1 subscriber3 = new Process_1("subscriber_3");
 		AbCEnvironment store1 = new AbCEnvironment();
-		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
-		store1.setValue(a1, "helping");
+		Attribute<Object> a1 = new Attribute<Object>("subscription", Object.class);
+		store1.setValue(a1, "News");
 		AbCComponent c1 = new AbCComponent("C1", store1);
-		c1.addProcess(helping);
+		c1.addProcess(subscriber3);
 		c1.addPort(cPortClient);
 		cPortClient.start();
 		c1.start();

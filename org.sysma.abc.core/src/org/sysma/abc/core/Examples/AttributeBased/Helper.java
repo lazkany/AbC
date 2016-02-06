@@ -1,34 +1,33 @@
 /**
  * 
  */
-package org.sysma.abc.core.Examples.GroupBased;
+package org.sysma.abc.core.Examples.AttributeBased;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
-import java.util.HashMap;
 
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+//import org.sysma.abc.core.Examples.broadcast.broadcast.Process_1;
 import org.sysma.abc.core.centralized.ServerPortAddress;
 import org.sysma.abc.core.centralized.ServerPortClient;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
+import org.sysma.abc.core.grpPredicate.And;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.grpPredicate.HasValue;
-import org.sysma.abc.core.grpPredicate.NoComponent;
 
 /**
  * @author Yehia Abd Alrahman
  *
  */
-public class GroupC {
-	public static GroupPredicate FromgrpA = new HasValue("$1", "A");
-	public static GroupPredicate ff=new NoComponent();
-	public static HashMap<Attribute<?>, Object> update=new HashMap<>();;
+public class Helper {
+	public static GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));
+
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -38,35 +37,14 @@ public class GroupC {
 		public Process_1(String name) throws AbCAttributeTypeException {
 			super(name);
 			// TODO Auto-generated constructor stub
-			
+
 		}
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			while(true){
-			System.out.println(this.name + " => received: " + receive(FromgrpA, null));
-			}
 
-		}
-	}
-	public static class Process_2 extends AbCProcess {
+			System.out.println(this.name + " => received: " + receive(andPrd, null));
 
-		/**
-		 * @param name
-		 * @throws AbCAttributeTypeException
-		 */
-		public Process_2(String name) throws AbCAttributeTypeException {
-			super(name);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			// TODO Auto-generated method stub
-			update.put(this.getComponent().getStore().getAttribute("group"), "B");
-			Thread.sleep(20000);
-			Send(ff, " ", update);
-			System.out.println("joined group B");
 		}
 	}
 
@@ -89,14 +67,12 @@ public class GroupC {
 		}
 		ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
-		Process_1 rcv = new Process_1("rcv_1");
-		Process_2 join=new Process_2("joinA");
+		Process_1 helping = new Process_1("helper_1");
 		AbCEnvironment store1 = new AbCEnvironment();
-		Attribute<Object> a1 = new Attribute<Object>("group", Object.class);
-		store1.setValue(a1, "C");
+		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
+		store1.setValue(a1, "helper");
 		AbCComponent c1 = new AbCComponent("C1", store1);
-		c1.addProcess(rcv);
-		c1.addProcess(join);
+		c1.addProcess(helping);
 		c1.addPort(cPortClient);
 		cPortClient.start();
 		c1.start();

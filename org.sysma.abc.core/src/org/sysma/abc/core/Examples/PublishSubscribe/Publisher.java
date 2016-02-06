@@ -39,7 +39,7 @@ public class Publisher {
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
-			Send(any, "msg," + this.getComponent().getStore().getValue("topic"), null);
+			Send(any, "msg," + this.getComponent().getStore().getValue("topic_1") + "," + this.getComponent().getStore().getValue("topic_2"), null);
 		}
 	}
 
@@ -64,8 +64,10 @@ public class Publisher {
 		cPortClient.RemoteRegister(new ServerPortAddress(9999));
 		Process_1 Publisher = new Process_1("Publish_1");
 		AbCEnvironment store1 = new AbCEnvironment();
-		Attribute<Object> a1 = new Attribute<Object>("topic", Object.class);
+		Attribute<Object> a1 = new Attribute<Object>("topic_1", Object.class);
+		Attribute<Object> a2 = new Attribute<Object>("topic_2", Object.class);
 		store1.setValue(a1, "Movies");
+		store1.setValue(a2, "News");
 		AbCComponent c1 = new AbCComponent("C1", store1);
 		c1.addProcess(Publisher);
 		c1.addPort(cPortClient);

@@ -25,7 +25,7 @@ import org.sysma.abc.core.grpPredicate.Or;
  *
  */
 public class Explorer {
-	public static GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helping"));
+	public static GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));
 	public static class Process_1 extends AbCProcess {
 
 		/**
