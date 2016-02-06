@@ -80,7 +80,11 @@
 
 <p><img src="https://dl.dropboxusercontent.com/s/6n47ju8qckgh7im/explorer.png?dl=0" alt=""></p>
 
-<p>The Send(predicate,message,update) takes three parameters, the filter predicate, the sequence of values as a string, and a possible set of local updates. In this case we don't need the updates. </p>
+<p>The Send(predicate,message,update) takes three parameters, the filter predicate, the sequence of values as a string, and a possible set of local updates. In this case we don't need the updates. Below you see the the definitions in the main method. </p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/6a1umd3m8utapnx/mainexplorer.png?dl=0" alt=""></p>
+
+<p>As we mentioned in the previous section, here we define the component, its environment, and its attributes. we attach the process we defined to the component and start its execution. The behaviour of other processes (i.e., Helper, Rescuer, and Charger) is specified in the same way. The only differences are those regarding their attributes, attribute values and their predicate. They also use the other construct for communication which is the receive(predicate, update). Again here we don't need any attribute updates, so we just keep them null.</p>
 
 <p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/AttributeBased">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=QfbCYoRgE3s&amp;feature=youtu.be">Video Demo</a></p>
