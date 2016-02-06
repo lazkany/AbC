@@ -46,7 +46,7 @@
 <h3>
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h3>
 
-<p>In this implementation we consider a message broker. In essence, it accepts messages from sending components, and delivers them to all registered components except for the sending one. This message broker has the exact role of a forwarder and it does not contribute anything to message filtering. Deciding to accept a message or not is carried out when the message is delivered to the component. This implies that you always have to start the forwarding server/message broker so that your program functions in the expected way. This task is very easy, all you need to do is to create an instance of the class "ServerPort". This class is responsible for forwarding messages. By default, It accepts messages at port number 9998 and it accepts registration at port number 9999. In the code snippet below we show how to instantiate this class and the required classed to be imported.</p>
+<p>In this implementation we consider a message broker. In essence, it accepts messages from sending components, and delivers them to all registered components except for the sending one. This message broker has the exact role of a forwarder and it does not contribute anything to message filtering. Deciding to accept a message or not is carried out when the message is delivered to the component. This implies that you always have to start the forwarding server/message broker so that your program functions in the expected way. This task is very easy, all you need to do is to create an instance of the class "ServerPort". This class is responsible for forwarding messages. By default, It accepts messages at port number 9998 and it accepts registration at port number 9999. In the code snippet below we show how to instantiate this class and the required classes to be imported.</p>
 
 <p><img src="https://dl.dropboxusercontent.com/s/rvylqyja3pswxrx/serverport.png?dl=0" alt=""></p>
 
@@ -54,11 +54,24 @@
 
 <p><img src="https://dl.dropboxusercontent.com/s/ex8iz8fcslqwp3u/serverportclient.png?dl=0" alt=""></p>
 
-<h3>
-<a id="attribute-based-interaction" class="anchor" href="#attribute-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attribute-based Interaction</h3>
+<p>Now everything is in place to start programming with AbC linguistic primitives as we will see in the following examples. Now we list the basic steps to write an AbC program:</p>
 
-<p>In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. In the following sections, we show how to program with AbC primitives naturally and easily.
-  <img src="https://dl.dropboxusercontent.com/s/e1w8f2qxge2m3rt/attribute.png?dl=0" alt=""> </p>
+<ul>
+<li>Create a Java class with a main method.</li>
+<li>Create a Java class each process type in your model (This class should extend the AbCProcess class and override doRun() method). The doRun() should contain the behaviour of your process.</li>
+<li>In the main method, instantiate your processes, instantiate the classes AbCEnvironment, Attribute, and AbCComponent, assign attributes to the environment, the environment to the component, and processes to the component. Notice that the method addProcess() put processes in parallel. For instant, if you have component C1, then 
+C1.addProcess(P1);
+C1.addProcess(P2);
+equal of having P1 and P2 in parallel within component C1.</li>
+<li>Add a client port to your component (C1.addPort(cPortClient)).</li>
+<li>Start the execution of your component by the following methods
+            cPortClient.start();
+    c1.start();</li>
+<li>This is it!
+### Attribute-based Interaction
+In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. In the following sections, we show how to program with AbC primitives naturally and easily.
+<img src="https://dl.dropboxusercontent.com/s/e1w8f2qxge2m3rt/attribute.png?dl=0" alt=""> </li>
+</ul>
 
 <p>In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. In the following sections, we show how to program with AbC primitives naturally and easily.</p>
 
