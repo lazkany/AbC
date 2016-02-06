@@ -30,15 +30,26 @@
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h3>
 
 <p>In this implementation we consider a message broker. In essence, it accepts messages from sending components, and delivers them to all registered components except for the sending one. This message broker has the exact role of a forwarder and it does not contribute anything to message filtering. Deciding to accept a message or not is carried out when the message is delivered to the component. This implies that you alway have to start the forwarding server/message broker so that your program functions in the expected way. This task is very easy, all you need to do is to create an instance of the class "ServerPort". This class is responsible for forwarding messages. It accepts messages at port number 9998 and it accepts registration at port number 9999. In the code snippet below we show how to instantiate this class and the required classed to be imported.
-<code>import java.io.IOException;
-        import org.sysma.abc.core.centralized.ServerPort;
-        import org.sysma.abc.core.exceptions.DuplicateNameException;
-        public class MainServer {
-            public static void main(String[] args) throws IOException, DuplicateNameException {
-                ServerPort srvr=new ServerPort();   
-            }
-        }
-</code></p>
+`   import java.io.IOException;
+    import org.sysma.abc.core.centralized.ServerPort;
+    import org.sysma.abc.core.exceptions.DuplicateNameException;</p>
+
+<pre><code>/**
+ * @author Yehia Abd Alrahman
+ *
+ */
+public class MainServer {
+
+    public static void main(String[] args) throws IOException, DuplicateNameException {
+        // TODO Auto-generated method stub
+        ServerPort srvr=new ServerPort();
+
+    }
+
+}
+</code></pre>
+
+<p>`</p>
 
 <h3>
 <a id="attribute-based-interaction" class="anchor" href="#attribute-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attribute-based Interaction</h3>
