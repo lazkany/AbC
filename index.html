@@ -36,7 +36,7 @@
 <p>In this way, every AbC component should communicate only with the message broker/main server, this server is responsible for forwarding the messages to the other components. This means that every component should provide a mean of communication and in our implementation this can be done by instantiating the class "ServerPortClient" and specify the local address and the server address. Every node should also register itself to the message broker to be considered for future incoming messages. All addresses are socket addresses (i.e., IP address + port number). As mentioned above, the message broker with default settings accepts messages at port 9998 and registration at port 9999. In our tutorial here, we let the user to enter the port address at run time and because we run the examples on one machine, we consider the IP address as a wildcard as shown below.</p>
 
 <pre><code>
-System.out.println("Enter port number : ");
+        System.out.println("Enter port number : ");
         int port = 0;
         try {
             BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
