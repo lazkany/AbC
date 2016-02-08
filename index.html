@@ -119,8 +119,8 @@ public class Explorer {
 <p>The Send method takes three parameters (predicate,values,update), the filter predicate, the sequence of values as a string, and a possible set of local attribute updates. In this case we don't need the updates. Below you see the the definitions in the main method. </p>
 
 <pre><code>
-   ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
-   cPortClient.RemoteRegister(new ServerPortAddress(9999));
+    ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
+    cPortClient.RemoteRegister(new ServerPortAddress(9999));
     Process_1 explorer = new Process_1("explorer_1");
     AbCEnvironment store1 = new AbCEnvironment();
     Attribute a1 = new Attribute("role", Object.class);
