@@ -28,7 +28,7 @@
 
 <p></p><pre> <code>ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
         cPortClient.RemoteRegister(new ServerPortAddress(9999));
-        Process_1 explorer = new Process_1("explorer_1");</code> <pre>
+        Process_1 explorer = new Process_1("explorer_1");</code> &lt;\pre&gt;
 
 <h3>
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h3>
@@ -43,7 +43,7 @@
 
 <p>Now everything is in place to start programming with AbC linguistic primitives as we will see in the following examples. Now we list the basic steps to write an AbC program:</p>
 
-</pre></pre><ul>
+</pre><ul>
 <li>Create a Java class with a main method.</li>
 <li>Create a Java class for each process type in your model (This class should extend the AbCProcess class and override the doRun() method). The doRun() method should contain the behaviour of your process.</li>
 <li>In the main method, instantiate your processes, instantiate the classes AbCEnvironment, Attribute, and AbCComponent, assign attributes to the environment, the environment to the component, and processes to the component. Notice that the method addProcess() puts processes in parallel. For instant, if you have component C1, and then you add processes P1 and P2 to component C1, this is equivalent of having P1 and P2 in parallel within component C1.</li>
