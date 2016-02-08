@@ -58,16 +58,16 @@ public class MainServer {
 
 <pre><code>
         System.out.println("Enter port number : ");
-        int port = 0;
-        try {
-            BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-            port = Integer.parseInt(bufferRead.readLine());
+    int port = 0;
+    try {
+        BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+        port = Integer.parseInt(bufferRead.readLine());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
-        cPortClient.RemoteRegister(new ServerPortAddress(9999));
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
+    cPortClient.RemoteRegister(new ServerPortAddress(9999));
 </code></pre>
 
 <p>Now everything is in place to start programming with AbC linguistic primitives as we will see in the following examples. Now we list the basic steps to write an AbC program:</p>
