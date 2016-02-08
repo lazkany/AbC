@@ -69,7 +69,7 @@
 
 <p>The behaviour of the explorer robot is simple, it sends queries for information about victims to nearby rescuers or helpers. It sends its Id, a qry request, and its role. In our implementation values are sent as a sequence of strings separated with comma ",". The predicate should be as follows: </p>
 
-<p>GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));</p>
+<p><code>GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));</code></p>
 
 <p>We provide a set of predicates to be used to filter messages and you can find them here <a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/grpPredicate">AbC Predicates</a>. If we take the predicate HasValue("role", "rescuer") for example,this corresponds to the AbC predicate (role=rescuer) where the left hand side denotes an attribute identifier and the right hand side corresponds to a value. The behaviour of the explorer robot is shown bellow.</p>
 
