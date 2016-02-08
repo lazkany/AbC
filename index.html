@@ -26,22 +26,6 @@
 
 <p>In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. </p>
 
-<pre><code>
-        ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
-        cPortClient.RemoteRegister(new ServerPortAddress(9999));
-        Process_1 explorer = new Process_1("explorer_1");
-        AbCEnvironment store1 = new AbCEnvironment();
-        Attribute a1 = new Attribute("role", Object.class);
-        Attribute a2 = new Attribute("id", Object.class);
-        store1.setValue(a1, "explorer");
-        store1.setValue(a2, "1");
-        AbCComponent c1 = new AbCComponent("C1", store1);
-        c1.addProcess(explorer);
-        c1.addPort(cPortClient);
-        cPortClient.start();
-        c1.start();
-</code></pre>
-
 <h3>
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h3>
 
@@ -81,7 +65,21 @@
 
 <p>The Send method takes three parameters (predicate,values,update), the filter predicate, the sequence of values as a string, and a possible set of local attribute updates. In this case we don't need the updates. Below you see the the definitions in the main method. </p>
 
-<p><img src="https://dl.dropboxusercontent.com/s/6a1umd3m8utapnx/mainexplorer.png?dl=0" alt=""></p>
+<pre><code>
+        ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
+        cPortClient.RemoteRegister(new ServerPortAddress(9999));
+        Process_1 explorer = new Process_1("explorer_1");
+        AbCEnvironment store1 = new AbCEnvironment();
+        Attribute a1 = new Attribute("role", Object.class);
+        Attribute a2 = new Attribute("id", Object.class);
+        store1.setValue(a1, "explorer");
+        store1.setValue(a2, "1");
+        AbCComponent c1 = new AbCComponent("C1", store1);
+        c1.addProcess(explorer);
+        c1.addPort(cPortClient);
+        cPortClient.start();
+        c1.start();
+</code></pre>
 
 <p>As we mentioned in the previous section, here we define the component, its environment, and its attributes. we attach the process we defined to the component and start its execution. </p>
 
