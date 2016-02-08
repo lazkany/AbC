@@ -1,42 +1,37 @@
-<!doctype html>
-<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
-<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on https://github.com/jonrohan -->
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
-  <link rel="stylesheet" href="stylesheets/github-dark.css">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="javascripts/script.js"></script>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="AbC : The Implementation of AbC Linguistic Primitives ">
 
-  <title>AbC</title>
-  <meta name="description" content="The Implementation of AbC Linguistic Primitives ">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>AbC</title>
+  </head>
 
-</head>
+  <body>
 
-<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/lazkany/AbC">View on GitHub</a>
 
-  <div class="wrapper">
-    <header>
-      <h1 class="title">AbC</h1>
-    </header>
-    <div id="container">
-      <p class="tagline">The Implementation of AbC Linguistic Primitives </p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/lazkany/AbC/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/lazkany/AbC/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/lazkany/AbC" class="code">View AbC on GitHub</a>
-        </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
-          <h3>
+          <h1 id="project_title">AbC</h1>
+          <h2 id="project_tagline">The Implementation of AbC Linguistic Primitives </h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/lazkany/AbC/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/lazkany/AbC/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
 <a id="attribute-based-communication" class="anchor" href="#attribute-based-communication" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attribute-based Communication.</h3>
 
 <p>AbC is a process calculus for attribute-based communication. An AbC system consists of a set of parallel agents each of which is equipped with a set of attributes. Communication takes place in an implicit multicast fashion, and interactions among agents are dynamically established by taking into account "connections" as determined by predicates over the attributes of agents.</p>
@@ -58,8 +53,8 @@
 
 <ul>
 <li>Create a Java class with a main method.</li>
-<li>Create a Java class for each process type in your model (This class should extend the AbCProcess class and override doRun() method). The doRun() should contain the behaviour of your process.</li>
-<li>In the main method, instantiate your processes, instantiate the classes AbCEnvironment, Attribute, and AbCComponent, assign attributes to the environment, the environment to the component, and processes to the component. Notice that the method addProcess() put processes in parallel. For instant, if you have component C1, and then you add processes P1 and P2 to component C1, this is equivalent of having P1 and P2 in parallel within component C1.</li>
+<li>Create a Java class for each process type in your model (This class should extend the AbCProcess class and override the doRun() method). The doRun() method should contain the behaviour of your process.</li>
+<li>In the main method, instantiate your processes, instantiate the classes AbCEnvironment, Attribute, and AbCComponent, assign attributes to the environment, the environment to the component, and processes to the component. Notice that the method addProcess() puts processes in parallel. For instant, if you have component C1, and then you add processes P1 and P2 to component C1, this is equivalent of having P1 and P2 in parallel within component C1.</li>
 <li>Add a client port to your component (C1.addPort(cPortClient)).</li>
 <li>Start the execution of your component with Start() method.</li>
 <li>This is it!</li>
@@ -76,15 +71,21 @@
 
 <p>GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));</p>
 
-<p>We provide a set of predicates to be used to filter messages and you can find them here <a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/grpPredicate">AbC Predicates</a>. The behaviour of the explorer robot is shown bellow.</p>
+<p>We provide a set of predicates to be used to filter messages and you can find them here <a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/grpPredicate">AbC Predicates</a>. If we take the predicate HasValue("role", "rescuer") for example,this corresponds to the AbC predicate (role=rescuer) where the left hand side denotes an attribute identifier and the right hand side corresponds to a value. The behaviour of the explorer robot is shown bellow.</p>
 
 <p><img src="https://dl.dropboxusercontent.com/s/6n47ju8qckgh7im/explorer.png?dl=0" alt=""></p>
 
-<p>The Send(predicate,message,update) takes three parameters, the filter predicate, the sequence of values as a string, and a possible set of local updates. In this case we don't need the updates. Below you see the the definitions in the main method. </p>
+<p>The Send method takes three parameters (predicate,values,update), the filter predicate, the sequence of values as a string, and a possible set of local attribute updates. In this case we don't need the updates. Below you see the the definitions in the main method. </p>
 
 <p><img src="https://dl.dropboxusercontent.com/s/6a1umd3m8utapnx/mainexplorer.png?dl=0" alt=""></p>
 
-<p>As we mentioned in the previous section, here we define the component, its environment, and its attributes. we attach the process we defined to the component and start its execution. The behaviour of other processes (i.e., Helper, Rescuer, and Charger) is specified in the same way. The only differences are those regarding their attributes, attribute values and their predicate. They also use the other construct for communication which is the receive(predicate, update). Again here we don't need any attribute updates, so we just keep them null.</p>
+<p>As we mentioned in the previous section, here we define the component, its environment, and its attributes. we attach the process we defined to the component and start its execution. </p>
+
+<p>The behaviour of processes (i.e., Helper, Rescuer, and Charger) is specified in the same way. The only differences are those regarding their attributes, attribute values and their predicate. They also use the other construct for communication which is the receive. The receive method takes two parameters (predicate, update), the receiving predicate and a possible set of local attribute updates if there is any. It should be noted that the receiving predicate can either check local attributes or if the received values satisfy certain conditions. As we know, the receiving values are a sequence of strings concatenated with ",". If you want to refer to a specific element in the received value, use the following notation for the left hand side of the predicate operands "$index". If you put a dollar sign before an integer number, this will be regarded as a bound name that refers to the value with index "index" in the received sequence of values. For instance if we take the receiving predicate for the Helper robot, it should be as follows: </p>
+
+<p>GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));</p>
+
+<p>This is an (and) predicate that checks if the second element of the received values equals to "qry" and the third element equals to "explorer". Notice that the index starts from zero. It corresponds to the AbC predicate (x=qry) &amp;&amp; (y=explorer) where the received sequence of values is (v,x,y). </p>
 
 <p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/AttributeBased">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=QfbCYoRgE3s&amp;feature=youtu.be">Video Demo</a></p>
@@ -130,27 +131,18 @@ Universita degli Studi di Firenze<br>
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with with installation or programming? Please contact either <a href="https://github.com/lazkany" class="user-mention">@lazkany</a> or <a href="https://github.com/michele-loreti" class="user-mention">@michele-loreti</a></p>
-        </article>
-      </div>
+      </section>
     </div>
-    <footer>
-      <div class="owner">
-      <p><a href="https://github.com/lazkany" class="avatar"><img src="https://avatars0.githubusercontent.com/u/9892259?v=3&amp;s=60" width="48" height="48"></a> <a href="https://github.com/lazkany">lazkany</a> maintains <a href="https://github.com/lazkany/AbC">AbC</a></p>
 
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">AbC maintained by <a href="https://github.com/lazkany">lazkany</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
 
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
-    </footer>
-  </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/lazkany/AbC/tarball/master" class="tar">tar</a><a href="https://github.com/lazkany/AbC/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
-  </div>
-
-            <script type="text/javascript">
+              <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -161,5 +153,6 @@ Universita degli Studi di Firenze<br>
             } catch(err) {}
           </script>
 
-</body>
+
+  </body>
 </html>
