@@ -81,11 +81,25 @@
 
 <p>As we mentioned in the previous section, here we define the component, its environment, and its attributes. we attach the process we defined to the component and start its execution. </p>
 
-<p>The behaviour of processes (i.e., Helper, Rescuer, and Charger) is specified in the same way. The only differences are those regarding their attributes, attribute values and their predicate. They also use the other construct for communication which is the receive. The receive method takes two parameters (predicate, update), the receiving predicate and a possible set of local attribute updates if there is any. It should be noted that the receiving predicate can either check local attributes or if the received values satisfy certain conditions. As we know, the receiving values are a sequence of strings concatenated with ",". If you want to refer to a specific element in the received value, use the following notation for the left hand side of the predicate operands "$index". If you put a dollar sign before an integer number, this will be regarded as a bound name that refers to the value with index "index" in the received sequence of values. For instance if we take the receiving predicate for the Helper robot, it should be as follows: </p>
+<p>The behaviour of processes (i.e., Helper, Rescuer, and Charger) is specified in the same way. The only differences are those regarding their attributes, attribute values and their predicate. They also use the other construct for communication which is the receive method. The receive method takes two parameters (predicate, update), the receiving predicate and a possible set of local attribute updates if there is any. It should be noted that the receiving predicate can either check local attributes or if the received values satisfy certain conditions. As we know, the receiving values are a sequence of strings concatenated with ",". If you want to refer to a specific element in the received value, use the following notation for the left hand side of the predicate operand "$index". If you put a dollar sign before an integer number, this will be regarded as a bound name that refers to the value with index "index" in the received sequence of values. For instance if we take the receiving predicate for the Helper robot, it should be as follows: </p>
 
 <p>GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));</p>
 
-<p>This is an (and) predicate that checks if the second element of the received values equals to "qry" and the third element equals to "explorer". Notice that the index starts from zero. It corresponds to the AbC predicate (x=qry) &amp;&amp; (y=explorer) where the received sequence of values is (v,x,y). </p>
+<p>This is an (and) predicate that checks if the second element of the received values equals to "qry" and the third element equals to "explorer". It corresponds to the AbC predicate (x=qry) &amp;&amp; (y=explorer) where the received sequence of values is (v,x,y). Notice that the index starts from zero. Below we only show the behaviour of the Helper robot. Processes Rescuer and charger follow in a similar way. The source code for the whole example can be found be the end of this section and we also include a video to show how to run AbC programs.</p>
+
+<p>Putting it all together </p>
+
+<ul>
+<li><p>To run your AbC program, you'll need AbC .JAR and its dependencies (i.e.,<a href="http://search.maven.org/#artifactdetails%7Ccom.google.code.gson%7Cgson%7C2.5%7Cjar">gson-2.5.jar</a>) placed in the same folder. </p></li>
+<li><p>To create AbC .JAR, after you complete writing your AbC program, select the main directory in the project explorer in your eclipse (org.sysma.abc.core). From file menu, select "Export". the Select JAR File from JAVA folder and finally save it in the same folder of "son-2.5.jar".</p></li>
+<li><p>Assume that you saved the AbC .JAR with "test.jar" name, so in the terminal you write the following to run for instance the code of the Helper robot.</p></li>
+</ul>
+
+<p>java -cp test.jar:son-2.5.jar org.sysma.abc.core.Examples.AttributeBased.Helper</p>
+
+<ul>
+<li>DO NOT FORGET to run the main server in the beginning, otherwise it will not work.</li>
+</ul>
 
 <p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/AttributeBased">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=QfbCYoRgE3s&amp;feature=youtu.be">Video Demo</a></p>
