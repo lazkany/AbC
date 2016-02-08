@@ -109,6 +109,31 @@ public class Explorer {
 
 <p>This is an (and) predicate that checks if the second element of the received values equals to "qry" and the third element equals to "explorer". It corresponds to the AbC predicate (x=qry) &amp;&amp; (y=explorer) where the received sequence of values is (v,x,y). Notice that the index starts from zero. Below we only show the behaviour of the Helper robot. Processes Rescuer and charger follow in a similar way. The source code for the whole example can be found be the end of this section and we also include a video to show how to run AbC programs.</p>
 
+<pre><code>
+public class Helper {
+    public static GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));
+
+    public static class Process_1 extends AbCProcess {
+
+        /**
+         * @param name
+         * @throws AbCAttributeTypeException
+         */
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);
+            // TODO Auto-generated constructor stub
+
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+
+            System.out.println(this.name + " =&gt; received: " + receive(andPrd, null));
+
+        }
+    }
+</code></pre>
+
 <p>Putting it all together </p>
 
 <ul>
