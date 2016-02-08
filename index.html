@@ -65,9 +65,11 @@
 
 <p>The Send method takes three parameters (predicate,values,update), the filter predicate, the sequence of values as a string, and a possible set of local attribute updates. In this case we don't need the updates. Below you see the the definitions in the main method. </p>
 
-<p><code>ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));</code>
-<code>cPortClient.RemoteRegister(new ServerPortAddress(9999));</code>
-<code>Process_1 explorer = new Process_1("explorer_1");</code></p>
+<p><code>ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));</code></p>
+
+<p><code>cPortClient.RemoteRegister(new ServerPortAddress(9999));</code></p>
+
+<p><code>Process_1 explorer = new Process_1("explorer_1");</code></p>
 
 <p><img src="https://dl.dropboxusercontent.com/s/6a1umd3m8utapnx/mainexplorer.png?dl=0" alt=""></p>
 
