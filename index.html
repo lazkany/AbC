@@ -27,7 +27,7 @@
 <p>In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. </p>
 
 <pre><code>
-                ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
+ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
         cPortClient.RemoteRegister(new ServerPortAddress(9999));
         Process_1 explorer = new Process_1("explorer_1");
         AbCEnvironment store1 = new AbCEnvironment();
