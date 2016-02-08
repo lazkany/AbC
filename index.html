@@ -121,17 +121,17 @@ public class Explorer {
 <pre><code>
         ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
         cPortClient.RemoteRegister(new ServerPortAddress(9999));
-        Process_1 explorer = new Process_1("explorer_1");
-        AbCEnvironment store1 = new AbCEnvironment();
-        Attribute a1 = new Attribute("role", Object.class);
-        Attribute a2 = new Attribute("id", Object.class);
-        store1.setValue(a1, "explorer");
-        store1.setValue(a2, "1");
-        AbCComponent c1 = new AbCComponent("C1", store1);
-        c1.addProcess(explorer);
-        c1.addPort(cPortClient);
-        cPortClient.start();
-        c1.start();
+    Process_1 explorer = new Process_1("explorer_1");
+    AbCEnvironment store1 = new AbCEnvironment();
+    Attribute a1 = new Attribute("role", Object.class);
+    Attribute a2 = new Attribute("id", Object.class);
+    store1.setValue(a1, "explorer");
+    store1.setValue(a2, "1");
+    AbCComponent c1 = new AbCComponent("C1", store1);
+    c1.addProcess(explorer);
+    c1.addPort(cPortClient);
+    cPortClient.start();
+    c1.start();
 </code></pre>
 
 <p>As we mentioned in the previous section, here we define the component, its environment, and its attributes. we attach the process we defined to the component and start its execution. </p>
