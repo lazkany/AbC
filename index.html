@@ -188,8 +188,91 @@ public class Helper {
 <h3>
 <a id="modelling-group-based-interaction" class="anchor" href="#modelling-group-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modelling Group-based Interaction</h3>
 
-<p><img src="https://dl.dropboxusercontent.com/s/hrlfdvqs27f8kl5/group.png?dl=0" alt="">
-<a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/GroupBased">Source Code</a><br>
+<p>In this section, we show how to model group-based framework in AbC in an easy way. We consider a scenario where we have three groups: groupA, groupB, and groupC. We defines two members of groupB, one member of groupA, and one member of groupC. The groupC member stays for a certain amount of time in groupC and then leaves to join groupB. The groupB members are always ready to receive messages from groupA members. On the other hand, groupA members are always sending messages only to groupB. The figure below shows the conceptual scenario.   </p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/hrlfdvqs27f8kl5/group.png?dl=0" alt=""></p>
+
+<p>The groupA behaviour is shown below. Basically, GroupA members always send messages with the predicate "TOgrpB". This predicate filters the message only to GroupB. In the same time, groupA members attach their group name in the message. 
+<code>this.getComponent().getStore().getValue("group")</code> this corresponds the the AbC attribute reference "this.group".</p>
+
+<pre><code>
+public class GroupA {
+    public static GroupPredicate TOgrpB = new HasValue("group", "B");
+
+    public static class Process_1 extends AbCProcess {
+
+        /**
+         * @param name
+         * @throws AbCAttributeTypeException
+         */
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            // TODO Auto-generated method stub
+            while(true){
+            Send(TOgrpB, "MSG" + "," + this.getComponent().getStore().getValue("group"), null);
+            Thread.sleep(2000);
+            }
+        }
+    }
+</code></pre>
+
+<p>On the other hand, the behaviour of groupB and groupC members is nearly similar in the sense that both of them are waiting to receive messages from groupA as shown below.</p>
+
+<pre><code>
+public class GroupB {
+    public static GroupPredicate FromgrpA = new HasValue("$1", "A");
+    public static class Process_1 extends AbCProcess {
+
+        /**
+         * @param name
+         * @throws AbCAttributeTypeException
+         */
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            while(true){
+            System.out.println(this.name + " =&gt; received: " + receive(FromgrpA, null));
+            }
+
+        }
+    }
+</code></pre>
+
+<p>So, both of groupB and groupC members have a process that is waiting to receive a message with a predicate "FromgrpA". This predicate inspects the second element of the received values and checks its equality with "A" where "A" denotes groupA. if this predicate holds true then the message can be receiver otherwise it will be discarded. In addition to this behaviour, the groupC members contains another process running in parallel and this process waits for a while and then leaves groupC to join groupB as shown below.</p>
+
+<pre><code>
+public static class Process_2 extends AbCProcess {
+
+        /**
+         * @param name
+         * @throws AbCAttributeTypeException
+         */
+        public Process_2(String name) throws AbCAttributeTypeException {
+            super(name);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            // TODO Auto-generated method stub
+            update.put(this.getComponent().getStore().getAttribute("group"), "B");
+            Thread.sleep(20000);
+            Send(ff, " ", update);
+            System.out.println("joined group B");
+        }
+    }
+<code></code></code></pre>
+
+<p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/GroupBased">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=3xlWubbXjTM&amp;feature=youtu.be">Video Demo</a></p>
 
 <h3>
