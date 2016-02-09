@@ -281,6 +281,32 @@ public class Publisher {
 
 <p><code>this.getComponent().getStore().getValue("topic_1")</code></p>
 
+<p>The subscriber is responsible to check if the message matches its subscriptions or not. This can be done by using the predicate "subscribe" as shown below. This predicate will check if the attached topics (i.e., located at $1 and $2) matches the subscriber subscriptions or not. Again the line <code>this.getComponent().getStore().getValue("subscription")</code> corresponds to the AbC attribute reference "this.subscription".</p>
+
+<pre><code>
+public class Subscriber_1 {
+    public static class Process_1 extends AbCProcess {
+
+        /**
+         * @param name
+         * @throws AbCAttributeTypeException 
+         */
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);
+            // TODO Auto-generated constructor stub         
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            GroupPredicate subscribe = new Or(new HasValue("$1", this.getComponent().getStore().getValue("subscription")), new HasValue("$2", this.getComponent().getStore().getValue("subscription")));
+            System.out.println(this.name + " =&gt; received: " + receive(subscribe, null));
+
+        }
+    }
+</code></pre>
+
+<p>The full source code for the whole scenario can be found below.</p>
+
 <p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/PublishSubscribe">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=Eiil8DkPoqM&amp;feature=youtu.be">Video Demo</a></p>
 
