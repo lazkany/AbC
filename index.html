@@ -193,67 +193,6 @@ public class Helper {
 <a href="https://www.youtube.com/watch?v=3xlWubbXjTM&amp;feature=youtu.be">Video Demo</a></p>
 
 <h3>
-<a id="encoding-channel-based-interaction" class="anchor" href="#encoding-channel-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Encoding Channel-based Interaction</h3>
-
-<p>In this example, we show how we can model channel-based communication in AbC smoothly and easily. In essence, we will show how to encode the basic constructs of the <a href="http://dl.acm.org/citation.cfm?id=662485">Broadcast Pi-calculus</a> into AbC in a natural way. We will consider the send and receive actions and the underlying communication paradigm. The encoding of a broadcast Pi-calculus process P, is rendered as an AbC component with empty environment. The channel is encoded as a special value in the sent message. For instance, the broadcast action in the broadcast Pi-calculus is encoded as follows:</p>
-
-<pre><code>
-public class Sender {
-    public static GroupPredicate any = new AnyComponent();
-
-    public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         */
-        public Process_1(String name) {
-            super(name);
-            // TODO Auto-generated constructor stub
-        }
-
-        @Override
-        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            // TODO Auto-generated method stub
-            Send(any, "a,v", null);
-        }
-    }
-</code></pre>
-
-<p>as you see, the send action is encoded as a send method in AbC, where the predicate any corresponds to a true predicate in AbC (i.e., satisfied by all). The sent values is a pair, the first element is the name of the channel and the second element is the actual communicated value. As shown below, the receiver decides whether to accept the message or not.  </p>
-
-<pre><code>
-public class Receiver_1 {
-    public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         */
-        public Process_1(String name) {
-            super(name);
-            // TODO Auto-generated constructor stub
-        }
-
-        @Override
-        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-
-            GroupPredicate channel = new HasValue("$0", "a");
-            System.out.println(this.name + " =&gt; received: " + receive(channel, null));
-
-        }
-    }
-
-</code></pre>
-
-<p>Basically, the receiver accept only the message that satisfies the predicate "channel". This predicate checks the first element (i.e., "$0") in the message and returns true if it is equal to "a" otherwise the message is discarded. As shown in the figure below, we model a scenario, where there are two receiver waiting to receive messages on channel "a" , one receiver is waiting to receive message on channel "c", and one sender that wants to send a message "v" on channel "a".</p>
-
-<p><img src="https://dl.dropboxusercontent.com/s/v8w7a1umxjne2w1/channel.png?dl=0" alt=""></p>
-
-<p>Only the receivers which are waiting to receive a message on channel "a" will receive the message, the other receiver will discard any sent message on a channel that is different from "c". The source code for all processes can be found below and we also include a video to show how to run these processes.</p>
-
-<p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/broadcast">Source Code</a><br>
-<a href="https://www.youtube.com/watch?v=VfFOpDV-JSw&amp;feature=youtu.be">Video Demo</a></p>
-
-<h3>
 <a id="modelling-publishsubscribe-framework" class="anchor" href="#modelling-publishsubscribe-framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modelling Publish/Subscribe framework</h3>
 
 <p>In this section, we show how to model Topic-based publish/subscribe framework in AbC in a natural way. We consider a scenario where a publisher is sending messages tagged with two different topics: topic_1=movies and topic_2=news. There are three subscribers, one is subscribed to "movies", one to "news", and the last one is subscribed to songs as shown below:</p>
@@ -316,6 +255,67 @@ public class Subscriber_1 {
 
 <p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/PublishSubscribe">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=Eiil8DkPoqM&amp;feature=youtu.be">Video Demo</a></p>
+
+<h3>
+<a id="encoding-channel-based-interaction" class="anchor" href="#encoding-channel-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Encoding Channel-based Interaction</h3>
+
+<p>In this example, we show how we can model channel-based communication in AbC smoothly and easily. In essence, we will show how to encode the basic constructs of the <a href="http://dl.acm.org/citation.cfm?id=662485">Broadcast Pi-calculus</a> into AbC in a natural way. We will consider the send and receive actions and the underlying communication paradigm. The encoding of a broadcast Pi-calculus process P, is rendered as an AbC component with empty environment. The channel is encoded as a special value in the sent message. For instance, the broadcast action in the broadcast Pi-calculus is encoded as follows:</p>
+
+<pre><code>
+public class Sender {
+    public static GroupPredicate any = new AnyComponent();
+
+    public static class Process_1 extends AbCProcess {
+
+        /**
+         * @param name
+         */
+        public Process_1(String name) {
+            super(name);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            // TODO Auto-generated method stub
+            Send(any, "a,v", null);
+        }
+    }
+</code></pre>
+
+<p>as you see, the send action is encoded as a send method in AbC, where the predicate any corresponds to a true predicate in AbC (i.e., satisfied by all). The sent values is a pair, the first element is the name of the channel and the second element is the actual communicated value. As shown below, the receiver decides whether to accept the message or not.  </p>
+
+<pre><code>
+public class Receiver_1 {
+    public static class Process_1 extends AbCProcess {
+
+        /**
+         * @param name
+         */
+        public Process_1(String name) {
+            super(name);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+
+            GroupPredicate channel = new HasValue("$0", "a");
+            System.out.println(this.name + " =&gt; received: " + receive(channel, null));
+
+        }
+    }
+
+</code></pre>
+
+<p>Basically, the receiver accept only the message that satisfies the predicate "channel". This predicate checks the first element (i.e., "$0") in the message and returns true if it is equal to "a" otherwise the message is discarded. As shown in the figure below, we model a scenario, where there are two receiver waiting to receive messages on channel "a" , one receiver is waiting to receive message on channel "c", and one sender that wants to send a message "v" on channel "a".</p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/v8w7a1umxjne2w1/channel.png?dl=0" alt=""></p>
+
+<p>Only the receivers which are waiting to receive a message on channel "a" will receive the message, the other receiver will discard any sent message on a channel that is different from "c". The source code for all processes can be found below and we also include a video to show how to run these processes.</p>
+
+<p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/broadcast">Source Code</a><br>
+<a href="https://www.youtube.com/watch?v=VfFOpDV-JSw&amp;feature=youtu.be">Video Demo</a></p>
 
 <h3>
 <a id="contributors-to-the-implementation" class="anchor" href="#contributors-to-the-implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributors to the Implementation</h3>
