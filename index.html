@@ -188,7 +188,7 @@ public class Helper {
 <h3>
 <a id="encoding-channel-based-interaction" class="anchor" href="#encoding-channel-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Encoding Channel-based Interaction</h3>
 
-<p>In this example, we show how we can model channel-based communication in AbC smoothly and easily. In essence, we will show how to encode the basic constructs of the <a href="http://dl.acm.org/citation.cfm?id=662485">Broadcast Pi-calculus</a>into AbC in a natural way. We will consider the send and receive actions and the underlying communication paradigm. The encoding of a broadcast Pi-calculus process P, is rendered as an AbC component with empty environment. The channel is encoded as a special value in the sent message. For instance, the broadcast action in the broadcast Pi-calculus is encoded as follows:</p>
+<p>In this example, we show how we can model channel-based communication in AbC smoothly and easily. In essence, we will show how to encode the basic constructs of the <a href="http://dl.acm.org/citation.cfm?id=662485">Broadcast Pi-calculus</a> into AbC in a natural way. We will consider the send and receive actions and the underlying communication paradigm. The encoding of a broadcast Pi-calculus process P, is rendered as an AbC component with empty environment. The channel is encoded as a special value in the sent message. For instance, the broadcast action in the broadcast Pi-calculus is encoded as follows:</p>
 
 <pre><code>
 public class Sender {
@@ -249,8 +249,39 @@ public class Receiver_1 {
 <h3>
 <a id="modelling-publishsubscribe-framework" class="anchor" href="#modelling-publishsubscribe-framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modelling Publish/Subscribe framework</h3>
 
-<p><img src="https://dl.dropboxusercontent.com/s/72r0wd6ot3ujeuh/pubsub.png?dl=0" alt="">
-<a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/PublishSubscribe">Source Code</a><br>
+<p>In this section, we show how to model Topic-based publish/subscribe framework in AbC in a natural way. We consider a scenario where a publisher is sending messages tagged with two different topics: topic_1=movies and topic_2=news. There are three subscribers, one is subscribed to "movies", one to "news", and the last one is subscribed to songs as shown below:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/72r0wd6ot3ujeuh/pubsub.png?dl=0" alt=""></p>
+
+<p>Obviously, only the subscribers with "movies" or "news" will get the message, the subscriber who is subscribed to "songs" will not receive the message. This scenario can be modelled in AbC in an obvious way in the sense that the publisher will send a message with true predicate (i.e., satisfied by all) and tag these messages with topics. The Publisher has two attributes named topic_1 and topic_2 respectively. The publisher code is shown below:</p>
+
+<pre><code>
+public class Publisher {
+    public static GroupPredicate any = new AnyComponent();
+    public static class Process_1 extends AbCProcess {
+
+        /**
+         * @param name
+         * @throws AbCAttributeTypeException
+         */
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            // TODO Auto-generated method stub
+            Send(any, "msg," + this.getComponent().getStore().getValue("topic_1") + "," + this.getComponent().getStore().getValue("topic_2"), null);
+        }
+    }
+<code></code></code></pre>
+
+<p>Simply, the publisher attaches its attributes "topic_1" and "topic_2" into the message and sends it to all possible subscribers. Note that the following code corresponds to the AbC attribute reference "this.topic_1"</p>
+
+<p><code>this.getComponent().getStore().getValue("topic_1")</code></p>
+
+<p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/PublishSubscribe">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=Eiil8DkPoqM&amp;feature=youtu.be">Video Demo</a></p>
 
 <h3>
