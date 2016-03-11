@@ -14,6 +14,7 @@ public class OuputAction {
 	 */
 	public OuputAction() {
 		// TODO Auto-generated constructor stub
+		System.out.print("");
 	}
 
 }
