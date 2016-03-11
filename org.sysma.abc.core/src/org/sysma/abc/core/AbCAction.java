@@ -21,7 +21,7 @@ public abstract class AbCAction {
 	 */
 	protected abstract GroupPredicate getPredicate() ;
 
-	/**
+	/** 
 	 * @return
 	 */
 	protected Set<Attribute<Object>> getExposed() {
