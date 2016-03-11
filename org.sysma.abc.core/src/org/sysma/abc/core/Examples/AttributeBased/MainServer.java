@@ -4,7 +4,6 @@
 package org.sysma.abc.core.Examples.AttributeBased;
 
 import java.io.IOException;
-
 import org.sysma.abc.core.centralized.ServerPort;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 
