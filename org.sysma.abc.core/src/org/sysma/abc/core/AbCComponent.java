@@ -5,6 +5,7 @@ package org.sysma.abc.core;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -31,8 +32,15 @@ public class AbCComponent {
 	private ComponentState state;
 	protected int nameCounter = 0;
 	protected Executor executor = Executors.newCachedThreadPool();
-	protected LinkedList<AbCPort> ports;
+	
 
+	protected LinkedList<AbCPort> ports;
+	/**
+	 * @return the executor
+	 */
+	public Executor getExecutor() {
+		return executor;
+	}
 	/**
 	 * @return the processes
 	 */
@@ -185,7 +193,7 @@ public class AbCComponent {
 		return state;
 	}
 
-	public <T> void storeUpdate(HashMap<Attribute<?>, Object> update) throws AbCAttributeTypeException {
+	public <T> void storeUpdate(Map<Attribute<?>, Object> update) throws AbCAttributeTypeException {
 		if (update != null) {
 			for (Attribute<?> att : update.keySet()) {
 				store.setValue(att, update.get(att));

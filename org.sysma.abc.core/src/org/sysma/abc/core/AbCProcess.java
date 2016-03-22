@@ -24,7 +24,7 @@ public abstract class AbCProcess implements Runnable {
 	private AbCComponent component;
 	// protected Queue<AbCAction> actions = new LinkedList<AbCAction>();
 	protected String name;
-	protected int id;
+	protected int id=0;
 	// private boolean waitingMessage;
 	private Queue<AbCMessage> receivedMessage = new LinkedList<>();
 	private String processType = "";
@@ -179,7 +179,7 @@ public abstract class AbCProcess implements Runnable {
 	 */
 	protected void doClose() {
 		// TODO Auto-generated method stub
-
+		this.component.getProcesses().remove(this);
 	}
 
 	/**
@@ -233,33 +233,30 @@ public abstract class AbCProcess implements Runnable {
 		component.suspend(time);
 	}
 
-	protected synchronized Object receive(GroupPredicate predicate, HashMap<Attribute<?>, Object> update)
+	protected synchronized Object receive(GroupPredicate predicate, AbcUpdate update)
 			throws InterruptedException, AbCAttributeTypeException {
 		// this.waitingMessage = true;
 		// Object value = null;
 		// while (value == null) { //CHANGE>> changed the condition was "!="
-		this.processType = "receiver"; // CHANGE> A process has to declare its
+		 // CHANGE> A process has to declare its
 										// type
-		while (this.receivedMessage.isEmpty()) {
-			wait();
-		}
-		// value = this.receivedMessage.getValue(predicate);
-		// this.receivedMessage = null;
-		// }
-		// this.waitingMessage = false;
-		if (this.receivedMessage.peek().getValue(predicate) == null) { // CHANGE>
-																		// To
-																		// model
-																		// the
-																		// blocking
-																		// nature
-																		// of
-																		// receive
+		this.processType = "receiver";
+		while(true)
+		{
+			
+		
+			while (this.receivedMessage.isEmpty()) {
+				wait();
+			}
+		
+			Object value = this.receivedMessage.peek().getValue(predicate);
+			if ( value != null) { // CHANGE>
+																		
+				//this.component.storeUpdate(update.eval(value));
+				return this.receivedMessage.poll().getValue(predicate);
+			} 
 			this.receivedMessage.poll();
-			receive(predicate, update);
 		}
-		this.component.storeUpdate(update);
-		return this.receivedMessage.poll().getValue(predicate);
 	}
 
 	protected synchronized void receive(AbCMessage message) {
@@ -269,10 +266,13 @@ public abstract class AbCProcess implements Runnable {
 		// }
 	}
 
-	// public void exec(AbCProcess p) throws InterruptedException {
-	// if (p != null) {
-	// component.exec(this, p);
-	// }
-	// }
+	 public void exec(AbCProcess p) throws InterruptedException {
+	 if (p != null) {
+		 p.setComponent(GetProcessId(), this.component);
+		 this.component.getProcesses().add(p);
+		 this.component.getExecutor().execute(p);
+	 //component.exec(this, p);
+	 }
+	 }
 
 }

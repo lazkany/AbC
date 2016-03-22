@@ -8,10 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
+import org.sysma.abc.core.AbcUpdate;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.centralized.ServerPortAddress;
 import org.sysma.abc.core.centralized.ServerPortClient;
@@ -44,7 +46,16 @@ public class GroupC {
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			while(true){
-			System.out.println(this.name + " => received: " + receive(FromgrpA, null));
+			System.out.println(this.name + " => received: " + receive(FromgrpA, new AbcUpdate() {
+
+				@Override
+				public Map<Attribute<?>, Object> eval(Object o) {
+					HashMap<Attribute<?>, Object> update = new HashMap<>();
+					update.put(getComponent().getStore().getAttribute("group"), o);
+					return update;
+				}})
+			
+				);
 			}
 
 		}
