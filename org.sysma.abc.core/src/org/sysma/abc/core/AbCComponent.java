@@ -32,28 +32,6 @@ public class AbCComponent {
 	protected int processCounter = 0;
 	private ComponentState state;
 	private int nameCounter = 0;
-	private int nrcv = 0;
-
-	/**
-	 * @return the nrcv
-	 */
-	public int getNrcv() {
-		nrcv = 0;
-		for (AbCProcess p : processes) {
-			if (p.getProcessType().equals("receiver")) {
-				nrcv++;
-			}
-		}
-		return nrcv;
-	}
-
-	/**
-	 * @param nrcv
-	 *            the nrcv to set
-	 */
-	public synchronized void setNrcv(int n) {
-		this.nrcv += n;
-	}
 
 	protected Executor executor = Executors.newCachedThreadPool();
 
