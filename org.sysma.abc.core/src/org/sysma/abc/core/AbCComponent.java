@@ -6,6 +6,7 @@ package org.sysma.abc.core;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -30,17 +31,82 @@ public class AbCComponent {
 
 	protected int processCounter = 0;
 	private ComponentState state;
-	protected int nameCounter = 0;
+	private int nameCounter = 0;
+	private int nrcv = 0;
+
+	/**
+	 * @return the nrcv
+	 */
+	public int getNrcv() {
+		nrcv = 0;
+		for (AbCProcess p : processes) {
+			if (p.getProcessType().equals("receiver")) {
+				nrcv++;
+			}
+		}
+		return nrcv;
+	}
+
+	/**
+	 * @param nrcv
+	 *            the nrcv to set
+	 */
+	public synchronized void setNrcv(int n) {
+		this.nrcv += n;
+	}
+
 	protected Executor executor = Executors.newCachedThreadPool();
-	
 
 	protected LinkedList<AbCPort> ports;
+	public int executed = 0;
+
+	private Boolean rec = false;
+
+	/**
+	 * @return the nameCounter
+	 */
+	public synchronized int getNameCounter() {
+		nameCounter++;
+		return nameCounter;
+	}
+
+	/**
+	 * @param nameCounter
+	 *            the nameCounter to set
+	 */
+	public void setNameCounter(int nameCounter) {
+		this.nameCounter = nameCounter;
+	}
+
+	// /**
+	// * @return the executed
+	// * @throws InterruptedException
+	// */
+	// public int getExecuted() throws InterruptedException {
+	// // while(executed.isEmpty())
+	// // {
+	// // wait();
+	// // }
+	// return executed;
+	// }
+
+	/**
+	 * @param executed
+	 *            the executed to set
+	 */
+	public synchronized void setExecuted(int executed, Boolean rec) {
+		this.rec = rec;
+		this.executed = executed;
+		notifyAll();
+	}
+
 	/**
 	 * @return the executor
 	 */
 	public Executor getExecutor() {
 		return executor;
 	}
+
 	/**
 	 * @return the processes
 	 */
@@ -100,6 +166,8 @@ public class AbCComponent {
 	}
 
 	public void addProcess(AbCProcess process) {
+
+		process.id = getNameCounter();
 		if (isRunning()) {
 			_addProcess(process);
 
@@ -236,14 +304,19 @@ public class AbCComponent {
 		}
 	}
 
-	public synchronized void receive(AbCMessage message) {
-		for (AbCProcess p : processes) {
-			if (p.getProcessType() == "receiver") { // CHANGE> Messages are only
-													// sent to receiving
-													// processes
+	public synchronized void receive(AbCMessage message) throws InterruptedException {
+		loop: for (AbCProcess p : processes) {
+			if (p.getProcessType() == "receiver") {
 				p.receive(message);
+				while (executed != 1) {
+					wait();
+				}
+				if (rec) {
+					setExecuted(0, false);
+					break loop;
+				}
 			}
-
+			setExecuted(0, false);
 		}
 
 	}

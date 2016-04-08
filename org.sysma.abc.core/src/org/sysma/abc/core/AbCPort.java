@@ -84,7 +84,12 @@ public abstract class AbCPort implements MessageReceiver {
 			while (isRunning) {
 				AbCMessage message = nextMessage();
 				if (message != null) {
-					receiveMessage(message);
+					try {
+						receiveMessage(message);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -112,16 +117,16 @@ public abstract class AbCPort implements MessageReceiver {
 	 * abc.core.AbCMessage)
 	 */
 
-	public void receiveMessage(AbCMessage message) {
+	public void receiveMessage(AbCMessage message) throws InterruptedException {
 		// TODO Auto-generated method stub
 		handleMessage(message);
 	}
-	public void receiveMsg(MsgCentralized message) {
+	public void receiveMsg(MsgCentralized message) throws InterruptedException {
 		// TODO Auto-generated method stub
 		AbCMessage msg=message.getMsg();
 		receiveMessage(msg);
 	}
-	protected void handleMessage(AbCMessage message) {
+	protected void handleMessage(AbCMessage message) throws InterruptedException {
 		synchronized (nodes) {
 			for (AbCComponent c : nodes.values()) {
 				if ((message.getSender() != c) && (message.isAReceiverFor(c.getStore()))) {

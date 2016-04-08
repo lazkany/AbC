@@ -10,10 +10,12 @@ import java.util.Set;
 import java.util.function.ToDoubleBiFunction;
 
 import javax.sql.rowset.spi.SyncResolver;
+import javax.swing.Box.Filler;
 
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.grpPredicate.GroupPredicate;
 import org.sysma.abc.core.grpPredicate.NoComponent;
+import java.util.function.*;
 
 /**
  * @author Yehia Abd Alrahman
@@ -24,10 +26,10 @@ public abstract class AbCProcess implements Runnable {
 	private AbCComponent component;
 	// protected Queue<AbCAction> actions = new LinkedList<AbCAction>();
 	protected String name;
-	protected int id=0;
-	// private boolean waitingMessage;
-	private Queue<AbCMessage> receivedMessage = new LinkedList<>();
+	protected int id;
+	public Queue<AbCMessage> receivedMessage = new LinkedList<>();
 	private String processType = "";
+	private boolean interrupt = false;
 
 	// /**
 	// * @return the actions
@@ -53,6 +55,11 @@ public abstract class AbCProcess implements Runnable {
 
 	public AbCProcess(String name) {
 		this.name = name;
+
+	}
+
+	public AbCProcess() {
+
 	}
 
 	public AbCProcess(AbCComponent component, String name) {
@@ -171,7 +178,7 @@ public abstract class AbCProcess implements Runnable {
 	 */
 	private void doHandle(Exception e) {
 		// TODO Auto-generated method stub
-
+		this.component.getProcesses().remove(this);
 	}
 
 	/**
@@ -179,7 +186,7 @@ public abstract class AbCProcess implements Runnable {
 	 */
 	protected void doClose() {
 		// TODO Auto-generated method stub
-		this.component.getProcesses().remove(this);
+		// this.component.getProcesses().remove(this);
 	}
 
 	/**
@@ -233,46 +240,81 @@ public abstract class AbCProcess implements Runnable {
 		component.suspend(time);
 	}
 
+	public void interrupt() throws InterruptedException {
+		// this.component.processes.remove(this);
+		interrupt = true;
+		notifyAll();
+	}
+
+	public void interrupt(String name) throws InterruptedException {
+		this.component.processes.removeIf(P -> P.getName() == name);
+		// Thread.currentThread().interrupt();
+		// return;
+	}
+
+	public void interrupt(int id) throws InterruptedException {
+		for (AbCProcess abCProcess : this.component.processes) {
+			if (id == abCProcess.id) {
+
+				abCProcess.interrupt();
+			}
+		}
+		// this.component.processes.removeIf(P -> P.GetProcessId() == id);
+
+		// Thread.currentThread().interrupt();
+
+		// return;
+	}
+
 	protected synchronized Object receive(GroupPredicate predicate, AbcUpdate update)
 			throws InterruptedException, AbCAttributeTypeException {
-		// this.waitingMessage = true;
-		// Object value = null;
-		// while (value == null) { //CHANGE>> changed the condition was "!="
-		 // CHANGE> A process has to declare its
-										// type
+
 		this.processType = "receiver";
-		while(true)
-		{
-			
-		
-			while (this.receivedMessage.isEmpty()) {
+		System.out.println(GetProcessId());
+		while (true) {
+
+			while (receivedMessage.isEmpty() && !interrupt) {
 				wait();
 			}
-		
-			Object value = this.receivedMessage.peek().getValue(predicate);
-			if ( value != null) { // CHANGE>
-																		
-				//this.component.storeUpdate(update.eval(value));
-				return this.receivedMessage.poll().getValue(predicate);
-			} 
-			this.receivedMessage.poll();
+			if (interrupt) {
+				this.processType = "";
+				// component.setNrcv(-1);
+				Thread.currentThread().interrupt();
+			}
+			Object value = receivedMessage.peek().getValue(predicate);
+			if (value != null) { // CHANGE>
+
+				// this.component.storeUpdate(update.eval(value));
+				this.component.setExecuted(1, true);
+				this.processType = "";
+				System.out.println("t" + GetProcessId() + "exec" + component.executed);
+				return receivedMessage.poll().getValue(predicate);
+			}
+
+			receivedMessage.poll();
+			this.component.setExecuted(1, false);
 		}
+
 	}
 
-	protected synchronized void receive(AbCMessage message) {
+	protected synchronized void receive(AbCMessage msg) {
 		// if (waitingMessage) {
-		receivedMessage.add(message);
+		receivedMessage.add(msg);
 		notifyAll();
+		// }   
+	}
+
+	public void exec(AbCProcess p) throws InterruptedException {
+		// if (p != null) {
+
+		p.id = this.component.getNameCounter();
+
+		p.setComponent(p.GetProcessId(), this.component);
+		this.component.getProcesses().add(p);
+		this.component.getExecutor().execute(p);
+		// new Thread(p).start();
+		// component.exec(this, p);
 		// }
 	}
-
-	 public void exec(AbCProcess p) throws InterruptedException {
-	 if (p != null) {
-		 p.setComponent(GetProcessId(), this.component);
-		 this.component.getProcesses().add(p);
-		 this.component.getExecutor().execute(p);
-	 //component.exec(this, p);
-	 }
-	 }
 
 }
