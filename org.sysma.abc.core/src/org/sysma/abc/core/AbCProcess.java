@@ -247,9 +247,12 @@ public abstract class AbCProcess implements Runnable {
 	}
 
 	public void interrupt(String name) throws InterruptedException {
-		this.component.processes.removeIf(P -> P.getName() == name);
-		// Thread.currentThread().interrupt();
-		// return;
+		for (AbCProcess abCProcess : this.component.processes) {
+			if (name == abCProcess.getName()) {
+
+				abCProcess.interrupt();
+			}
+		}
 	}
 
 	public void interrupt(int id) throws InterruptedException {
