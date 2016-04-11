@@ -30,7 +30,7 @@ public abstract class AbCProcess implements Runnable {
 	public Queue<AbCMessage> receivedMessage = new LinkedList<>();
 	private String processType = "";
 	private boolean interrupt = false;
-
+	private Object value;
 	// /**
 	// * @return the actions
 	// */
@@ -45,6 +45,20 @@ public abstract class AbCProcess implements Runnable {
 	// protected void insertAction(AbCAction action) {
 	// this.actions.add(action);
 	// }
+
+	/**
+	 * @return the value
+	 */
+	public Object getRecValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setRecValue(Object value) {
+		this.value = value;
+	}
 
 	/**
 	 * @return the processType

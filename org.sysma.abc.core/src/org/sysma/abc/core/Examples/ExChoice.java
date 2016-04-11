@@ -51,10 +51,10 @@ public class ExChoice {
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			GroupPredicate subscribe = new Or(
-					new HasValue("$1", this.getComponent().getStore().getValue("subscription1")),
-					new HasValue("$2", this.getComponent().getStore().getValue("subscription1")));
-			System.out.println("t" + this.id + " => received: " + receive(subscribe, null));
+//			GroupPredicate subscribe = new Or(
+//					new HasValue("$1", this.getComponent().getStore().getValue("subscription1")),
+//					new HasValue("$2", this.getComponent().getStore().getValue("subscription1")));
+			System.out.println("t" + this.id + " => received: " + getRecValue());
 
 		}
 
@@ -78,8 +78,8 @@ public class ExChoice {
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			GroupPredicate subscribe = new HasValue("$1", this.getComponent().getStore().getValue("subscription3"));
-			System.out.println("t" + this.id + " => received: " + receive(subscribe, null));
+//			GroupPredicate subscribe = new HasValue("$1", this.getComponent().getStore().getValue("subscription3"));
+			System.out.println("t" + this.id + " => received: " + getRecValue());
 
 		}
 

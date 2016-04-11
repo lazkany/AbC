@@ -49,6 +49,7 @@ public abstract class NonDeterminism extends AbCProcess {
 		Object xObject = receive(Predicate, null);
 		for (GroupPredicate p : choice.keySet()) {
 			if (p.evaluate(xObject)) {
+				choice.get(p).setRecValue(xObject);
 				exec(choice.get(p));
 				break;
 			}
