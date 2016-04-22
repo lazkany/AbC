@@ -98,20 +98,13 @@ public class MainServer {
 public class Explorer {
     public static GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));
     public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         * @throws AbCAttributeTypeException
-         */
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
-            // TODO Auto-generated constructor stub
         }
 
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            // TODO Auto-generated method stub
-            Send(orPrd, this.getComponent().getStore().getValue("id")+","+"qry" + ","+ this.getComponent().getStore().getValue("role"), null);
+            Send(orPrd, this.getComponent().getStore().getValue("id")+","+"qry" + ","+    this.getComponent().getStore().getValue("role"), null);
         }
     }
 </code></pre>
@@ -147,22 +140,13 @@ public class Helper {
     public static GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));
 
     public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         * @throws AbCAttributeTypeException
-         */
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
-            // TODO Auto-generated constructor stub
-
         }
 
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-
             System.out.println(this.name + " =&gt; received: " + receive(andPrd, null));
-
         }
     }
 </code></pre>
@@ -200,19 +184,12 @@ public class GroupA {
     public static GroupPredicate TOgrpB = new HasValue("group", "B");
 
     public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         * @throws AbCAttributeTypeException
-         */
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
-            // TODO Auto-generated constructor stub
         }
 
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            // TODO Auto-generated method stub
             while(true){
             Send(TOgrpB, "MSG" + "," + this.getComponent().getStore().getValue("group"), null);
             Thread.sleep(2000);
@@ -227,14 +204,8 @@ public class GroupA {
 public class GroupB {
     public static GroupPredicate FromgrpA = new HasValue("$1", "A");
     public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         * @throws AbCAttributeTypeException
-         */
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
-            // TODO Auto-generated constructor stub
         }
 
         @Override
@@ -251,19 +222,12 @@ public class GroupB {
 
 <pre><code>
 public static class Process_2 extends AbCProcess {
-
-        /**
-         * @param name
-         * @throws AbCAttributeTypeException
-         */
         public Process_2(String name) throws AbCAttributeTypeException {
             super(name);
-            // TODO Auto-generated constructor stub
         }
 
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            // TODO Auto-generated method stub
             update.put(this.getComponent().getStore().getAttribute("group"), "B");
             Thread.sleep(20000);
             Send(ff, " ", update);
@@ -292,19 +256,12 @@ public static class Process_2 extends AbCProcess {
 public class Publisher {
     public static GroupPredicate any = new AnyComponent();
     public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         * @throws AbCAttributeTypeException
-         */
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
-            // TODO Auto-generated constructor stub
         }
 
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            // TODO Auto-generated method stub
             Send(any, "msg," + this.getComponent().getStore().getValue("topic_1") + "," + this.getComponent().getStore().getValue("topic_2"), null);
         }
     }
@@ -319,14 +276,8 @@ public class Publisher {
 <pre><code>
 public class Subscriber_1 {
     public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         * @throws AbCAttributeTypeException 
-         */
         public Process_1(String name) throws AbCAttributeTypeException {
-            super(name);
-            // TODO Auto-generated constructor stub         
+            super(name);    
         }
 
         @Override
@@ -353,18 +304,12 @@ public class Sender {
     public static GroupPredicate any = new AnyComponent();
 
     public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         */
         public Process_1(String name) {
             super(name);
-            // TODO Auto-generated constructor stub
         }
 
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            // TODO Auto-generated method stub
             Send(any, "a,v", null);
         }
     }
@@ -375,21 +320,14 @@ public class Sender {
 <pre><code>
 public class Receiver_1 {
     public static class Process_1 extends AbCProcess {
-
-        /**
-         * @param name
-         */
         public Process_1(String name) {
             super(name);
-            // TODO Auto-generated constructor stub
         }
 
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-
             GroupPredicate channel = new HasValue("$0", "a");
             System.out.println(this.name + " =&gt; received: " + receive(channel, null));
-
         }
     }
 
