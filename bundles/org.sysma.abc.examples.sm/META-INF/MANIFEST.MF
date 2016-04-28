@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Sm
+Bundle-SymbolicName: org.sysma.abc.examples.sm
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: com.google.gson;bundle-version="2.2.4",
+ org.sysma.abc.core;bundle-version="1.0.0"

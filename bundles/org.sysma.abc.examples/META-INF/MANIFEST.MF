@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Examples
+Bundle-SymbolicName: org.sysma.abc.examples
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.sysma.abc.core.ex,
+ org.sysma.abc.core.ex.AttributeBased,
+ org.sysma.abc.core.ex.GroupBased,
+ org.sysma.abc.core.ex.PublishSubscribe,
+ org.sysma.abc.core.ex.broadcast
+Require-Bundle: org.sysma.abc.core;bundle-version="1.0.0"

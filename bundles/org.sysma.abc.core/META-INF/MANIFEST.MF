@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core
+Bundle-SymbolicName: org.sysma.abc.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: core.jar,
+ Yehia/Downloads/gson-2.5.jar,
+ Yehia/Downloads/gson-2.5-javadoc.jar
+Export-Package: org.sysma.abc,
+ org.sysma.abc.core,
+ org.sysma.abc.core.NetworkMessages,
+ org.sysma.abc.core.abcfactoy,
+ org.sysma.abc.core.exceptions,
+ org.sysma.abc.core.json,
+ org.sysma.abc.core.predicates,
+ org.sysma.abc.core.topology
+Require-Bundle: com.google.gson;bundle-version="2.2.4"
