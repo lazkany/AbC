@@ -107,18 +107,22 @@ public abstract class AbCProcess implements Runnable {
 	 * @throws AbCAttributeTypeException
 	 * @throws InterruptedException 
 	 */
-	protected synchronized void send(AbCPredicate predicate, Object value)
+	protected void send(AbCPredicate predicate, Object value)
 			throws AbCAttributeTypeException, InterruptedException {
 
-		readyToReceive = true;
-		notifyAll();
-		while (isDelivering) {
-			wait();
+		synchronized (this) {
+			readyToReceive = true;
+			notifyAll();
+			while (isDelivering) {
+				wait();
+			}			
 		}
 		PortHandler handler = component.connect();
-		handler.send(new AbCMessage(value, predicate));
-		readyToReceive = false;
-		notifyAll();
+		synchronized(this) {
+			handler.send(new AbCMessage(value, predicate));
+			readyToReceive = false;
+			notifyAll();
+		}
 	}
 
 	/**

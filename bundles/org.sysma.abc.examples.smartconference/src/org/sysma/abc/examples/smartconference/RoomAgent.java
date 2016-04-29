@@ -21,6 +21,7 @@ public class RoomAgent extends AbCProcess {
 	protected void doRun() throws Exception {
 		while (true) {
 			Tuple value = (Tuple) receive(o -> isARequest(o));
+			System.out.println( getValue(SmartConferenceDefinitions.nameAttribute)+"> Received: "+value);
 			//The following is an asynchronous send. When executed,
 			//a new process is created to send the message.
 			asend(
@@ -28,7 +29,7 @@ public class RoomAgent extends AbCProcess {
 				new Tuple( 
 					getValue(SmartConferenceDefinitions.sessionAttribute) ,  
 					SmartConferenceDefinitions.REPLY_STRING ,
-					getValue(SmartConferenceDefinitions.nameAttrivute)
+					getValue(SmartConferenceDefinitions.nameAttribute)
 				)
 			);
 		}

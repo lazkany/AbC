@@ -39,11 +39,14 @@ public class ParticipantAgent extends AbCProcess {
 					
 			)				
 		);
+		System.out.println(getComponent().getName()+"> registered for topic "+this.selectedTopic);
 		Tuple value = (Tuple) receive( o -> isAnInterestReply( o ) );
 		setValue(SmartConferenceDefinitions.destinationAttribute, (String) value.get(2));			
+		System.out.println(getComponent().getName()+"> moving to room "+getValue(SmartConferenceDefinitions.destinationAttribute));
 		while (true) {
 			value = (Tuple) receive( o -> isAnInterestUpdate( o ) );
-			setValue(SmartConferenceDefinitions.destinationAttribute, (String) value.get(4));			
+			setValue(SmartConferenceDefinitions.destinationAttribute, (String) value.get(3));			
+			System.out.println(getComponent().getName()+"> relocating to room "+getValue(SmartConferenceDefinitions.destinationAttribute));
 		}
 	}
 
@@ -51,7 +54,7 @@ public class ParticipantAgent extends AbCProcess {
 		if (o instanceof Tuple) {
 			Tuple t = (Tuple) o;
 			try {
-				if ((t.size() == 2)&&
+				if ((t.size() == 3)&&
 						getValue(SmartConferenceDefinitions.interestAttribute).equals(t.get(0))&&
 						SmartConferenceDefinitions.REPLY_STRING.equals(t.get(1)))
 						{

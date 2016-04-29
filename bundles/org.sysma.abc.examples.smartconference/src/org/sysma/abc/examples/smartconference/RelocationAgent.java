@@ -46,7 +46,7 @@ public class RelocationAgent extends AbCProcess {
 						getValue( SmartConferenceDefinitions.previousSessionAttribute ) ,
 						getValue( SmartConferenceDefinitions.sessionAttribute ) ,
 						SmartConferenceDefinitions.UPDATE_STRING ,
-						getValue( SmartConferenceDefinitions.nameAttrivute )
+						getValue( SmartConferenceDefinitions.nameAttribute )
 					)
 			);
 		}

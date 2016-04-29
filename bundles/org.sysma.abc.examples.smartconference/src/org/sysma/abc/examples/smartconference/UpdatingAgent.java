@@ -22,12 +22,18 @@ public class UpdatingAgent extends AbCProcess {
 	protected void doRun() throws Exception {
 		while (true) {
 			Tuple value = (Tuple) receive( o -> isAnUpdateMessage( o ) );
+			System.out.println( getValue(SmartConferenceDefinitions.nameAttribute)+"> Received: "+value);
 			setValue(
 					SmartConferenceDefinitions.previousSessionAttribute, 
 					getValue(SmartConferenceDefinitions.sessionAttribute));
 			setValue(
 					SmartConferenceDefinitions.sessionAttribute, 
 					(String) value.get(0));
+			System.out.println( 
+					getValue(SmartConferenceDefinitions.nameAttribute)+"> New session: "+
+							getValue(SmartConferenceDefinitions.previousSessionAttribute)
+							+"->"+
+							getValue(SmartConferenceDefinitions.sessionAttribute));
 			asend(
 					new Or(
 						new HasValue(
@@ -43,7 +49,7 @@ public class UpdatingAgent extends AbCProcess {
 						getValue( SmartConferenceDefinitions.previousSessionAttribute ) ,
 						getValue( SmartConferenceDefinitions.sessionAttribute ) ,
 						SmartConferenceDefinitions.UPDATE_STRING ,
-						getValue( SmartConferenceDefinitions.nameAttrivute )
+						getValue( SmartConferenceDefinitions.nameAttribute )
 					)
 			);
 		}
