@@ -121,6 +121,27 @@ public abstract class AbCProcess implements Runnable {
 		notifyAll();
 	}
 
+	/**
+	 * @param predicate
+	 * @param s
+	 * @param value
+	 * @return
+	 * @throws AbCAttributeTypeException
+	 * @throws InterruptedException 
+	 */
+	protected synchronized void asend(AbCPredicate predicate, Object value)
+			throws AbCAttributeTypeException, InterruptedException {
+
+		exec( new AbCProcess() {
+			
+			@Override
+			protected void doRun() throws Exception {
+				send( predicate,value);
+			}
+			
+		});
+	}
+	
 	 
 
 	/*

@@ -26,14 +26,14 @@ public class ParticipantAgent extends AbCProcess {
 	
 	@Override
 	protected void doRun() throws Exception {
-		setValue(SmartConferenceDefinitions.topicAttribute, this.selectedTopic);
+		setValue(SmartConferenceDefinitions.interestAttribute, this.selectedTopic);
 		send( 
 			new HasValue(
 					SmartConferenceDefinitions.ROLE_ATTRIBUTE_NAME, 
 					SmartConferenceDefinitions.PROVIDER
 			) ,
 			new Tuple( 
-					getValue(SmartConferenceDefinitions.topicAttribute) ,
+					getValue(SmartConferenceDefinitions.interestAttribute) ,
 					SmartConferenceDefinitions.REQUEST_STRING ,
 					getValue(SmartConferenceDefinitions.idAttribute)
 					
@@ -52,7 +52,7 @@ public class ParticipantAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size() == 2)&&
-						getValue(SmartConferenceDefinitions.topicAttribute).equals(t.get(0))&&
+						getValue(SmartConferenceDefinitions.interestAttribute).equals(t.get(0))&&
 						SmartConferenceDefinitions.REPLY_STRING.equals(t.get(1)))
 						{
 							return new TruePredicate();
@@ -70,7 +70,7 @@ public class ParticipantAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size()==4)&&
-						(getValue(SmartConferenceDefinitions.topicAttribute).equals(t.get(1)))&&
+						(getValue(SmartConferenceDefinitions.interestAttribute).equals(t.get(1)))&&
 						(SmartConferenceDefinitions.UPDATE_STRING.equals(t.get(2)))) {
 					return new TruePredicate();
 				}
