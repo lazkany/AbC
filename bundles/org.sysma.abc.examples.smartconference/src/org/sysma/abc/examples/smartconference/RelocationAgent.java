@@ -31,7 +31,7 @@ public class RelocationAgent extends AbCProcess {
 			setValue(
 					SmartConferenceDefinitions.sessionAttribute, 
 					getValue(SmartConferenceDefinitions.newSessionAttribute));
-			asend(
+			send(
 					new Or(
 						new HasValue(
 							SmartConferenceDefinitions.INTEREST_ATTRIBUTE_NAME, 

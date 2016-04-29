@@ -35,18 +35,30 @@ public class WomanAgent extends AbCProcess {
 			Tuple msg = (Tuple) receive( o -> isAProposeMessage(o) );
 			Integer newPartner = (Integer) msg.get(1);
 			if ( bof( this.getValue(SmDefinitions.partnerAttribute) , newPartner ) ) {
+				Integer previousPartner = getValue(SmDefinitions.partnerAttribute);
 				setValue(SmDefinitions.partnerAttribute, newPartner);
 				System.out.println(this.getValue(SmDefinitions.idAttribute)+" now married with "+newPartner);
+
+				exec(new AbCProcess() {
+					
+					@Override
+					protected void doRun() throws Exception {
+						send( new HasValue(SmDefinitions.idAttribute.getName(), previousPartner),new Tuple("INVALID"));
+					}
+					
+				});
+
+			} else {
+				exec(new AbCProcess() {
+					
+					@Override
+					protected void doRun() throws Exception {
+						send( new HasValue(SmDefinitions.idAttribute.getName(), newPartner),new Tuple("INVALID"));
+					}
+					
+				});
 			}
 //			exec(new PartnerHandler( (Integer) msg.get(1) ));
-			exec(new AbCProcess() {
-				
-				@Override
-				protected void doRun() throws Exception {
-					waitUnil(new Not(new HasValue(SmDefinitions.partnerAttribute.getName(), newPartner)) );
-					send( new HasValue(SmDefinitions.idAttribute.getName(), newPartner),new Tuple("INVALID"));
-				}
-			});
 		}
 	}
 	
