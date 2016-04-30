@@ -55,13 +55,13 @@ public class AbCServer implements PacketReceiver {
 	}
 	
 	public void start() {
+		this.running = true;
 		Thread t1 = new Thread(receiver);
-		t1.setDaemon(true);
+		//t1.setDaemon(true);
 		t1.start();
 		Thread t2 = new Thread(rHandler);
-		t2.setDaemon(true);
+		//t2.setDaemon(true);
 		t2.start();
-		this.running = true;
 	}
 
 	public void register(String clientName, InetSocketAddress clientAddress) throws DuplicateNameException {

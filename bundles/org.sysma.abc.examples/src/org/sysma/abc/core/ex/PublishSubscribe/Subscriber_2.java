@@ -14,12 +14,15 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
+import org.sysma.abc.core.predicates.FalsePredicate;
 import org.sysma.abc.core.predicates.HasValue;
 import org.sysma.abc.core.predicates.Or;
+import org.sysma.abc.core.predicates.TruePredicate;
 import org.sysma.abc.core.topology.AbCClient;
 
 /**
@@ -40,9 +43,17 @@ public class Subscriber_2 {
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			AbCPredicate subscribe = new Or(new HasValue("$1", this.getComponent().getStore().getValue("subscription")), new HasValue("$2", this.getComponent().getStore().getValue("subscription")));
-			System.out.println(this.name + " => received: " + receive(subscribe));
+			System.out.println(this.name + " => received: " + receive(o -> subscribe(o)));
 
+		}
+		public AbCPredicate subscribe( Object msg ) {
+			if (msg instanceof Tuple) {
+				Tuple t = (Tuple) msg;
+				if (t.get(1).equals(this.getComponent().getStore().getValue("subscription"))||t.get(2).equals(this.getComponent().getStore().getValue("subscription"))) {
+					return new TruePredicate();
+				}
+			}
+			return new FalsePredicate();
 		}
 	}
 
@@ -69,7 +80,7 @@ public class Subscriber_2 {
 		Process_1 subscriber2 = new Process_1("subscriber_2");
 		AbCEnvironment store1 = new AbCEnvironment();
 		Attribute<Object> a1 = new Attribute<Object>("subscription", Object.class);
-		store1.setValue(a1, "Movies");
+		store1.setValue(a1, "Songs");
 		AbCComponent c1 = new AbCComponent("C1", store1);
 		c1.addProcess(subscriber2);
 		c1.setPort(cPortClient);

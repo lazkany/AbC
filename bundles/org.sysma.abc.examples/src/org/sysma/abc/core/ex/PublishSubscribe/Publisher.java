@@ -14,12 +14,15 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
+import org.sysma.abc.core.predicates.HasValue;
 import org.sysma.abc.core.predicates.TruePredicate;
 import org.sysma.abc.core.topology.AbCClient;
+//import org.sysma.abc.examples.sm.SmDefinitions;
 
 /**
  * @author Yehia Abd Alrahman
@@ -41,7 +44,8 @@ public class Publisher {
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
-			send(any, "msg," + this.getComponent().getStore().getValue("topic_1") + "," + this.getComponent().getStore().getValue("topic_2"));
+			//while(true)
+			send( new TruePredicate() , new Tuple( "msg" , this.getComponent().getStore().getValue("topic_1"), this.getComponent().getStore().getValue("topic_2")));
 		}
 	}
 
