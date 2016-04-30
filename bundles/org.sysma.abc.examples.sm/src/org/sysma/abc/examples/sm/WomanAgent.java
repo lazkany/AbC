@@ -34,16 +34,16 @@ public class WomanAgent extends AbCProcess {
 		while ( true ) {
 			Tuple msg = (Tuple) receive( o -> isAProposeMessage(o) );
 			Integer newPartner = (Integer) msg.get(1);
-			if ( bof( this.getValue(SmDefinitions.partnerAttribute) , newPartner ) ) {
-				Integer previousPartner = getValue(SmDefinitions.partnerAttribute);
-				setValue(SmDefinitions.partnerAttribute, newPartner);
-				System.out.println(this.getValue(SmDefinitions.idAttribute)+" now married with "+newPartner);
+			if ( bof( this.getValue(Environment.partnerAttribute) , newPartner ) ) {
+				Integer previousPartner = getValue(Environment.partnerAttribute);
+				setValue(Environment.partnerAttribute, newPartner);
+				System.out.println(this.getValue(Environment.idAttribute)+" now married with "+newPartner);
 
 				exec(new AbCProcess() {
 					
 					@Override
 					protected void doRun() throws Exception {
-						send( new HasValue(SmDefinitions.idAttribute.getName(), previousPartner),new Tuple("INVALID"));
+						send( new HasValue(Environment.idAttribute.getName(), previousPartner),new Tuple("INVALID"));
 					}
 					
 				});
@@ -53,7 +53,7 @@ public class WomanAgent extends AbCProcess {
 					
 					@Override
 					protected void doRun() throws Exception {
-						send( new HasValue(SmDefinitions.idAttribute.getName(), newPartner),new Tuple("INVALID"));
+						send( new HasValue(Environment.idAttribute.getName(), newPartner),new Tuple("INVALID"));
 					}
 					
 				});

@@ -43,7 +43,7 @@ public class Main {
 			preferences.add(integers[i]);
 		}
 		AbCComponent c = new AbCComponent("M"+id);
-		c.setValue(SmDefinitions.idAttribute, id);
+		c.setValue(Environment.idAttribute, id);
 		port.start();
 		c.setPort(port);
 		c.addProcess(new ManAgent(preferences));
@@ -56,7 +56,7 @@ public class Main {
 			preferences.add(integers[i]);
 		}
 		AbCComponent c = new AbCComponent("W"+id);
-		c.setValue(SmDefinitions.idAttribute, id);
+		c.setValue(Environment.idAttribute, id);
 		port.start();
 		c.setPort(port);
 		c.addProcess(new WomanAgent(preferences));

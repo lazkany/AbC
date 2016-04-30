@@ -32,14 +32,14 @@ public class ManAgent extends AbCProcess {
 		System.out.println("Man started...");
 		while ( !preferences.isEmpty() ) {
 			Integer partner = preferences.poll();
-			System.out.println(getValue(SmDefinitions.idAttribute)+"> Selected partner: "+partner);
-			setValue(SmDefinitions.partnerAttribute, partner);
-			System.out.println(getValue(SmDefinitions.idAttribute)+"> Sendig request to "+partner);
-			send( new HasValue("ID", partner) , new Tuple( "PROPOSE" , getValue(SmDefinitions.idAttribute)) );
+			System.out.println(getValue(Environment.idAttribute)+"> Selected partner: "+partner);
+			setValue(Environment.partnerAttribute, partner);
+			System.out.println(getValue(Environment.idAttribute)+"> Sendig request to "+partner);
+			send( new HasValue("ID", partner) , new Tuple( "PROPOSE" , getValue(Environment.idAttribute)) );
 			receive(o -> isAnInvalidatingMessage(o) );
-			System.out.println(getValue(SmDefinitions.idAttribute)+"> Matching changed!");
+			System.out.println(getValue(Environment.idAttribute)+"> Matching changed!");
 		}
-		System.out.println(getValue(SmDefinitions.idAttribute)+"> I am alone...");
+		System.out.println(getValue(Environment.idAttribute)+"> I am alone...");
 	}
 	
 	

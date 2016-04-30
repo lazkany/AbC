@@ -28,8 +28,8 @@ public class PartnerHandler extends AbCProcess {
 	 */
 	@Override
 	protected void doRun() throws Exception {
-		waitUnil(new Not(new HasValue(SmDefinitions.partnerAttribute.getName(), this.partner)) );
-		send( new HasValue(SmDefinitions.idAttribute.getName(), this.partner),new Tuple("INVALID"));
+		waitUnil(new Not(new HasValue(Environment.partnerAttribute.getName(), this.partner)) );
+		send( new HasValue(Environment.idAttribute.getName(), this.partner),new Tuple("INVALID"));
 	}
 
 }
