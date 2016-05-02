@@ -195,17 +195,15 @@ public class Helper {
 
 <pre><code>
 public class GroupA {
-    public static GroupPredicate TOgrpB = new HasValue("group", "B");
-
+    public static AbCPredicate TOgrpB = new HasValue("group", "B");
     public static class Process_1 extends AbCProcess {
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
         }
-
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
             while(true){
-            Send(TOgrpB, "MSG" + "," + this.getComponent().getStore().getValue("group"), null);
+            send(TOgrpB, new Tuple("MSG",this.getComponent().getStore().getValue("group")) );
             Thread.sleep(2000);
             }
         }
@@ -216,18 +214,24 @@ public class GroupA {
 
 <pre><code>
 public class GroupB {
-    public static GroupPredicate FromgrpA = new HasValue("$1", "A");
     public static class Process_1 extends AbCProcess {
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
         }
-
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            while(true){
-            System.out.println(this.name + " =&gt; received: " + receive(FromgrpA, null));
+            while (true) {
+                System.out.println(this.name + " =&gt; received: " + receive(o -&gt; fromGroupA(o)));
             }
-
+        }
+        public AbCPredicate fromGroupA(Object msg) {
+            if (msg instanceof Tuple) {
+                Tuple t = (Tuple) msg;
+                if (t.get(1).equals("A")) {
+                    return new TruePredicate();
+                }
+            }
+            return new FalsePredicate();
         }
     }
 </code></pre>
@@ -239,20 +243,19 @@ public static class Process_2 extends AbCProcess {
         public Process_2(String name) throws AbCAttributeTypeException {
             super(name);
         }
-
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            update.put(this.getComponent().getStore().getAttribute("group"), "B");
             Thread.sleep(20000);
-            Send(ff, " ", update);
+            setValue(a1, "B");
+            send(new FalsePredicate(), " ");    
             System.out.println("joined group B");
         }
     }
 <code></code></code></pre>
 
-<p>We model the group name as an attribute and leaving/joining the group by an attribute update. The attribute update can be achieved by updating the attribute followed with a silent move (i.e., send on a false predicate ()<a href="https://github.com/ff" class="user-mention">@ff</a> ). The object "update" is a hashmap that contains a set of possible updates, these are attached to a send action with a false predicate. This action is not observable and indicates a silent move. The above code corresponds to the AbC code <code>[this.group := B]()@ff</code>. </p>
+<p>We model the group name as an attribute and leaving/joining the group by an attribute update. The attribute update can be achieved by updating the attribute followed with a silent move (i.e., send on a false predicate ()<a href="https://github.com/ff" class="user-mention">@ff</a> ). This action is not observable and indicates a silent move. The above code corresponds to the AbC code <code>[this.group := B]()@ff</code>. </p>
 
-<p>So now, the behaviour of a groupC member is equivalent to the AbC component <code>Gamma:( (y=B)(x,y) | [this.group := B]()@ff)</code>. This is interesting and models what we call opportunistic behaviour in the sense the the behaviour of two co-located processes running in parallel can influence each other. For instance, once the attribute update is performed with a silent move, this component leaves groupC and joins groupB and thus is eligible to receive messages from groupA. This is why modelling adaptation and failure in AbC is quite natural. In some sense, processes can influence the behaviour of each other indirectly through changing the shared working space/environment. In many cases, this behaviour is highly recommended where message passing becomes impractical. For instance, in wireless sensor networks where a massive number of components are distributed in a relatively small space, message passing doesn't scale well in this situation. This kind of behaviour is hardly possible in other approaches. Below you find the full source code for the scenario and a video of showing how to run the code.</p>
+<p>So now, the behaviour of a groupC member is equivalent to the AbC component <code>Gamma:( (y=B)(x,y) | [this.group := B]()@ff)</code>. This is interesting and models what we call opportunistic behaviour in the sense that the behaviour of two co-located processes running in parallel can influence each other. For instance, once the attribute update is performed with a silent move, this component leaves groupC and joins groupB and thus is eligible to receive messages from groupA. This is why modelling adaptation and failure in AbC is quite natural. In some sense, processes can influence the behaviour of each other indirectly through changing the shared working space/environment. In many cases, this behaviour is highly recommended where message passing becomes impractical. For instance, in wireless sensor networks where a massive number of components are distributed in a relatively small space, message passing doesn't scale well in this situation. This kind of behaviour is hardly possible in other approaches. Below you find the full source code for the scenario and a video of showing how to run the code.</p>
 
 <p><a href="https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/GroupBased">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=3xlWubbXjTM&amp;feature=youtu.be">Video Demo</a></p>
@@ -268,7 +271,7 @@ public static class Process_2 extends AbCProcess {
 
 <pre><code>
 public class Publisher {
-    public static GroupPredicate any = new AnyComponent();
+    public static AbCPredicate any = new TruePredicate();
     public static class Process_1 extends AbCProcess {
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
@@ -276,16 +279,17 @@ public class Publisher {
 
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            Send(any, "msg," + this.getComponent().getStore().getValue("topic_1") + "," + this.getComponent().getStore().getValue("topic_2"), null);
+            send( new TruePredicate() , new Tuple( "msg" , this.getComponent().getStore().getValue("topic_1"), this.getComponent().getStore().getValue("topic_2")));
         }
     }
+
 <code></code></code></pre>
 
 <p>Simply, the publisher attaches its attributes "topic_1" and "topic_2" into the message and sends it to all possible subscribers. Note that the following code corresponds to the AbC attribute reference "this.topic_1"</p>
 
 <p><code>this.getComponent().getStore().getValue("topic_1")</code></p>
 
-<p>The subscriber is responsible to check if the message matches its subscriptions or not. This can be done by using the predicate "subscribe" as shown below. This predicate will check if the attached topics (i.e., located at $1 and $2) matches the subscriber subscriptions or not. Again the line <code>this.getComponent().getStore().getValue("subscription")</code> corresponds to the AbC attribute reference "this.subscription".</p>
+<p>The subscriber is responsible to check if the message matches its subscriptions or not. This can be done by using the predicate "subscribe" as shown below. This predicate will check if the attached topics match the subscriber subscriptions or not. Again the line <code>this.getComponent().getStore().getValue("subscription")</code> corresponds to the AbC attribute reference "this.subscription".</p>
 
 <pre><code>
 public class Subscriber_1 {
@@ -293,12 +297,18 @@ public class Subscriber_1 {
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);    
         }
-
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            GroupPredicate subscribe = new Or(new HasValue("$1", this.getComponent().getStore().getValue("subscription")), new HasValue("$2", this.getComponent().getStore().getValue("subscription")));
-            System.out.println(this.name + " =&gt; received: " + receive(subscribe, null));
-
+            System.out.println(this.name + " =&gt; received: " + receive(o -&gt; subscribe(o)));
+        }
+        public AbCPredicate subscribe( Object msg ) {
+            if (msg instanceof Tuple) {
+                Tuple t = (Tuple) msg;
+                if (t.get(1).equals(this.getComponent().getStore().getValue("subscription"))||t.get(2).equals(this.getComponent().getStore().getValue("subscription"))) {
+                    return new TruePredicate();
+                }
+            }
+            return new FalsePredicate();
         }
     }
 </code></pre>
@@ -315,16 +325,14 @@ public class Subscriber_1 {
 
 <pre><code>
 public class Sender {
-    public static GroupPredicate any = new AnyComponent();
-
+    public static AbCPredicate any = new TruePredicate();
     public static class Process_1 extends AbCProcess {
         public Process_1(String name) {
             super(name);
         }
-
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            Send(any, "a,v", null);
+            send(any, new Tuple("a","v"));
         }
     }
 </code></pre>
@@ -337,17 +345,23 @@ public class Receiver_1 {
         public Process_1(String name) {
             super(name);
         }
-
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            GroupPredicate channel = new HasValue("$0", "a");
-            System.out.println(this.name + " =&gt; received: " + receive(channel, null));
+            System.out.println(this.name + " =&gt; received: " + receive(o -&gt; channel(o)));
+        }
+        public AbCPredicate channel(Object msg) {
+            if (msg instanceof Tuple) {
+                Tuple t = (Tuple) msg;
+                if (t.get(0).equals("a")) {
+                    return new TruePredicate();
+                }
+            }
+            return new FalsePredicate();
         }
     }
-
 </code></pre>
 
-<p>Basically, the receiver accept only the message that satisfies the predicate "channel". This predicate checks the first element (i.e., "$0") in the message and returns true if it is equal to "a" otherwise the message is discarded. As shown in the figure below, we model a scenario, where there are two receiver waiting to receive messages on channel "a" , one receiver is waiting to receive message on channel "c", and one sender that wants to send a message "v" on channel "a".</p>
+<p>Basically, the receiver accept only the message that satisfies the predicate "channel". This predicate checks the first element in the message and returns true if it is equal to "a" otherwise the message is discarded. As shown in the figure below, we model a scenario, where there are two receiver waiting to receive messages on channel "a" , one receiver is waiting to receive message on channel "c", and one sender that wants to send a message "v" on channel "a".</p>
 
 <p><img src="https://dl.dropboxusercontent.com/s/v8w7a1umxjne2w1/channel.png?dl=0" alt=""></p>
 
