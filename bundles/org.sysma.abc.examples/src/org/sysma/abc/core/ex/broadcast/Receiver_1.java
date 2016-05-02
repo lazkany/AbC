@@ -13,11 +13,14 @@ import java.net.ServerSocket;
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
+import org.sysma.abc.core.predicates.FalsePredicate;
 import org.sysma.abc.core.predicates.HasValue;
+import org.sysma.abc.core.predicates.TruePredicate;
 import org.sysma.abc.core.topology.AbCClient;
 
 /**
@@ -38,9 +41,18 @@ public class Receiver_1 {
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 
-			AbCPredicate channel = new HasValue("$0", "a");
-			System.out.println(this.name + " => received: " + receive(channel));
+			System.out.println(this.name + " => received: " + receive(o -> channel(o)));
 
+		}
+
+		public AbCPredicate channel(Object msg) {
+			if (msg instanceof Tuple) {
+				Tuple t = (Tuple) msg;
+				if (t.get(0).equals("a")) {
+					return new TruePredicate();
+				}
+			}
+			return new FalsePredicate();
 		}
 	}
 
@@ -49,9 +61,10 @@ public class Receiver_1 {
 	 * @throws IOException
 	 * @throws DuplicateNameException
 	 * @throws AbCAttributeTypeException
-	 * @throws AbCPortException 
+	 * @throws AbCPortException
 	 */
-	public static void main(String[] args) throws IOException, DuplicateNameException, AbCAttributeTypeException, AbCPortException {
+	public static void main(String[] args)
+			throws IOException, DuplicateNameException, AbCAttributeTypeException, AbCPortException {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		int port = 0;
@@ -63,7 +76,7 @@ public class Receiver_1 {
 			e.printStackTrace();
 		}
 		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
-		cPortClient.register( InetAddress.getLoopbackAddress() , 9999 );
+		cPortClient.register(InetAddress.getLoopbackAddress(), 9999);
 		AbCEnvironment store1 = new AbCEnvironment();
 		AbCComponent c1 = new AbCComponent("C1", store1);
 		Process_1 rcv1 = new Process_1("rcv_1");
@@ -71,7 +84,7 @@ public class Receiver_1 {
 		c1.setPort(cPortClient);
 		cPortClient.start();
 		c1.start();
-//		System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
+		// System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
 
 	}
 

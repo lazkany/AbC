@@ -13,11 +13,14 @@ import java.net.ServerSocket;
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
+import org.sysma.abc.core.predicates.FalsePredicate;
 import org.sysma.abc.core.predicates.HasValue;
+import org.sysma.abc.core.predicates.TruePredicate;
 import org.sysma.abc.core.topology.AbCClient;
 
 /**
@@ -39,10 +42,18 @@ public class Receiver_2 {
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 
-			AbCPredicate channel = new HasValue("$0", "c");
+			System.out.println(this.name + " => received: " + receive(o -> channel(o)));
 
-			System.out.println(this.name + " => received: " + receive(channel));
+		}
 
+		public AbCPredicate channel(Object msg) {
+			if (msg instanceof Tuple) {
+				Tuple t = (Tuple) msg;
+				if (t.get(0).equals("c")) {
+					return new TruePredicate();
+				}
+			}
+			return new FalsePredicate();
 		}
 	}
 
