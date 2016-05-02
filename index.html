@@ -96,65 +96,71 @@ public class MainServer {
 
 <p><img src="https://dl.dropboxusercontent.com/s/e1w8f2qxge2m3rt/attribute.png?dl=0" alt=""> </p>
 
-<p>The behaviour of the explorer robot is simple, it sends queries for information about victims to nearby rescuers or helpers. It sends its Id, a qry request, and its role. In our implementation values are sent as a sequence of strings separated with comma ",". The predicate should be as follows: </p>
+<p>The behaviour of the explorer robot is simple, it sends queries for information about victims to nearby rescuers or helpers. It sends its Id, a qry request, and its role. In our implementation values are sent as a tuple of elements. The predicate should be as follows: </p>
 
 <p><code>GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));</code></p>
 
-<p>We provide a set of predicates to be used to filter messages and you can find them here <a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/grpPredicate">AbC Predicates</a>. If we take the predicate HasValue("role", "rescuer") for example,this corresponds to the AbC predicate (role=rescuer) where the left hand side denotes an attribute identifier and the right hand side corresponds to a value. The behaviour of the explorer robot is shown bellow.</p>
+<p>We provide a set of predicates to be used to filter messages and you can find them here <a href="https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.core/src/org/sysma/abc/core/predicates">AbC Predicates</a>. If we take the predicate HasValue("role", "rescuer") for example,this corresponds to the AbC predicate (role=rescuer) where the left hand side denotes an attribute identifier and the right hand side corresponds to a value. The behaviour of the explorer robot is shown bellow.</p>
 
 <pre><code>
 public class Explorer {
-    public static GroupPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));
+    public static AbCPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));
     public static class Process_1 extends AbCProcess {
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
         }
-
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            Send(orPrd, this.getComponent().getStore().getValue("id")+","+"qry" + ","+    this.getComponent().getStore().getValue("role"), null);
+            send(orPrd, new Tuple(this.getComponent().getStore().getValue("id"), "qry",
+                    this.getComponent().getStore().getValue("role")));
         }
     }
 </code></pre>
 
-<p>The Send method takes three parameters (predicate,values,update), the filter predicate, the sequence of values as a string, and a possible set of local attribute updates. In this case we don't need the updates. Below you see the the definitions in the main method. </p>
+<p>The Send method takes two parameters (predicate,values), the filter predicate and the tuple of values. Below you see the the definitions in the main method. </p>
 
 <pre><code>
-    ServerPortClient cPortClient = new ServerPortClient(new ServerPortAddress(9998), new ServerSocket(port));
-    cPortClient.RemoteRegister(new ServerPortAddress(9999));
-    Process_1 explorer = new Process_1("explorer_1");
-    AbCEnvironment store1 = new AbCEnvironment();
-    Attribute a1 = new Attribute("role", Object.class);
-    Attribute a2 = new Attribute("id", Object.class);
-    store1.setValue(a1, "explorer");
-    store1.setValue(a2, "1");
-    AbCComponent c1 = new AbCComponent("C1", store1);
-    c1.addProcess(explorer);
-    c1.addPort(cPortClient);
-    cPortClient.start();
-    c1.start();
+    AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
+        cPortClient.register(InetAddress.getLoopbackAddress(), 9999);
+        Process_1 explorer = new Process_1("explorer_1");
+        AbCEnvironment store1 = new AbCEnvironment();
+        Attribute a1 = new Attribute("role", Object.class);
+        Attribute a2 = new Attribute("id", Object.class);
+        store1.setValue(a1, "explorer");
+        store1.setValue(a2, "1");
+        AbCComponent c1 = new AbCComponent("C1", store1);
+        c1.addProcess(explorer);
+        c1.setPort(cPortClient);
+        cPortClient.start();
+        c1.start();
 </code></pre>
 
 <p>As we mentioned in the previous section, here we define the component, its environment, and its attributes. we attach the process we defined to the component and start its execution. </p>
 
-<p>The behaviour of processes (i.e., Helper, Rescuer, and Charger) is specified in the same way. The only differences are those regarding their attributes, attribute values and their predicate. They also use the other construct for communication which is the receive method. The receive method takes two parameters (predicate, update), the receiving predicate and a possible set of local attribute updates if there is any. It should be noted that the receiving predicate can either check local attributes or if the received values satisfy certain conditions. As we know, the receiving values are a sequence of strings concatenated with ",". If you want to refer to a specific element in the received value, use the following notation for the left hand side of the predicate operand "$index". If you put a dollar sign before an integer number, this will be regarded as a bound name that refers to the value with index "index" in the received sequence of values. For instance if we take the receiving predicate for the Helper robot, it should be as follows: </p>
+<p>The behaviour of processes (i.e., Helper, Rescuer, and Charger) is specified in the same way. The only differences are those regarding their attributes, attribute values and their predicate. They also use the other construct for communication which is the receive method. The receive method passes the received message to a function (msg-&gt;Function(msg)), This function checks if the received message satisfies the receiving predicate.</p>
 
-<p><code>GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));</code></p>
-
-<p>This is an (and) predicate that checks if the second element of the received values equals to "qry" and the third element equals to "explorer". It corresponds to the AbC predicate (x=qry) &amp;&amp; (y=explorer) where the received sequence of values is (v,x,y). Notice that the index starts from zero. Below we only show the behaviour of the Helper robot. Processes Rescuer and charger follow in a similar way. The source code for the whole example can be found be the end of this section and we also include a video to show how to run AbC programs.</p>
+<p>Below we only show the behaviour of the Helper robot. Processes Rescuer and charger follow in a similar way. The source code for the whole example can be found be the end of this section and we also include a video to show how to run AbC programs.</p>
 
 <pre><code>
 public class Helper {
-    public static GroupPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));
+    public class Helper {
 
     public static class Process_1 extends AbCProcess {
         public Process_1(String name) throws AbCAttributeTypeException {
             super(name);
         }
-
         @Override
         protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-            System.out.println(this.name + " =&gt; received: " + receive(andPrd, null));
+            System.out.println(this.name + " =&gt; received: " + receive(o -&gt; andPrd(o)));
+        }
+        public AbCPredicate andPrd(Object msg) {
+            if (msg instanceof Tuple) {
+                Tuple t = (Tuple) msg;
+                if (t.get(1).equals("qry") &amp;&amp; t.get(2).equals("explorer")) {
+                    return new TruePredicate();
+                }
+            }
+            return new FalsePredicate();
         }
     }
 </code></pre>
@@ -167,7 +173,7 @@ public class Helper {
 <li><p>Assume that you saved the AbC .JAR with "test.jar" name, so in the terminal you write the following to run for instance the code of the Helper robot. The AbC .JAR file for the examples in this tutorial can be found in <a href="https://www.dropbox.com/s/w1nqfasckxi1x4j/test.jar?dl=0">test.jar</a></p></li>
 </ul>
 
-<p><code>java -cp test.jar:gson-2.5.jar org.sysma.abc.core.Examples.AttributeBased.Helper</code></p>
+<p><code>java -cp test.jar:gson-2.5.jar org.sysma.abc.core.ex.AttributeBased.Helper</code></p>
 
 <ul>
 <li><p>DO NOT FORGET to run the main server in the beginning, otherwise it will not work.</p></li>
