@@ -32,24 +32,32 @@
 
         <section id="main_content">
           <h3>
-<a id="attribute-based-communication" class="anchor" href="#attribute-based-communication" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attribute-based Communication.</h3>
+<a id="abacus-a-run-time-environment-of-the-abc-calculus" class="anchor" href="#abacus-a-run-time-environment-of-the-abc-calculus" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AbaCuS: A Run-time Environment of the AbC Calculus</h3>
 
-<p>AbC is a process calculus for attribute-based communication. An AbC system consists of a set of parallel agents each of which is equipped with a set of attributes. Communication takes place in an implicit multicast fashion, and interactions among agents are dynamically established by taking into account "connections" as determined by predicates over the attributes of agents.</p>
-
-<p>In this page, we present a prototype implementation for AbC linguistic primitives and show how one can exploit these flexible primitives to model different communication models and interaction patterns. </p>
+<p>In most distributed systems, named connections (i.e., channels) are used as means for programming interaction between communicating partners. These kinds of connections are low level and usually totally independent of the knowledge, the status, the capabilities, ..., in one word, of the attributes of the interacting partners. We have recently introduced a calculus, called AbC, in which interactions among agents are dynamically established by taking into account “connection” as determined by predicates over agent attributes. Here, we present AbaCuS, a Java run-time environment that has been developed to support modelling and programming of collective adaptive systems by relying on the communication primitives of the AbC calculus. Systems are described as sets of parallel components, each component is equipped with a set of attributes and communications among components take place in an implicit multicast fashion. By means of a number of examples, we also show how opportunistic behaviors, achieved by run-time attribute updates, can be exploited to express different communication and interaction patterns and to program challenging case studies.</p>
 
 <h3>
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h3>
 
-<p>In this implementation we consider a message broker. In essence, it accepts messages from sending components, and delivers them to all registered components except for the sending one. This message broker has the exact role of a forwarder and it does not contribute anything to message filtering. Deciding to accept a message or not is carried out when the message is delivered to the component. This implies that you always have to start the forwarding server/message broker so that your program functions in the expected way. This task is very easy, all you need to do is to create an instance of the class "ServerPort". This class is responsible for forwarding messages. By default, It accepts messages at port number 9998 and it accepts registration at port number 9999. In the code snippet below we show how to instantiate this class and the required classes to be imported.   </p>
+<p>AbaCuS provides a Java API that allows programmers to use the linguistic primitives of the AbC calculus in Java programs. 
+The implementation of AbaCuS fully relies on the formal semantics of the AbC calculus. There is a one-to-one correspondence between the AbC primitives and the programming constructs in AbaCuS. This close correspondence enhances confidence on the behavior of AbaCuS programs once they have been analyzed via formal methods, which is possible by relying on the operational semantics of the AbC calculus.</p>
+
+<p>AbC's operational semantics abstracts from a specific communication infrastructure. An AbC model consists of a set of parallel components that cooperate in a highly dynamic environment where the underlying communication infrastructure can change dynamically. 
+The current implementation  AbaCuS is however a centralized one, in the sense that it relies on a message broker that mediates the interactions. In essence, the broker accepts messages from sending components, and delivers them to all registered components with the exception of the sending ones. This central component plays the role of a forwarder and does not contribute in any way to message filtering. The decision about accepting or ignoring a message is decreed when the message is delivered to the receiving components. </p>
+
+<p>We would like to stress that, although the current AbaCuS implementation is centralized, components interact anonymously  and combine their behaviors to achieve the required goals. Components are unaware of the existence of each other, they only interact with the message broker.
+To facilitate interoperability with other tools and programming frameworks, AbaCuS relies on JSON, a standard data exchange technology that simplifies the interactions between heterogenous network components and provides the basis for allowing AbaCuS programs to cooperate with external services or devices. </p>
+
+<p>To do network programming with AbaCuS you always have to start a forwarding server/message broker so that your program functions in the expected way. This task is very easy, all you need to do is to create an instance of the class "AbCServer". This class is responsible for forwarding messages. By default, It accepts messages at port number 9998 and it accepts registration at port number 9999. In the code snippet below we show how to instantiate this class and the required classes to be imported.   </p>
 
 <pre><code>
 import java.io.IOException;
-import org.sysma.abc.core.centralized.ServerPort;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
+import org.sysma.abc.core.topology.AbCServer;
 public class MainServer {
     public static void main(String[] args) throws IOException, DuplicateNameException {
-        ServerPort srvr=new ServerPort();       
+        AbCServer srvr=new AbCServer();
+        srvr.start();
     }
 }
 </code></pre>
