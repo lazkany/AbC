@@ -30,9 +30,7 @@ import org.sysma.abc.core.topology.AbCClient;
  *
  */
 public class GroupC {
-	public static AbCPredicate FromgrpA = new HasValue("$1", "A");
 	public static AbCPredicate ff = new FalsePredicate();
-	public static HashMap<Attribute<?>, Object> update = new HashMap<>();;
 	public static Attribute<Object> a1 = new Attribute<Object>("group", Object.class);
 	public static class Process_1 extends AbCProcess {
 
@@ -80,9 +78,8 @@ public class GroupC {
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
 			Thread.sleep(20000);
-			send(new FalsePredicate(), " ");
 			setValue(a1, "B");
-
+			send(new FalsePredicate(), " ");	
 			System.out.println("joined group B");
 		}
 	}
