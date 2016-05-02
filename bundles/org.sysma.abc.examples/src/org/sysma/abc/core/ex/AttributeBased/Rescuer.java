@@ -14,12 +14,15 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
 import org.sysma.abc.core.predicates.And;
+import org.sysma.abc.core.predicates.FalsePredicate;
 import org.sysma.abc.core.predicates.HasValue;
+import org.sysma.abc.core.predicates.TruePredicate;
 import org.sysma.abc.core.topology.AbCClient;
 
 /**
@@ -28,6 +31,7 @@ import org.sysma.abc.core.topology.AbCClient;
  */
 public class Rescuer {
 	public static AbCPredicate andPrd = new And(new HasValue("$1", "qry"), new HasValue("$2", "explorer"));
+
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -41,8 +45,18 @@ public class Rescuer {
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			System.out.println(this.name + " => received: " + receive(andPrd));
+			System.out.println(this.name + " => received: " + receive(o -> andPrd(o)));
 
+		}
+
+		public AbCPredicate andPrd(Object msg) {
+			if (msg instanceof Tuple) {
+				Tuple t = (Tuple) msg;
+				if (t.get(1).equals("qry") && t.get(2).equals("explorer")) {
+					return new TruePredicate();
+				}
+			}
+			return new FalsePredicate();
 		}
 	}
 
@@ -51,9 +65,10 @@ public class Rescuer {
 	 * @throws IOException
 	 * @throws DuplicateNameException
 	 * @throws AbCAttributeTypeException
-	 * @throws AbCPortException 
+	 * @throws AbCPortException
 	 */
-	public static void main(String[] args) throws IOException, DuplicateNameException, AbCAttributeTypeException, AbCPortException {
+	public static void main(String[] args)
+			throws IOException, DuplicateNameException, AbCAttributeTypeException, AbCPortException {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		int port = 0;
@@ -65,7 +80,7 @@ public class Rescuer {
 			e.printStackTrace();
 		}
 		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
-		cPortClient.register( InetAddress.getLoopbackAddress() , 9999 );
+		cPortClient.register(InetAddress.getLoopbackAddress(), 9999);
 		Process_1 rescuer = new Process_1("rescuer_1");
 		AbCEnvironment store1 = new AbCEnvironment();
 		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
@@ -75,7 +90,7 @@ public class Rescuer {
 		c1.setPort(cPortClient);
 		cPortClient.start();
 		c1.start();
-//		System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
+		// System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
 
 	}
 

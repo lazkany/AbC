@@ -14,12 +14,15 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
 import org.sysma.abc.core.predicates.And;
+import org.sysma.abc.core.predicates.FalsePredicate;
 import org.sysma.abc.core.predicates.HasValue;
+import org.sysma.abc.core.predicates.TruePredicate;
 import org.sysma.abc.core.topology.AbCClient;
 
 /**
@@ -27,7 +30,6 @@ import org.sysma.abc.core.topology.AbCClient;
  *
  */
 public class Charger {
-	public static AbCPredicate andPrd = new And(new HasValue("$1", "charge"), new HasValue("$2", "explorer"));
 
 	public static class Process_1 extends AbCProcess {
 
@@ -44,8 +46,18 @@ public class Charger {
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 
-			System.out.println(this.name + " => received: " + receive(andPrd));
+			System.out.println(this.name + " => received: " + receive(o -> andPrd(o)));
 
+		}
+
+		public AbCPredicate andPrd(Object msg) {
+			if (msg instanceof Tuple) {
+				Tuple t = (Tuple) msg;
+				if (t.get(1).equals("charge") && t.get(2).equals("explorer")) {
+					return new TruePredicate();
+				}
+			}
+			return new FalsePredicate();
 		}
 	}
 
