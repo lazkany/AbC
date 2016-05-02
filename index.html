@@ -240,7 +240,7 @@ public static class Process_2 extends AbCProcess {
 
 <p>So now, the behaviour of a groupC member is equivalent to the AbC component <code>Gamma:( (y=B)(x,y) | [this.group := B]()@ff)</code>. This is interesting and models what we call opportunistic behaviour in the sense the the behaviour of two co-located processes running in parallel can influence each other. For instance, once the attribute update is performed with a silent move, this component leaves groupC and joins groupB and thus is eligible to receive messages from groupA. This is why modelling adaptation and failure in AbC is quite natural. In some sense, processes can influence the behaviour of each other indirectly through changing the shared working space/environment. In many cases, this behaviour is highly recommended where message passing becomes impractical. For instance, in wireless sensor networks where a massive number of components are distributed in a relatively small space, message passing doesn't scale well in this situation. This kind of behaviour is hardly possible in other approaches. Below you find the full source code for the scenario and a video of showing how to run the code.</p>
 
-<p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/GroupBased">Source Code</a><br>
+<p><a href="https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/GroupBased">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=3xlWubbXjTM&amp;feature=youtu.be">Video Demo</a></p>
 
 <h3>
@@ -291,7 +291,7 @@ public class Subscriber_1 {
 
 <p>The full source code for the whole scenario can be found below.</p>
 
-<p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/PublishSubscribe">Source Code</a><br>
+<p><a href="https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/PublishSubscribe">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=Eiil8DkPoqM&amp;feature=youtu.be">Video Demo</a></p>
 
 <h3>
@@ -339,7 +339,7 @@ public class Receiver_1 {
 
 <p>Only the receivers which are waiting to receive a message on channel "a" will receive the message, the other receiver will discard any sent message on a channel that is different from "c". The source code for all processes can be found below and we also include a video to show how to run these processes.</p>
 
-<p><a href="https://github.com/lazkany/AbC/tree/master/org.sysma.abc.core/src/org/sysma/abc/core/Examples/broadcast">Source Code</a><br>
+<p><a href="https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/broadcast">Source Code</a><br>
 <a href="https://www.youtube.com/watch?v=VfFOpDV-JSw&amp;feature=youtu.be">Video Demo</a></p>
 
 <h3>
