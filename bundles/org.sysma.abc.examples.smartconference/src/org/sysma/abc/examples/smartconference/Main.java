@@ -39,10 +39,10 @@ public class Main {
 	
 	public static AbCComponent createRoomComponent( int id , String topic , AbCPort port ) throws DuplicateNameException, AbCPortException, AbCAttributeTypeException {
 		AbCComponent c = new AbCComponent("Room "+id);
-		c.setValue(SmartConferenceDefinitions.nameAttribute, "Room "+id);
-		c.setValue(SmartConferenceDefinitions.relocateAttrivute, false);
-		c.setValue(SmartConferenceDefinitions.sessionAttribute, topic);
-		c.setValue(SmartConferenceDefinitions.roleAttribute, SmartConferenceDefinitions.PROVIDER);
+		c.setValue(Environment.nameAttribute, "Room "+id);
+		c.setValue(Environment.relocateAttrivute, false);
+		c.setValue(Environment.sessionAttribute, topic);
+		c.setValue(Environment.roleAttribute, Environment.PROVIDER);
 		port.start();
 		c.setPort(port);
 		c.addProcess(new RoomAgent());
@@ -55,7 +55,7 @@ public class Main {
 
 	public static AbCComponent createParticipantComponent( int id , String topic , AbCPort port ) throws DuplicateNameException, AbCPortException, AbCAttributeTypeException {
 		AbCComponent c = new AbCComponent("Participant "+id);
-		c.setValue(SmartConferenceDefinitions.idAttribute, id);
+		c.setValue(Environment.idAttribute, id);
 		port.start();
 		c.setPort(port);
 		c.addProcess(new ParticipantAgent("Participant "+id,topic));

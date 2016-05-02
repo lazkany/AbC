@@ -14,6 +14,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
@@ -43,7 +44,7 @@ public class GroupA {
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
 			while(true){
-			send(TOgrpB, "MSG" + "," + this.getComponent().getStore().getValue("group"));
+			send(TOgrpB, new Tuple("MSG",this.getComponent().getStore().getValue("group")) );
 			Thread.sleep(2000);
 			}
 		}

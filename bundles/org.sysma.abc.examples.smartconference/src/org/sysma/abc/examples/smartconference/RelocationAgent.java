@@ -21,32 +21,32 @@ public class RelocationAgent extends AbCProcess {
 	@Override
 	protected void doRun() throws Exception {
 		while (true) {
-			waitUnil(new HasValue(SmartConferenceDefinitions.RELOCATE_ATTRIBUTE_NAME, true));
+			waitUnil(new HasValue(Environment.RELOCATE_ATTRIBUTE_NAME, true));
 			setValue(
-					SmartConferenceDefinitions.relocateAttrivute ,
+					Environment.relocateAttrivute ,
 					false);
 			setValue(
-					SmartConferenceDefinitions.previousSessionAttribute, 
-					getValue(SmartConferenceDefinitions.sessionAttribute));
+					Environment.previousSessionAttribute, 
+					getValue(Environment.sessionAttribute));
 			setValue(
-					SmartConferenceDefinitions.sessionAttribute, 
-					getValue(SmartConferenceDefinitions.newSessionAttribute));
+					Environment.sessionAttribute, 
+					getValue(Environment.newSessionAttribute));
 			send(
 					new Or(
 						new HasValue(
-							SmartConferenceDefinitions.INTEREST_ATTRIBUTE_NAME, 
-							getValue(SmartConferenceDefinitions.sessionAttribute)
+							Environment.INTEREST_ATTRIBUTE_NAME, 
+							getValue(Environment.sessionAttribute)
 						) ,
 						new HasValue(
-								SmartConferenceDefinitions.SESSION_ATTRIBUTE_NAME, 
-								getValue(SmartConferenceDefinitions.sessionAttribute)
+								Environment.SESSION_ATTRIBUTE_NAME, 
+								getValue(Environment.sessionAttribute)
 						)
 					), 
 					new Tuple(
-						getValue( SmartConferenceDefinitions.previousSessionAttribute ) ,
-						getValue( SmartConferenceDefinitions.sessionAttribute ) ,
-						SmartConferenceDefinitions.UPDATE_STRING ,
-						getValue( SmartConferenceDefinitions.nameAttribute )
+						getValue( Environment.previousSessionAttribute ) ,
+						getValue( Environment.sessionAttribute ) ,
+						Environment.UPDATE_STRING ,
+						getValue( Environment.nameAttribute )
 					)
 			);
 		}
@@ -57,8 +57,8 @@ public class RelocationAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size()==3)&&
-						(getValue(SmartConferenceDefinitions.sessionAttribute).equals(t.get(0))&&
-						(SmartConferenceDefinitions.REQUEST_STRING.equals(t.get(1))))) {
+						(getValue(Environment.sessionAttribute).equals(t.get(0))&&
+						(Environment.REQUEST_STRING.equals(t.get(1))))) {
 					return new TruePredicate();
 				}
 			} catch (AbCAttributeTypeException e) {

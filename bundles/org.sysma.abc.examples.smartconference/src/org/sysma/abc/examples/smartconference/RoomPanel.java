@@ -36,9 +36,9 @@ public class RoomPanel extends JFrame {
 	private JTextField field;
 
 	public RoomPanel( AbCComponent room ) throws HeadlessException, AbCAttributeTypeException {
-		super( room.getValue(SmartConferenceDefinitions.nameAttribute) );
+		super( room.getValue(Environment.nameAttribute) );
 		this.room = room;
-		this.topic = room.getValue(SmartConferenceDefinitions.sessionAttribute);
+		this.topic = room.getValue(Environment.sessionAttribute);
 		build();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
@@ -48,8 +48,8 @@ public class RoomPanel extends JFrame {
 			public void run() {
 				while( true ) {
 					try {
-						room.waitUntil(new Not(new HasValue(SmartConferenceDefinitions.SESSION_ATTRIBUTE_NAME, topic)));
-						String newTopic = room.getValue(SmartConferenceDefinitions.sessionAttribute);
+						room.waitUntil(new Not(new HasValue(Environment.SESSION_ATTRIBUTE_NAME, topic)));
+						String newTopic = room.getValue(Environment.sessionAttribute);
 						if (!newTopic.equals(topic)) {
 							history.add(0, newTopic);
 							topic = newTopic;
@@ -92,10 +92,10 @@ public class RoomPanel extends JFrame {
 					try {
 						RoomPanel.this.topic = topic;
 						if (history.isEmpty()) {
-							room.setValue(SmartConferenceDefinitions.sessionAttribute, topic);
+							room.setValue(Environment.sessionAttribute, topic);
 						} else {
-							room.setValue(SmartConferenceDefinitions.newSessionAttribute, topic);
-							room.setValue(SmartConferenceDefinitions.relocateAttrivute, true);
+							room.setValue(Environment.newSessionAttribute, topic);
+							room.setValue(Environment.relocateAttrivute, true);
 						}
 						history.add(0, topic);
 						field.setText("");

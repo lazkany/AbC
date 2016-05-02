@@ -15,12 +15,14 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
 import org.sysma.abc.core.predicates.FalsePredicate;
 import org.sysma.abc.core.predicates.HasValue;
+import org.sysma.abc.core.predicates.TruePredicate;
 import org.sysma.abc.core.topology.AbCClient;
 
 /**
@@ -29,8 +31,9 @@ import org.sysma.abc.core.topology.AbCClient;
  */
 public class GroupC {
 	public static AbCPredicate FromgrpA = new HasValue("$1", "A");
-	public static AbCPredicate ff=new FalsePredicate();
-	public static HashMap<Attribute<?>, Object> update=new HashMap<>();;
+	public static AbCPredicate ff = new FalsePredicate();
+	public static HashMap<Attribute<?>, Object> update = new HashMap<>();;
+	public static Attribute<Object> a1 = new Attribute<Object>("group", Object.class);
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -40,27 +43,28 @@ public class GroupC {
 		public Process_1(String name) throws AbCAttributeTypeException {
 			super(name);
 			// TODO Auto-generated constructor stub
-			
+
 		}
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			while(true){
-			System.out.println(this.name + " => received: " + receive(FromgrpA) );
-//			, new AbcUpdate() {
-//
-//				@Override
-//				public Map<Attribute<?>, Object> eval(Object o) {
-//					HashMap<Attribute<?>, Object> update = new HashMap<>();
-//					update.put(getComponent().getStore().getAttribute("group"), o);
-//					return update;
-//				}})
-//			
-//				);
+			while (true) {
+				System.out.println(this.name + " => received: " + receive(o -> fromGroupA(o)));
 			}
 
 		}
+
+		public AbCPredicate fromGroupA(Object msg) {
+			if (msg instanceof Tuple) {
+				Tuple t = (Tuple) msg;
+				if (t.get(1).equals("A")) {
+					return new TruePredicate();
+				}
+			}
+			return new FalsePredicate();
+		}
 	}
+
 	public static class Process_2 extends AbCProcess {
 
 		/**
@@ -76,8 +80,8 @@ public class GroupC {
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
 			Thread.sleep(20000);
-			send(ff, " ");
-			setValue(new Attribute<String>("group",String.class), "B");
+			send(new FalsePredicate(), " ");
+			setValue(a1, "B");
 
 			System.out.println("joined group B");
 		}
@@ -88,9 +92,10 @@ public class GroupC {
 	 * @throws IOException
 	 * @throws DuplicateNameException
 	 * @throws AbCAttributeTypeException
-	 * @throws AbCPortException 
+	 * @throws AbCPortException
 	 */
-	public static void main(String[] args) throws IOException, DuplicateNameException, AbCAttributeTypeException, AbCPortException {
+	public static void main(String[] args)
+			throws IOException, DuplicateNameException, AbCAttributeTypeException, AbCPortException {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		int port = 0;
@@ -102,11 +107,10 @@ public class GroupC {
 			e.printStackTrace();
 		}
 		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
-		cPortClient.register( InetAddress.getLoopbackAddress() , 9999 );
+		cPortClient.register(InetAddress.getLoopbackAddress(), 9999);
 		Process_1 rcv = new Process_1("rcv_1");
-		Process_2 join=new Process_2("joinA");
+		Process_2 join = new Process_2("joinA");
 		AbCEnvironment store1 = new AbCEnvironment();
-		Attribute<Object> a1 = new Attribute<Object>("group", Object.class);
 		store1.setValue(a1, "C");
 		AbCComponent c1 = new AbCComponent("C1", store1);
 		c1.addProcess(rcv);
@@ -114,7 +118,7 @@ public class GroupC {
 		c1.setPort(cPortClient);
 		cPortClient.start();
 		c1.start();
-//		System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
+		// System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
 
 	}
 

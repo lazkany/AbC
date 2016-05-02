@@ -14,11 +14,14 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
+import org.sysma.abc.core.predicates.FalsePredicate;
 import org.sysma.abc.core.predicates.HasValue;
+import org.sysma.abc.core.predicates.TruePredicate;
 import org.sysma.abc.core.topology.AbCClient;
 
 /**
@@ -26,7 +29,7 @@ import org.sysma.abc.core.topology.AbCClient;
  *
  */
 public class GroupB {
-	public static AbCPredicate FromgrpA = new HasValue("$1", "A");
+
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -40,11 +43,22 @@ public class GroupB {
 
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
-			while(true){
-			System.out.println(this.name + " => received: " + receive(FromgrpA));
+			while (true) {
+				System.out.println(this.name + " => received: " + receive(o -> fromGroupA(o)));
 			}
 
 		}
+
+		public AbCPredicate fromGroupA(Object msg) {
+			if (msg instanceof Tuple) {
+				Tuple t = (Tuple) msg;
+				if (t.get(1).equals("A")) {
+					return new TruePredicate();
+				}
+			}
+			return new FalsePredicate();
+		}
+
 	}
 
 	/**
@@ -52,9 +66,10 @@ public class GroupB {
 	 * @throws IOException
 	 * @throws DuplicateNameException
 	 * @throws AbCAttributeTypeException
-	 * @throws AbCPortException 
+	 * @throws AbCPortException
 	 */
-	public static void main(String[] args) throws IOException, DuplicateNameException, AbCAttributeTypeException, AbCPortException {
+	public static void main(String[] args)
+			throws IOException, DuplicateNameException, AbCAttributeTypeException, AbCPortException {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		int port = 0;
@@ -66,7 +81,7 @@ public class GroupB {
 			e.printStackTrace();
 		}
 		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
-		cPortClient.register( InetAddress.getLoopbackAddress() , 9999 );
+		cPortClient.register(InetAddress.getLoopbackAddress(), 9999);
 		Process_1 rcv = new Process_1("rcv_1");
 		AbCEnvironment store1 = new AbCEnvironment();
 		Attribute<Object> a1 = new Attribute<Object>("group", Object.class);
@@ -76,7 +91,7 @@ public class GroupB {
 		c1.setPort(cPortClient);
 		cPortClient.start();
 		c1.start();
-//		System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
+		// System.out.println(cPortClient.getLocalAddress().getLocalSocketAddress());
 
 	}
 

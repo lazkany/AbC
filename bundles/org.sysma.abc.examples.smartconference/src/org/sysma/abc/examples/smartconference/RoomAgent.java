@@ -21,15 +21,15 @@ public class RoomAgent extends AbCProcess {
 	protected void doRun() throws Exception {
 		while (true) {
 			Tuple value = (Tuple) receive(o -> isARequest(o));
-			System.out.println( getValue(SmartConferenceDefinitions.nameAttribute)+"> Received: "+value);
+			System.out.println( getValue(Environment.nameAttribute)+"> Received: "+value);
 			//The following is an asynchronous send. When executed,
 			//a new process is created to send the message.
 			asend(
-				new HasValue(SmartConferenceDefinitions.ID_ATTRIBUTE_NAME, value.get(2)), 
+				new HasValue(Environment.ID_ATTRIBUTE_NAME, value.get(2)), 
 				new Tuple( 
-					getValue(SmartConferenceDefinitions.sessionAttribute) ,  
-					SmartConferenceDefinitions.REPLY_STRING ,
-					getValue(SmartConferenceDefinitions.nameAttribute)
+					getValue(Environment.sessionAttribute) ,  
+					Environment.REPLY_STRING ,
+					getValue(Environment.nameAttribute)
 				)
 			);
 		}
@@ -40,8 +40,8 @@ public class RoomAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size()==3)&&
-						(getValue(SmartConferenceDefinitions.sessionAttribute).equals(t.get(0))&&
-						(SmartConferenceDefinitions.REQUEST_STRING.equals(t.get(1))))) {
+						(getValue(Environment.sessionAttribute).equals(t.get(0))&&
+						(Environment.REQUEST_STRING.equals(t.get(1))))) {
 					return new TruePredicate();
 				}
 			} catch (AbCAttributeTypeException e) {

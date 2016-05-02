@@ -22,34 +22,34 @@ public class UpdatingAgent extends AbCProcess {
 	protected void doRun() throws Exception {
 		while (true) {
 			Tuple value = (Tuple) receive( o -> isAnUpdateMessage( o ) );
-			System.out.println( getValue(SmartConferenceDefinitions.nameAttribute)+"> Received: "+value);
+			System.out.println( getValue(Environment.nameAttribute)+"> Received: "+value);
 			setValue(
-					SmartConferenceDefinitions.previousSessionAttribute, 
-					getValue(SmartConferenceDefinitions.sessionAttribute));
+					Environment.previousSessionAttribute, 
+					getValue(Environment.sessionAttribute));
 			setValue(
-					SmartConferenceDefinitions.sessionAttribute, 
+					Environment.sessionAttribute, 
 					(String) value.get(0));
 			System.out.println( 
-					getValue(SmartConferenceDefinitions.nameAttribute)+"> New session: "+
-							getValue(SmartConferenceDefinitions.previousSessionAttribute)
+					getValue(Environment.nameAttribute)+"> New session: "+
+							getValue(Environment.previousSessionAttribute)
 							+"->"+
-							getValue(SmartConferenceDefinitions.sessionAttribute));
+							getValue(Environment.sessionAttribute));
 			asend(
 					new Or(
 						new HasValue(
-							SmartConferenceDefinitions.INTEREST_ATTRIBUTE_NAME, 
-							getValue(SmartConferenceDefinitions.sessionAttribute)
+							Environment.INTEREST_ATTRIBUTE_NAME, 
+							getValue(Environment.sessionAttribute)
 						) ,
 						new HasValue(
-								SmartConferenceDefinitions.SESSION_ATTRIBUTE_NAME, 
-								getValue(SmartConferenceDefinitions.sessionAttribute)
+								Environment.SESSION_ATTRIBUTE_NAME, 
+								getValue(Environment.sessionAttribute)
 						)
 					), 
 					new Tuple(
-						getValue( SmartConferenceDefinitions.previousSessionAttribute ) ,
-						getValue( SmartConferenceDefinitions.sessionAttribute ) ,
-						SmartConferenceDefinitions.UPDATE_STRING ,
-						getValue( SmartConferenceDefinitions.nameAttribute )
+						getValue( Environment.previousSessionAttribute ) ,
+						getValue( Environment.sessionAttribute ) ,
+						Environment.UPDATE_STRING ,
+						getValue( Environment.nameAttribute )
 					)
 			);
 		}
@@ -60,8 +60,8 @@ public class UpdatingAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size()==4)&&
-						(getValue(SmartConferenceDefinitions.sessionAttribute).equals(t.get(1)))&&
-						(SmartConferenceDefinitions.UPDATE_STRING.equals(t.get(2)))) {
+						(getValue(Environment.sessionAttribute).equals(t.get(1)))&&
+						(Environment.UPDATE_STRING.equals(t.get(2)))) {
 					return new TruePredicate();
 				}
 			} catch (AbCAttributeTypeException e) {

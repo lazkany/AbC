@@ -17,7 +17,7 @@ public class MainServer {
 	public static void main(String[] args) throws IOException, DuplicateNameException {
 		// TODO Auto-generated method stub
 		AbCServer srvr=new AbCServer();
-		
+		srvr.start();
 	}
 
 }

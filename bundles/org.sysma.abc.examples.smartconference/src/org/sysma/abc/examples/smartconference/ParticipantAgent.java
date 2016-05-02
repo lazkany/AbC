@@ -26,27 +26,27 @@ public class ParticipantAgent extends AbCProcess {
 	
 	@Override
 	protected void doRun() throws Exception {
-		setValue(SmartConferenceDefinitions.interestAttribute, this.selectedTopic);
+		setValue(Environment.interestAttribute, this.selectedTopic);
 		send( 
 			new HasValue(
-					SmartConferenceDefinitions.ROLE_ATTRIBUTE_NAME, 
-					SmartConferenceDefinitions.PROVIDER
+					Environment.ROLE_ATTRIBUTE_NAME, 
+					Environment.PROVIDER
 			) ,
 			new Tuple( 
-					getValue(SmartConferenceDefinitions.interestAttribute) ,
-					SmartConferenceDefinitions.REQUEST_STRING ,
-					getValue(SmartConferenceDefinitions.idAttribute)
+					getValue(Environment.interestAttribute) ,
+					Environment.REQUEST_STRING ,
+					getValue(Environment.idAttribute)
 					
 			)				
 		);
 		System.out.println(getComponent().getName()+"> registered for topic "+this.selectedTopic);
 		Tuple value = (Tuple) receive( o -> isAnInterestReply( o ) );
-		setValue(SmartConferenceDefinitions.destinationAttribute, (String) value.get(2));			
-		System.out.println(getComponent().getName()+"> moving to room "+getValue(SmartConferenceDefinitions.destinationAttribute));
+		setValue(Environment.destinationAttribute, (String) value.get(2));			
+		System.out.println(getComponent().getName()+"> moving to room "+getValue(Environment.destinationAttribute));
 		while (true) {
 			value = (Tuple) receive( o -> isAnInterestUpdate( o ) );
-			setValue(SmartConferenceDefinitions.destinationAttribute, (String) value.get(3));			
-			System.out.println(getComponent().getName()+"> relocating to room "+getValue(SmartConferenceDefinitions.destinationAttribute));
+			setValue(Environment.destinationAttribute, (String) value.get(3));			
+			System.out.println(getComponent().getName()+"> relocating to room "+getValue(Environment.destinationAttribute));
 		}
 	}
 
@@ -55,8 +55,8 @@ public class ParticipantAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size() == 3)&&
-						getValue(SmartConferenceDefinitions.interestAttribute).equals(t.get(0))&&
-						SmartConferenceDefinitions.REPLY_STRING.equals(t.get(1)))
+						getValue(Environment.interestAttribute).equals(t.get(0))&&
+						Environment.REPLY_STRING.equals(t.get(1)))
 						{
 							return new TruePredicate();
 				}
@@ -73,8 +73,8 @@ public class ParticipantAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size()==4)&&
-						(getValue(SmartConferenceDefinitions.interestAttribute).equals(t.get(1)))&&
-						(SmartConferenceDefinitions.UPDATE_STRING.equals(t.get(2)))) {
+						(getValue(Environment.interestAttribute).equals(t.get(1)))&&
+						(Environment.UPDATE_STRING.equals(t.get(2)))) {
 					return new TruePredicate();
 				}
 			} catch (AbCAttributeTypeException e) {

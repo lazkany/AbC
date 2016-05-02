@@ -14,6 +14,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
@@ -28,6 +29,7 @@ import org.sysma.abc.core.topology.AbCClient;
  */
 public class Explorer {
 	public static AbCPredicate orPrd = new Or(new HasValue("role", "rescuer"), new HasValue("role", "helper"));
+
 	public static class Process_1 extends AbCProcess {
 
 		/**
@@ -42,7 +44,8 @@ public class Explorer {
 		@Override
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			// TODO Auto-generated method stub
-			send(orPrd, this.getComponent().getStore().getValue("id")+","+"qry" + ","+ this.getComponent().getStore().getValue("role"));
+			send(orPrd, new Tuple(this.getComponent().getStore().getValue("id"), "qry",
+					this.getComponent().getStore().getValue("role")));
 		}
 	}
 
@@ -51,9 +54,10 @@ public class Explorer {
 	 * @throws IOException
 	 * @throws AbCAttributeTypeException
 	 * @throws DuplicateNameException
-	 * @throws AbCPortException 
+	 * @throws AbCPortException
 	 */
-	public static void main(String[] args) throws IOException, AbCAttributeTypeException, DuplicateNameException, AbCPortException {
+	public static void main(String[] args)
+			throws IOException, AbCAttributeTypeException, DuplicateNameException, AbCPortException {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		int port = 0;
@@ -65,7 +69,7 @@ public class Explorer {
 			e.printStackTrace();
 		}
 		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
-		cPortClient.register( InetAddress.getLoopbackAddress() , 9999 );
+		cPortClient.register(InetAddress.getLoopbackAddress(), 9999);
 		Process_1 explorer = new Process_1("explorer_1");
 		AbCEnvironment store1 = new AbCEnvironment();
 		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);
@@ -77,7 +81,7 @@ public class Explorer {
 		c1.setPort(cPortClient);
 		cPortClient.start();
 		c1.start();
-//		System.out.println(cPortClient.getLocalAddress());
+		// System.out.println(cPortClient.getLocalAddress());
 
 	}
 

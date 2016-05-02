@@ -9,7 +9,7 @@ import org.sysma.abc.core.Attribute;
  * @author loreti
  *
  */
-public class SmartConferenceDefinitions {
+public class Environment {
 
 	public static final String REQUEST_STRING = "S_REQ";
 	public static final String UPDATE_STRING = "INTEREST_UPDATE";
