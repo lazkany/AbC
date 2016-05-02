@@ -188,14 +188,15 @@ public class Helper {
 <p>We consider the classical stable marriage problem (SMP), a problem of finding a stable matching between two equally sized sets of elements given an ordering of preferences for each element. </p>
 
 <p>In our example, we consider $n$ men and $n$ women, where each person has ranked all members of the opposite sex in order of preferences, we have to engage the men and women together such that there are no two people of opposite sex who would both rather have each other than their current partners. When there are no such pairs of people, the set of marriages is deemed stable. For convenience we assume there are no ties; thus, if a person is indifferent between two or more possible partners he/she is nevertheless required to rank them in some order. 
-In our implementation we assume that the man initiates the interaction. This is done by removing his first best from his list of preferences and assuming it to be his partner. The man proposes to this possible partner and waits for any invalidation messages from this woman. If this message is received, the man starts over again and removes the next item from his preferences and soon. The behaviour of a man can be implemented in AbaCuS as follows:
-</p><pre><code>
+In our implementation we assume that the man initiates the interaction. This is done by removing his first best from his list of preferences and assuming it to be his partner. The man proposes to this possible partner and waits for any invalidation messages from this woman. If this message is received, the man starts over again and removes the next item from his preferences and soon. The behaviour of a man can be implemented in AbaCuS as follows:</p>
+
+<pre><code>
 public class ManAgent extends AbCProcess {
     public LinkedList preferences; 
     public ManAgent( LinkedList preferences ) {
         super("ManAgent");
         this.preferences = preferences;
-    }<br>
+    }   
     @Override
     protected void doRun() throws Exception {
         System.out.println("Man started...");
@@ -222,11 +223,213 @@ public class ManAgent extends AbCProcess {
 }
 </code></pre>
 
-<p>On the other hand, a woman waits for proposals all the time. In the beginning, when she is not engaged, she accepts any proposal. Once she is engaged and another man proposes, she looks at her list of preferences and compare her current man with the new man and decides if she will be better off with the new man or not. If yes, she says sorry to her current man and get engaged to the new one, otherwise she just says sorry to the new proposed man. 
-The full implementation can be found below.</p>
+On the other hand, a woman waits for proposals all the time. In the beginning, when she is not engaged, she accepts any proposal. Once she is engaged and another man proposes, she looks at her list of preferences and compare her current man with the new man and decides if she will be better off with the new man or not. If yes, she says sorry to her current man and get engaged to the new one, otherwise she just says sorry to the new proposed man. 
+The full implementation can be found below.
+
+### Modelling Channel-based Interaction
+In this section, we show how to model group-based framework in AbC in an easy way. We consider a scenario where we have three groups: groupA, groupB, and groupC. We defines two members of groupB, one member of groupA, and one member of groupC. The groupC member stays for a certain amount of time in groupC and then leaves to join groupB. The groupB members are always ready to receive messages from groupA members. On the other hand, groupA members are always sending messages only to groupB. The figure below shows the conceptual scenario.   
+
+![](https://dl.dropboxusercontent.com/s/hrlfdvqs27f8kl5/group.png?dl=0)
+
+The groupA behaviour is shown below. Basically, GroupA members always send messages with the predicate "TOgrpB". This predicate filters the message only to GroupB. In the same time, groupA members attach their group name in the message. 
+`this.getComponent().getStore().getValue("group")` this corresponds the the AbC attribute reference "this.group".
+
+<pre><code>
+public class GroupA {
+    public static AbCPredicate TOgrpB = new HasValue("group", "B");
+    public static class Process_1 extends AbCProcess {
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);
+        }
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            while(true){
+            send(TOgrpB, new Tuple("MSG",this.getComponent().getStore().getValue("group")) );
+            Thread.sleep(2000);
+            }
+        }
+    }
+</code></pre>
+
+<p>On the other hand, the behaviour of groupB and groupC members is nearly similar in the sense that both of them are waiting to receive messages from groupA as shown below.</p>
+
+<pre><code>
+public class GroupB {
+    public static class Process_1 extends AbCProcess {
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);
+        }
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            while (true) {
+                System.out.println(this.name + " =&gt; received: " + receive(o -&gt; fromGroupA(o)));
+            }
+        }
+        public AbCPredicate fromGroupA(Object msg) {
+            if (msg instanceof Tuple) {
+                Tuple t = (Tuple) msg;
+                if (t.get(1).equals("A")) {
+                    return new TruePredicate();
+                }
+            }
+            return new FalsePredicate();
+        }
+    }
+</code></pre>
+
+<p>So, both of groupB and groupC members have a process that is waiting to receive a message with a predicate "FromgrpA". This predicate inspects the second element of the received values and checks its equality with "A" where "A" denotes groupA. if this predicate holds true then the message can be received otherwise it will be discarded. In addition to this behaviour, the groupC members contain another process running in parallel with previous process (Remember: putting two processes in parallel is done using the method "addProcess()"). This process waits for a while and then leaves groupC to join groupB as shown below.</p>
+
+<pre><code>
+public static class Process_2 extends AbCProcess {
+        public Process_2(String name) throws AbCAttributeTypeException {
+            super(name);
+        }
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            Thread.sleep(20000);
+            setValue(a1, "B");
+            send(new FalsePredicate(), " ");    
+            System.out.println("joined group B");
+        }
+    }
+<code></code></code></pre>
+
+<p>We model the group name as an attribute and leaving/joining the group by an attribute update. The attribute update can be achieved by updating the attribute followed with a silent move (i.e., send on a false predicate ()<a href="https://github.com/ff" class="user-mention">@ff</a> ). This action is not observable and indicates a silent move. The above code corresponds to the AbC code <code>[this.group := B]()@ff</code>. </p>
+
+<p>So now, the behaviour of a groupC member is equivalent to the AbC component <code>Gamma:( (y=B)(x,y) | [this.group := B]()@ff)</code>. This is interesting and models what we call opportunistic behaviour in the sense that the behaviour of two co-located processes running in parallel can influence each other. For instance, once the attribute update is performed with a silent move, this component leaves groupC and joins groupB and thus is eligible to receive messages from groupA. This is why modelling adaptation and failure in AbC is quite natural. In some sense, processes can influence the behaviour of each other indirectly through changing the shared working space/environment. In many cases, this behaviour is highly recommended where message passing becomes impractical. For instance, in wireless sensor networks where a massive number of components are distributed in a relatively small space, message passing doesn't scale well in this situation. This kind of behaviour is hardly possible in other approaches. Below you find the full source code for the scenario and a video of showing how to run the code.</p>
+
+<p><a href="https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/GroupBased">Source Code</a><br>
+<a href="https://www.youtube.com/watch?v=3xlWubbXjTM&amp;feature=youtu.be">Video Demo</a></p>
 
 <h3>
-<a id="modelling-channel-based-interaction" class="anchor" href="#modelling-channel-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modelling Channel-based Interaction</h3>
+<a id="modelling-publishsubscribe-framework" class="anchor" href="#modelling-publishsubscribe-framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modelling Publish/Subscribe framework</h3>
+
+<p>In this section, we show how to model Topic-based publish/subscribe framework in AbC in a natural way. We consider a scenario where a publisher is sending messages tagged with two different topics: topic_1=movies and topic_2=news. There are three subscribers, one is subscribed to "movies", one to "news", and the last one is subscribed to songs as shown below:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/72r0wd6ot3ujeuh/pubsub.png?dl=0" alt=""></p>
+
+<p>Obviously, only the subscribers with "movies" or "news" will get the message, the subscriber who is subscribed to "songs" will not receive the message. This scenario can be modelled in AbC in an obvious way in the sense that the publisher will send a message with true predicate (i.e., satisfied by all) and tag these messages with topics. The Publisher has two attributes named topic_1 and topic_2 respectively. The publisher code is shown below:</p>
+
+<pre><code>
+public class Publisher {
+    public static AbCPredicate any = new TruePredicate();
+    public static class Process_1 extends AbCProcess {
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);
+        }
+
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            send( new TruePredicate() , new Tuple( "msg" , this.getComponent().getStore().getValue("topic_1"), this.getComponent().getStore().getValue("topic_2")));
+        }
+    }
+
+<code></code></code></pre>
+
+<p>Simply, the publisher attaches its attributes "topic_1" and "topic_2" into the message and sends it to all possible subscribers. Note that the following code corresponds to the AbC attribute reference "this.topic_1"</p>
+
+<p><code>this.getComponent().getStore().getValue("topic_1")</code></p>
+
+<p>The subscriber is responsible to check if the message matches its subscriptions or not. This can be done by using the predicate "subscribe" as shown below. This predicate will check if the attached topics match the subscriber subscriptions or not. Again the line <code>this.getComponent().getStore().getValue("subscription")</code> corresponds to the AbC attribute reference "this.subscription".</p>
+
+<pre><code>
+public class Subscriber_1 {
+    public static class Process_1 extends AbCProcess {
+        public Process_1(String name) throws AbCAttributeTypeException {
+            super(name);    
+        }
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            System.out.println(this.name + " =&gt; received: " + receive(o -&gt; subscribe(o)));
+        }
+        public AbCPredicate subscribe( Object msg ) {
+            if (msg instanceof Tuple) {
+                Tuple t = (Tuple) msg;
+                if (t.get(1).equals(this.getComponent().getStore().getValue("subscription"))||t.get(2).equals(this.getComponent().getStore().getValue("subscription"))) {
+                    return new TruePredicate();
+                }
+            }
+            return new FalsePredicate();
+        }
+    }
+</code></pre>
+
+<p>The full source code for the whole scenario can be found below.</p>
+
+<p><a href="https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/PublishSubscribe">Source Code</a><br>
+<a href="https://www.youtube.com/watch?v=Eiil8DkPoqM&amp;feature=youtu.be">Video Demo</a></p>
+
+<h3>
+<a id="encoding-channel-based-interaction" class="anchor" href="#encoding-channel-based-interaction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Encoding Channel-based Interaction</h3>
+
+<p>In this example, we show how we can model channel-based communication in AbC smoothly and easily. In essence, we will show how to encode the basic constructs of the <a href="http://dl.acm.org/citation.cfm?id=662485">Broadcast Pi-calculus</a> into AbC in a natural way. We will consider the send and receive actions and the underlying communication paradigm. The encoding of a broadcast Pi-calculus process P, is rendered as an AbC component with empty environment. The channel is encoded as a special value in the sent message. For instance, the broadcast action in the broadcast Pi-calculus is encoded as follows:</p>
+
+<pre><code>
+public class Sender {
+    public static AbCPredicate any = new TruePredicate();
+    public static class Process_1 extends AbCProcess {
+        public Process_1(String name) {
+            super(name);
+        }
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            send(any, new Tuple("a","v"));
+        }
+    }
+</code></pre>
+
+<p>as you see, the send action is encoded as a send method in AbC, where the predicate any corresponds to a true predicate in AbC (i.e., satisfied by all). The sent values is a pair, the first element is the name of the channel and the second element is the actual communicated value. As shown below, the receiver decides whether to accept the message or not.  </p>
+
+<pre><code>
+public class Receiver_1 {
+    public static class Process_1 extends AbCProcess {
+        public Process_1(String name) {
+            super(name);
+        }
+        @Override
+        protected void doRun() throws InterruptedException, AbCAttributeTypeException {
+            System.out.println(this.name + " =&gt; received: " + receive(o -&gt; channel(o)));
+        }
+        public AbCPredicate channel(Object msg) {
+            if (msg instanceof Tuple) {
+                Tuple t = (Tuple) msg;
+                if (t.get(0).equals("a")) {
+                    return new TruePredicate();
+                }
+            }
+            return new FalsePredicate();
+        }
+    }
+</code></pre>
+
+<p>Basically, the receiver accept only the message that satisfies the predicate "channel". This predicate checks the first element in the message and returns true if it is equal to "a" otherwise the message is discarded. As shown in the figure below, we model a scenario, where there are two receiver waiting to receive messages on channel "a" , one receiver is waiting to receive message on channel "c", and one sender that wants to send a message "v" on channel "a".</p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/v8w7a1umxjne2w1/channel.png?dl=0" alt=""></p>
+
+<p>Only the receivers which are waiting to receive a message on channel "a" will receive the message, the other receiver will discard any sent message on a channel that is different from "c". The source code for all processes can be found below and we also include a video to show how to run these processes.</p>
+
+<p><a href="https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/broadcast">Source Code</a><br>
+<a href="https://www.youtube.com/watch?v=VfFOpDV-JSw&amp;feature=youtu.be">Video Demo</a></p>
+
+<h3>
+<a id="contributors-to-the-implementation" class="anchor" href="#contributors-to-the-implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributors to the Implementation</h3>
+
+<p>Yehia Abd Alrahman<br>
+<a href="mailto:yehia.abdalrahman@imtlucca.it">yehia.abdalrahman@imtlucca.it</a><br>
+IMT Lucca for Advanced Studies<br>
+<a href="https://github.com/lazkany" class="user-mention">@lazkany</a></p>
+
+<hr>
+
+<p>Michele Loreti<br>
+<a href="mailto:michele.loreti@unifi.it">michele.loreti@unifi.it</a><br>
+Universita degli Studi di Firenze<br>
+<a href="https://github.com/michele-loreti" class="user-mention">@michele-loreti</a></p>
+
+<h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Having trouble with with installation or programming? Please contact either <a href="https://github.com/lazkany" class="user-mention">@lazkany</a> or <a href="https://github.com/michele-loreti" class="user-mention">@michele-loreti</a></p>
       </section>
       <footer>
         <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
