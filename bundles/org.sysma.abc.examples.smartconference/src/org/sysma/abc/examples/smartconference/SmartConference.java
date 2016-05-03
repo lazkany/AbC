@@ -135,15 +135,17 @@ public class SmartConference extends JFrame {
 				int result = JOptionPane.showConfirmDialog(SmartConference.this, "New participants arrival ");
 				if (result == JOptionPane.OK_OPTION) {
 					try {
-						for (int i = Integer.parseInt(identity.getText()); i <= Integer
-								.parseInt(number.getText()); i++) {
+						for (int i = Integer.parseInt(identity.getText()); i <= (Integer
+								.parseInt(number.getText())+Integer.parseInt(identity.getText())-1); i++) {
 							String x = (this.list.get(new Random().nextInt(this.list.size())));
 
 							createParticipantComponent(i, x, vp.getPort()).start();
 
 						}
-						int n = Integer.parseInt(number.getText()) + 1;
+						int n = Integer
+								.parseInt(number.getText())+Integer.parseInt(identity.getText()) + 1;
 						identity.setText(String.valueOf(n));
+						identity.setEnabled(false);
 						number.setText("");
 					} catch (ConcurrentModificationException e1) {
 						// TODO Auto-generated catch block
