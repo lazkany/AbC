@@ -3,6 +3,7 @@
  */
 package org.sysma.abc.examples.smartconference;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -34,7 +35,7 @@ public class RoomPanel extends JFrame {
 	private String topic;
 	private DefaultListModel<String> history;
 	private JTextField field;
-
+	private JPanel inputPane = new JPanel();
 	public RoomPanel( AbCComponent room ) throws HeadlessException, AbCAttributeTypeException {
 		super( room.getValue(Environment.nameAttribute) );
 		this.room = room;
@@ -42,6 +43,7 @@ public class RoomPanel extends JFrame {
 		build();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
+		setClr();
 		Thread t = new Thread(new Runnable() {
 			
 			@Override
@@ -49,6 +51,7 @@ public class RoomPanel extends JFrame {
 				while( true ) {
 					try {
 						room.waitUntil(new Not(new HasValue(Environment.SESSION_ATTRIBUTE_NAME, topic)));
+						setClr();
 						String newTopic = room.getValue(Environment.sessionAttribute);
 						if (!newTopic.equals(topic)) {
 							history.add(0, newTopic);
@@ -73,7 +76,7 @@ public class RoomPanel extends JFrame {
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new GridLayout(2, 1));
 		
-		JPanel inputPane = new JPanel();
+		
 //		contentPane.setLayout(new GridLayout(2, 2));
 		inputPane.add(new JLabel("Topic: "));
 		field = new JTextField(50);
@@ -117,7 +120,32 @@ public class RoomPanel extends JFrame {
 		
 	}
 	
-	
+	public void setClr() throws AbCAttributeTypeException{
+		switch(room.getValue(Environment.sessionAttribute)){
+		case "A":
+			inputPane.setBackground(Color.red);
+			break;
+		case "B":
+			inputPane.setBackground(Color.blue);
+			break;
+		case "C":
+			inputPane.setBackground(Color.GRAY);
+			break;
+		case "D":
+			inputPane.setBackground(Color.GREEN);
+			break;
+		case "E":
+			inputPane.setBackground(Color.cyan);
+			break;
+		case "F":
+			inputPane.setBackground(Color.magenta);
+			break;
+		case "J":
+			inputPane.setBackground(Color.pink);
+			break;
+			
+		}
+	}
 	public static void main(String[] argv) throws HeadlessException, AbCAttributeTypeException {
 		RoomPanel rp = new RoomPanel(new AbCComponent("test") );
 		rp.setVisible(true);
