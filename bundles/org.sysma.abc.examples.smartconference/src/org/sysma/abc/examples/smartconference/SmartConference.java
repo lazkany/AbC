@@ -109,6 +109,7 @@ public class SmartConference extends JFrame {
 								this.list.remove(x);
 							}
 						}
+						button1.setEnabled(false);
 					} catch (NumberFormatException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
