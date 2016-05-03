@@ -68,7 +68,7 @@ public class SmartConference extends JFrame {
 		c.addProcess(new RelocationAgent());
 		c.addProcess(new UpdatingAgent());
 		RoomPanel rp = new RoomPanel(c);
-		rp.setLocation(0, (id-1)*rp.getHeight()+40*(id-1));
+		rp.setLocation(0, (id - 1) * rp.getHeight() + 40 * (id - 1));
 		rp.setVisible(true);
 		return c;
 	}
@@ -88,7 +88,7 @@ public class SmartConference extends JFrame {
 		contentPane.setLayout(new GridLayout(2, 1));
 
 		// contentPane.setLayout(new GridLayout(2, 2));
-		
+
 		// this.setContentPane(inputPane);
 		// contentPane.add(inputPane);
 		JButton button1 = new JButton("Create Conference Venue");
@@ -97,8 +97,7 @@ public class SmartConference extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.showConfirmDialog(SmartConference.this,
-						"Create Venue! ");
+				int result = JOptionPane.showConfirmDialog(SmartConference.this, "Create Venue! ");
 				if (result == JOptionPane.OK_OPTION) {
 					try {
 						for (int i = 1; i <= 7; i++) {
@@ -143,7 +142,9 @@ public class SmartConference extends JFrame {
 							createParticipantComponent(i, x, vp.getPort()).start();
 
 						}
-
+						int n = Integer.parseInt(number.getText()) + 1;
+						identity.setText(String.valueOf(n));
+						number.setText("");
 					} catch (ConcurrentModificationException e1) {
 						// TODO Auto-generated catch block
 						System.out.println(e1.toString());
@@ -167,10 +168,10 @@ public class SmartConference extends JFrame {
 
 		});
 		inputPane.add(button1);
-		
+
 		this.setContentPane(contentPane);
 		contentPane.add(inputPane);
-		
+
 		JPanel panel = new JPanel();
 		panel.add(new JLabel("ID: "));
 		identity = new JTextField(3);
@@ -179,7 +180,7 @@ public class SmartConference extends JFrame {
 		number = new JTextField(3);
 		panel.add(new JLabel("Number: "));
 		panel.add(number);
-		this.setContentPane(contentPane);	
+		this.setContentPane(contentPane);
 		panel.add(button2);
 		contentPane.add(panel);
 		// inputPane.setBackground(Color.RED);
