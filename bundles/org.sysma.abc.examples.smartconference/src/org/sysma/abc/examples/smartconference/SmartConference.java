@@ -68,6 +68,7 @@ public class SmartConference extends JFrame {
 		c.addProcess(new RelocationAgent());
 		c.addProcess(new UpdatingAgent());
 		RoomPanel rp = new RoomPanel(c);
+		rp.setLocation(0, (id-1)*rp.getHeight()+40*(id-1));
 		rp.setVisible(true);
 		return c;
 	}
