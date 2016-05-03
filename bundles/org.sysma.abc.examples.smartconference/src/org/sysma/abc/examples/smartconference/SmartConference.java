@@ -138,7 +138,7 @@ public class SmartConference extends JFrame {
 						for (int i = Integer.parseInt(identity.getText()); i <= (Integer
 								.parseInt(number.getText())+Integer.parseInt(identity.getText())-1); i++) {
 							String x = (this.list.get(this.rnd.nextInt(7)));
-							Thread.sleep(100);
+							Thread.sleep(50);
 							createParticipantComponent(i, x, vp.getPort()).start();
 
 						}
