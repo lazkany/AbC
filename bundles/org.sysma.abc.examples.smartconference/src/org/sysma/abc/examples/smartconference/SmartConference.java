@@ -135,10 +135,11 @@ public class SmartConference extends JFrame {
 				int result = JOptionPane.showConfirmDialog(SmartConference.this, "New participants arrival ");
 				if (result == JOptionPane.OK_OPTION) {
 					try {
+						
 						for (int i = Integer.parseInt(identity.getText()); i <= (Integer
 								.parseInt(number.getText())+Integer.parseInt(identity.getText())-1); i++) {
 							String x = (this.list.get(this.rnd.nextInt(7)));
-							Thread.sleep(50);
+							Thread.sleep(20);
 							createParticipantComponent(i, x, vp.getPort()).start();
 
 						}
