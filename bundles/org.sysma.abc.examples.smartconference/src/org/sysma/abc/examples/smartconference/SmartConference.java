@@ -129,7 +129,7 @@ public class SmartConference extends JFrame {
 		JButton button2 = new JButton("New Participants");
 		button2.addActionListener(new ActionListener() {
 			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "J"));
-
+			private Random rnd=new Random();
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int result = JOptionPane.showConfirmDialog(SmartConference.this, "New participants arrival ");
@@ -137,8 +137,8 @@ public class SmartConference extends JFrame {
 					try {
 						for (int i = Integer.parseInt(identity.getText()); i <= (Integer
 								.parseInt(number.getText())+Integer.parseInt(identity.getText())-1); i++) {
-							String x = (this.list.get(new Random().nextInt(this.list.size())));
-
+							String x = (this.list.get(this.rnd.nextInt(7)));
+							Thread.sleep(100);
 							createParticipantComponent(i, x, vp.getPort()).start();
 
 						}
@@ -161,6 +161,9 @@ public class SmartConference extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (AbCAttributeTypeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
