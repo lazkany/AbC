@@ -143,7 +143,7 @@ public class SmartConference extends JFrame {
 
 						}
 						int n = Integer
-								.parseInt(number.getText())+Integer.parseInt(identity.getText()) + 1;
+								.parseInt(number.getText())+Integer.parseInt(identity.getText());
 						identity.setText(String.valueOf(n));
 						identity.setEnabled(false);
 						number.setText("");
