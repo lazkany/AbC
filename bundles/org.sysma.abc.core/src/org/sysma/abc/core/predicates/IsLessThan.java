@@ -30,7 +30,11 @@ public class IsLessThan extends AbCPredicate {
 		this.attribute = attribute;
 		this.value = value;
 	}
-
+	public IsLessThan(Attribute<?> attribute, Number value) {
+		super(AbCPredicate.PredicateType.ISLES);
+		this.attribute = attribute.getName();
+		this.value = value;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

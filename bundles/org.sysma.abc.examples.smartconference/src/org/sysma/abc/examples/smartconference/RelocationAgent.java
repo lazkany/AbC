@@ -21,32 +21,32 @@ public class RelocationAgent extends AbCProcess {
 	@Override
 	protected void doRun() throws Exception {
 		while (true) {
-			waitUnil(new HasValue(Environment.RELOCATE_ATTRIBUTE_NAME, true));
+			waitUnil(new HasValue(Defs.relocateAttrivute, true));
 			setValue(
-					Environment.relocateAttrivute ,
+					Defs.relocateAttrivute ,
 					false);
 			setValue(
-					Environment.previousSessionAttribute, 
-					getValue(Environment.sessionAttribute));
+					Defs.previousSessionAttribute, 
+					getValue(Defs.sessionAttribute));
 			setValue(
-					Environment.sessionAttribute, 
-					getValue(Environment.newSessionAttribute));
+					Defs.sessionAttribute, 
+					getValue(Defs.newSessionAttribute));
 			send(
 					new Or(
 						new HasValue(
-							Environment.INTEREST_ATTRIBUTE_NAME, 
-							getValue(Environment.sessionAttribute)
+							Defs.interestAttribute, 
+							getValue(Defs.sessionAttribute)
 						) ,
 						new HasValue(
-								Environment.SESSION_ATTRIBUTE_NAME, 
-								getValue(Environment.sessionAttribute)
+								Defs.sessionAttribute, 
+								getValue(Defs.sessionAttribute)
 						)
 					), 
 					new Tuple(
-						getValue( Environment.previousSessionAttribute ) ,
-						getValue( Environment.sessionAttribute ) ,
-						Environment.UPDATE_STRING ,
-						getValue( Environment.nameAttribute )
+						getValue( Defs.previousSessionAttribute ) ,
+						getValue( Defs.sessionAttribute ) ,
+						Defs.UPDATE_STRING ,
+						getValue( Defs.nameAttribute )
 					)
 			);
 		}
@@ -57,8 +57,8 @@ public class RelocationAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size()==3)&&
-						(getValue(Environment.sessionAttribute).equals(t.get(0))&&
-						(Environment.REQUEST_STRING.equals(t.get(1))))) {
+						(getValue(Defs.sessionAttribute).equals(t.get(0))&&
+						(Defs.REQUEST_STRING.equals(t.get(1))))) {
 					return new TruePredicate();
 				}
 			} catch (AbCAttributeTypeException e) {

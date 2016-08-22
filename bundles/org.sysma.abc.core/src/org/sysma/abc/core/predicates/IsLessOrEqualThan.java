@@ -32,6 +32,11 @@ public class IsLessOrEqualThan extends AbCPredicate {
 		this.attribute = attribute;
 		this.value = value;
 	}
+	public IsLessOrEqualThan(Attribute<?> attribute, Number value) {
+		super(AbCPredicate.PredicateType.ISLEQ);
+		this.attribute = attribute.getName();
+		this.value = value;
+	}
 
 	/*
 	 * (non-Javadoc)

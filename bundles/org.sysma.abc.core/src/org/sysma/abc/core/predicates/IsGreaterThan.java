@@ -36,7 +36,15 @@ public class IsGreaterThan extends AbCPredicate {
 			this.value = 0;
 		}
 	}
-
+	public IsGreaterThan(Attribute<?> attribute, Number value) {
+		super(AbCPredicate.PredicateType.ISGTR);
+		this.attribute = attribute.getName();
+		if (value != null) {
+			this.value = value;
+		} else {
+			this.value = 0;
+		}
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

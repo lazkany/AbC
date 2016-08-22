@@ -32,6 +32,11 @@ public class IsGreaterOrEqualThan extends AbCPredicate {
 		this.attribute = attribute;
 		this.value = value;
 	}
+	public IsGreaterOrEqualThan(Attribute<?> attribute, Number value) {
+		super(AbCPredicate.PredicateType.ISGEQ);
+		this.attribute = attribute.getName();
+		this.value = value;
+	}
 
 	/*
 	 * (non-Javadoc)

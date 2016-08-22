@@ -33,7 +33,11 @@ public class HasValue extends AbCPredicate {
 		this.attribute = attribute;
 		this.value = value;
 	}
-
+	public HasValue(Attribute<?> attribute, Object value) {
+		super(AbCPredicate.PredicateType.ISEQUAL);
+		this.attribute = attribute.getName();
+		this.value = value;
+	}
 	@Override
 	public boolean isSatisfiedBy(AbCEnvironment store) throws AbCAttributeTypeException {
 		Attribute<?> a = store.getAttribute(attribute);

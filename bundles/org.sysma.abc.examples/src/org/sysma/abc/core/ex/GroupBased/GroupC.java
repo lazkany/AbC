@@ -15,6 +15,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.AbCEnvironment;
 import org.sysma.abc.core.AbCProcess;
 import org.sysma.abc.core.Attribute;
+import org.sysma.abc.core.InputAction;
 import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
@@ -48,9 +49,15 @@ public class GroupC {
 		protected void doRun() throws InterruptedException, AbCAttributeTypeException {
 			while (true) {
 				System.out.println(this.name + " => received: " + receive(o -> fromGroupA(o)));
+				//System.out.println(this.name + " => received: " + receive(new InputAction(AbCEnvironment->assign(this.getComponent().getStore()),AbCPredicate.TRUE,o->fromGroupA(o))));
 			}
 
 		}
+
+//		private AbCEnvironment assign(AbCEnvironment store) {
+//			// TODO Auto-generated method stub
+//			return null;
+//		}
 
 		public AbCPredicate fromGroupA(Object msg) {
 			if (msg instanceof Tuple) {

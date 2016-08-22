@@ -33,7 +33,6 @@ import org.sysma.abc.core.topology.VirtualPort;
 public class SmartConference extends JFrame {
 
 	private JTextField identity;
-	private JTextField session;
 	private JTextField number;
 	private VirtualPort vp = new VirtualPort();
 	JPanel inputPane = new JPanel();
@@ -58,10 +57,10 @@ public class SmartConference extends JFrame {
 	public AbCComponent createRoomComponent(int id, String topic, AbCPort port)
 			throws DuplicateNameException, AbCPortException, AbCAttributeTypeException {
 		AbCComponent c = new AbCComponent("Room " + id);
-		c.setValue(Environment.nameAttribute, "Room " + id);
-		c.setValue(Environment.relocateAttrivute, false);
-		c.setValue(Environment.sessionAttribute, topic);
-		c.setValue(Environment.roleAttribute, Environment.PROVIDER);
+		c.setValue(Defs.nameAttribute, "Room " + id);
+		c.setValue(Defs.relocateAttrivute, false);
+		c.setValue(Defs.sessionAttribute, topic);
+		c.setValue(Defs.roleAttribute, Defs.PROVIDER);
 		port.start();
 		c.setPort(port);
 		c.addProcess(new RoomAgent());
@@ -76,7 +75,7 @@ public class SmartConference extends JFrame {
 	public AbCComponent createParticipantComponent(int id, String topic, AbCPort port)
 			throws DuplicateNameException, AbCPortException, AbCAttributeTypeException {
 		AbCComponent c = new AbCComponent("Participant " + id);
-		c.setValue(Environment.idAttribute, id);
+		c.setValue(Defs.idAttribute, id);
 		port.start();
 		c.setPort(port);
 		c.addProcess(new ParticipantAgent("Participant " + id, topic));

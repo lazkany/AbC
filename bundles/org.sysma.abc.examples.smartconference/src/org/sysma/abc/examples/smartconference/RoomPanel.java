@@ -37,9 +37,9 @@ public class RoomPanel extends JFrame {
 	private JTextField field;
 	private JPanel inputPane = new JPanel();
 	public RoomPanel( AbCComponent room ) throws HeadlessException, AbCAttributeTypeException {
-		super( room.getValue(Environment.nameAttribute) );
+		super( room.getValue(Defs.nameAttribute) );
 		this.room = room;
-		this.topic = room.getValue(Environment.sessionAttribute);
+		this.topic = room.getValue(Defs.sessionAttribute);
 		build();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
@@ -50,9 +50,9 @@ public class RoomPanel extends JFrame {
 			public void run() {
 				while( true ) {
 					try {
-						room.waitUntil(new Not(new HasValue(Environment.SESSION_ATTRIBUTE_NAME, topic)));
+						room.waitUntil(new Not(new HasValue(Defs.SESSION_ATTRIBUTE_NAME, topic)));
 						setClr();
-						String newTopic = room.getValue(Environment.sessionAttribute);
+						String newTopic = room.getValue(Defs.sessionAttribute);
 						if (!newTopic.equals(topic)) {
 							history.add(0, newTopic);
 							topic = newTopic;
@@ -95,10 +95,10 @@ public class RoomPanel extends JFrame {
 					try {
 						RoomPanel.this.topic = topic;
 						if (history.isEmpty()) {
-							room.setValue(Environment.sessionAttribute, topic);
+							room.setValue(Defs.sessionAttribute, topic);
 						} else {
-							room.setValue(Environment.newSessionAttribute, topic);
-							room.setValue(Environment.relocateAttrivute, true);
+							room.setValue(Defs.newSessionAttribute, topic);
+							room.setValue(Defs.relocateAttrivute, true);
 						}
 						history.add(0, topic);
 						field.setText("");
@@ -121,7 +121,7 @@ public class RoomPanel extends JFrame {
 	}
 	
 	public void setClr() throws AbCAttributeTypeException{
-		switch(room.getValue(Environment.sessionAttribute)){
+		switch(room.getValue(Defs.sessionAttribute)){
 		case "A":
 			inputPane.setBackground(Color.red);
 			break;

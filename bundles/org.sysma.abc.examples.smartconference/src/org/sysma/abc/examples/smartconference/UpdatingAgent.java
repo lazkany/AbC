@@ -22,34 +22,34 @@ public class UpdatingAgent extends AbCProcess {
 	protected void doRun() throws Exception {
 		while (true) {
 			Tuple value = (Tuple) receive( o -> isAnUpdateMessage( o ) );
-			System.out.println( getValue(Environment.nameAttribute)+"> Received: "+value);
+			System.out.println( getValue(Defs.nameAttribute)+"> Received: "+value);
 			setValue(
-					Environment.previousSessionAttribute, 
-					getValue(Environment.sessionAttribute));
+					Defs.previousSessionAttribute, 
+					getValue(Defs.sessionAttribute));
 			setValue(
-					Environment.sessionAttribute, 
+					Defs.sessionAttribute, 
 					(String) value.get(0));
 			System.out.println( 
-					getValue(Environment.nameAttribute)+"> New session: "+
-							getValue(Environment.previousSessionAttribute)
+					getValue(Defs.nameAttribute)+"> New session: "+
+							getValue(Defs.previousSessionAttribute)
 							+"->"+
-							getValue(Environment.sessionAttribute));
+							getValue(Defs.sessionAttribute));
 			asend(
 					new Or(
 						new HasValue(
-							Environment.INTEREST_ATTRIBUTE_NAME, 
-							getValue(Environment.sessionAttribute)
+							Defs.interestAttribute, 
+							getValue(Defs.sessionAttribute)
 						) ,
 						new HasValue(
-								Environment.SESSION_ATTRIBUTE_NAME, 
-								getValue(Environment.sessionAttribute)
+								Defs.sessionAttribute, 
+								getValue(Defs.sessionAttribute)
 						)
 					), 
 					new Tuple(
-						getValue( Environment.previousSessionAttribute ) ,
-						getValue( Environment.sessionAttribute ) ,
-						Environment.UPDATE_STRING ,
-						getValue( Environment.nameAttribute )
+						getValue( Defs.previousSessionAttribute ) ,
+						getValue( Defs.sessionAttribute ) ,
+						Defs.UPDATE_STRING ,
+						getValue( Defs.nameAttribute )
 					)
 			);
 		}
@@ -60,8 +60,8 @@ public class UpdatingAgent extends AbCProcess {
 			Tuple t = (Tuple) o;
 			try {
 				if ((t.size()==4)&&
-						(getValue(Environment.sessionAttribute).equals(t.get(1)))&&
-						(Environment.UPDATE_STRING.equals(t.get(2)))) {
+						(getValue(Defs.sessionAttribute).equals(t.get(1)))&&
+						(Defs.UPDATE_STRING.equals(t.get(2)))) {
 					return new TruePredicate();
 				}
 			} catch (AbCAttributeTypeException e) {
