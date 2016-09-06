@@ -146,15 +146,19 @@ public class Nondeter {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		int port = 0;
+		int sig_port=0;
+		int sub_port=0;
 		try {
 			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 			port = Integer.parseInt(bufferRead.readLine());
+			sig_port=Integer.parseInt(bufferRead.readLine());
+			sub_port=Integer.parseInt(bufferRead.readLine());
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
-		cPortClient.register( InetAddress.getLoopbackAddress() , 9999 );
+		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
+		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
 		// Process_1 subscriber1 = new Process_1("subscriber_1");
 		// Process_2 subscriber2 = new Process_2("subscriber_2");
 		Process_3 main = new Process_3("main");

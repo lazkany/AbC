@@ -72,15 +72,21 @@ public class Rescuer {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		int port = 0;
+		int sig_port=0;
+		int sub_port=0;
 		try {
 			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 			port = Integer.parseInt(bufferRead.readLine());
+			System.out.println("Enter signal port number : ");
+			sig_port=Integer.parseInt(bufferRead.readLine());
+			System.out.println("Enter subscribe port number : ");
+			sub_port=Integer.parseInt(bufferRead.readLine());
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
-		cPortClient.register(InetAddress.getLoopbackAddress(), 9999);
+		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
+		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
 		Process_1 rescuer = new Process_1("rescuer_1");
 		AbCEnvironment store1 = new AbCEnvironment();
 		Attribute<Object> a1 = new Attribute<Object>("role", Object.class);

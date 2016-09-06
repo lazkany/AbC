@@ -56,15 +56,19 @@ public class Publisher2 {
 		// TODO Auto-generated method stub
 		System.out.println("Enter port number : ");
 		int port = 0;
+		int sig_port=0;
+		int sub_port=0;
 		try {
 			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 			port = Integer.parseInt(bufferRead.readLine());
+			sig_port=Integer.parseInt(bufferRead.readLine());
+			sub_port=Integer.parseInt(bufferRead.readLine());
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
-		cPortClient.register( InetAddress.getLoopbackAddress() , 9999 );
+		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
+		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
 		Process_1 Publisher = new Process_1("Publish_1");
 		AbCEnvironment store1 = new AbCEnvironment();
 		Attribute<Object> a1 = new Attribute<Object>("topic_1", Object.class);
