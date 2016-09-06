@@ -80,7 +80,7 @@ public class AbCClient extends AbCPort implements NetworkPacketReceiver {
 						writer.close();
 						socket.close();
 						nAckMsg();
-						ACK_MESSAGE = "";
+						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -109,11 +109,13 @@ public class AbCClient extends AbCPort implements NetworkPacketReceiver {
 		while (ACK_MESSAGE.equals("")) {
 			try {
 				wait();
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		ACK_MESSAGE = "";
 
 	}
 
@@ -162,10 +164,10 @@ public class AbCClient extends AbCPort implements NetworkPacketReceiver {
 			this.serverSocket.bind(new InetSocketAddress(this.localAddress, this.localPort));
 			this.receiver = new SocketReceiver(serverSocket, this, ReceiverType.CLIENT_RCV_SERVER);
 			Thread t = new Thread(receiver);
-			t.setDaemon(true);
+			//t.setDaemon(true);
 			t.start();
 			Thread t2 = new Thread(sigHandler);
-			t2.setDaemon(true);
+			//t2.setDaemon(true);
 			t2.start();
 		} catch (IOException e) {
 			throw new AbCPortException(e);

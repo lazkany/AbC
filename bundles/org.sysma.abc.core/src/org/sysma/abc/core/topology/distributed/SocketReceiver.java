@@ -74,6 +74,7 @@ public class SocketReceiver implements Runnable {
 					// client_rcv_server();
 					break;
 				case SERVER_RCV_CLIENT:
+					 //System.out.println("i'm here");
 					client_rcv_server((AbCServer) receiver, packet);
 					break;
 				case SERVER_RCV_SERVER:
@@ -95,20 +96,32 @@ public class SocketReceiver implements Runnable {
 		if (server.getParent() != null) {
 			server.getCincoming().add(packet);
 			// AbCServer other=(AbCServer)receiver;
-
 			server.ForwardToParent(server.getParent(), packet, server.getPortId(), MsgType.REQUEST);
-		} else {
-			//System.out.println("hi");
+			
+		} else if (server.getParent() == null && server.getServers().isEmpty()) {
+			// System.out.println("");
+			//System.out.println(String.valueOf(server.getCounter()));
+			//System.out.println(String.valueOf(server.getCounter()));
 			Signal(server, packet.getPacket().getSenderId());
 			server.receive(packet);
+		} else {
+			packet.setId(String.valueOf(server.getCounter()));
+			packet.setServerId(server.getPortId());
+			 System.out.println(server.getPortId());
+			Signal(server, packet.getPacket().getSenderId());
+			server.receive(packet);
+			server.forward(packet);
+			
+			
 		}
+		// System.out.println(server.getServers().isEmpty());
 	}
-	
-	 public void server_rcv_client(AbCServer receiver, NetworkPacket packet) {
-	 }
-	
-	 public void server_rcv_server(AbCServer receiver, NetworkPacket packet) {
-	 }
+
+	public void server_rcv_client(AbCServer receiver, NetworkPacket packet) {
+	}
+
+	public void server_rcv_server(AbCServer receiver, NetworkPacket packet) {
+	}
 
 	public void stop() {
 		try {

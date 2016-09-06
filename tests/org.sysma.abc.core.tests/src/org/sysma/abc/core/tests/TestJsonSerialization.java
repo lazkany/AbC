@@ -137,7 +137,7 @@ public class TestJsonSerialization {
 		NetworkPacket p = new NetworkPacket(new AbCPacket(new AbCMessage("4",new TruePredicate()),"5"));
 		String data = gson.toJson(p);
 		NetworkPacket q =  gson.fromJson(data, NetworkPacket.class);
-		assertEquals(q.toString(), "");
+		assertEquals(q.toString(), p.toString());
 	}
 	@Test
 	public void testAbCMessageWithTuple() {
