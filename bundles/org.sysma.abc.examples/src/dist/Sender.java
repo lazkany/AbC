@@ -54,23 +54,25 @@ public class Sender {
 	 */
 	public static void main(String[] args) throws IOException, AbCAttributeTypeException, DuplicateNameException, AbCPortException {
 		// TODO Auto-generated method stub
-		System.out.println("Enter port number : ");
-		int port = 0;
-		int sig_port=0;
-		int sub_port=0;
-		try {
-			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-			port = Integer.parseInt(bufferRead.readLine());
-			System.out.println("Enter signal port number : ");
-			sig_port=Integer.parseInt(bufferRead.readLine());
-			System.out.println("Enter subscribe port number : ");
-			sub_port=Integer.parseInt(bufferRead.readLine());
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
-		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
+//		System.out.println("Enter port number : ");
+//		int port = 0;
+//		int sig_port=0;
+//		int sub_port=0;
+//		try {
+//			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+//			port = Integer.parseInt(bufferRead.readLine());
+//			System.out.println("Enter signal port number : ");
+//			sig_port=Integer.parseInt(bufferRead.readLine());
+//			System.out.println("Enter subscribe port number : ");
+//			sub_port=Integer.parseInt(bufferRead.readLine());
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
+//		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
+		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), 1235,1335);
+		cPortClient.register( InetAddress.getLoopbackAddress() , 9995 );
 		AbCEnvironment store1 = new AbCEnvironment();
 		AbCComponent c1 = new AbCComponent("C1", store1);
 		Process_1 snd = new Process_1("snd_1");

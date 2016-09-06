@@ -59,7 +59,7 @@ public class AbCServer implements NetworkPacketReceiver {
 
 	/*-----------------------------------*/
 	private int counter = -1;
-	private int lastId = -1;
+	//private int lastId = -1;
 	private Queue<NetworkPacket> cincoming;
 	private Queue<NetworkPacket> sincoming;
 	// protected AbCPort port;
@@ -274,7 +274,7 @@ public class AbCServer implements NetworkPacketReceiver {
 			setParent(new Parent<String, InetSocketAddress>(parentName,
 					new InetSocketAddress(this.parentAdress, this.ssData_port)));
 			System.out.println("parent: " + parentName);
-			System.out.println("server last processed ID: " + counter);
+			System.out.println("last processed ID: " + counter);
 			this.registered = true;
 		}
 		reader.close();
@@ -283,21 +283,32 @@ public class AbCServer implements NetworkPacketReceiver {
 
 	}
 
-	private void dispatch(String clientName, NetworkPacket message) throws IOException {
-		InetSocketAddress clientAddress = clients.get(clientName);
-		Socket socket = new Socket(clientAddress.getAddress(), clientAddress.getPort());
+	private void dispatch(String Name, NetworkPacket message,InetSocketAddress Address) throws IOException {
+	//	InetSocketAddress Address = receivers.get(Name);
+		Socket socket = new Socket(Address.getAddress(), Address.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
 		writer.println(gson.toJson(message));
 		writer.close();
 		socket.close();
 	}
 
-	public void ForwardToParent(Parent<String, InetSocketAddress> parent, NetworkPacket message, String senderId,
-			MsgType type) throws IOException {
+	public void RootReply(AbCServer server, NetworkPacket message, MsgType type) throws IOException {
+		InetSocketAddress address = server.getServers().get(message.getServerId());
+		NetworkPacket packet = message;
+		//packet.setServerId(server.getPortId());
+		packet.setType(type);
+		Socket socket = new Socket(address.getAddress(), address.getPort());
+		PrintWriter writer = new PrintWriter(socket.getOutputStream());
+		writer.println(gson.toJson(packet));
+		writer.close();
+		socket.close();// }
+	}
+	public void ForwardToParent(AbCServer server, NetworkPacket message, MsgType type) throws IOException {
+		Parent<String, InetSocketAddress> parent = server.getParent();
 		// if(parent!=null){
 		InetSocketAddress address = parent.getValue();
 		NetworkPacket packet = message;
-		packet.setServerId(senderId);
+		packet.setServerId(server.getPortId());
 		packet.setType(type);
 		Socket socket = new Socket(address.getAddress(), address.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
@@ -306,11 +317,12 @@ public class AbCServer implements NetworkPacketReceiver {
 		socket.close();// }
 	}
 
-	private synchronized void propagate(NetworkPacket pckt,HashMap<String, InetSocketAddress> receivers) {
+	private synchronized void propagate(NetworkPacket pckt, HashMap<String, InetSocketAddress> receivers,
+			String senderId) {
 		for (String Name : receivers.keySet()) {
-			if (!Name.equals(pckt.getPacket().getSenderId())) {
+			if (!Name.equals(senderId)) {
 				try {
-					dispatch(Name, pckt);
+					dispatch(Name, pckt,receivers.get(Name));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -319,19 +331,19 @@ public class AbCServer implements NetworkPacketReceiver {
 		}
 	}
 
-	 public synchronized void forward(NetworkPacket packet) {
-	 // InetSocketAddress parentAddress=parent.getValue();
-	 // if (port != null) {
-	 // PortHandler handler = port.connect();
-	 // handler.send(packet);
-	 // }
-		 propagate(packet, servers);
-	 }
+	public synchronized void forward(NetworkPacket packet, String serverId) {
+		// InetSocketAddress parentAddress=parent.getValue();
+		// if (port != null) {
+		// PortHandler handler = port.connect();
+		// handler.send(packet);
+		// }
+		propagate(packet, servers, serverId);
+	}
 
 	@Override
 	public synchronized void receive(NetworkPacket packet) {
 		// TODO Auto-generated method stub
-		propagate(packet, clients);
+		propagate(packet, clients, packet.getPacket().getSenderId());
 		// forward(msg);
 	}
 
