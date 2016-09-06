@@ -13,5 +13,6 @@ Export-Package: org.sysma.abc,
  org.sysma.abc.core.exceptions,
  org.sysma.abc.core.json,
  org.sysma.abc.core.predicates,
- org.sysma.abc.core.topology
+ org.sysma.abc.core.topology,
+ org.sysma.abc.core.topology.distributed
 Require-Bundle: com.google.gson;bundle-version="2.2.4"

@@ -8,7 +8,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.sysma.abc.core.AbCMessage;
-
+import org.sysma.abc.core.NetworkMessages.NetworkPacket;
+import org.sysma.abc.core.topology.distributed.AbCPort;
+import org.sysma.abc.core.topology.distributed.PortHandler;
 /**
  * @author loreti
  *
@@ -78,6 +80,12 @@ public class VirtualPort {
 				public void send(AbCMessage message) {
 					dispatch(LocalPort.this, message);
 					portLock.unlock();
+				}
+
+				@Override
+				public void send(NetworkPacket packet) {
+					// TODO Auto-generated method stub
+					
 				}
 				
 			};

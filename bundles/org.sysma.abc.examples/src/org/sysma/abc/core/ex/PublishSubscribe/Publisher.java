@@ -21,7 +21,7 @@ import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
 import org.sysma.abc.core.predicates.HasValue;
 import org.sysma.abc.core.predicates.TruePredicate;
-import org.sysma.abc.core.topology.AbCClient;
+import org.sysma.abc.core.topology.distributed.AbCClient;
 //import org.sysma.abc.examples.sm.SmDefinitions;
 
 /**

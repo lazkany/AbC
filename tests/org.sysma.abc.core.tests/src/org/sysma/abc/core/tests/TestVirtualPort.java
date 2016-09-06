@@ -9,8 +9,8 @@ import org.junit.Test;
 import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.predicates.TruePredicate;
-import org.sysma.abc.core.topology.AbCPort;
-import org.sysma.abc.core.topology.MessageReceiver;
+import org.sysma.abc.core.topology.distributed.AbCPort;
+import org.sysma.abc.core.topology.distributed.MessageReceiver;
 import org.sysma.abc.core.topology.VirtualPort;
 
 /**

@@ -17,9 +17,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.AbCPredicate;
-import org.sysma.abc.core.topology.AbCPort;
-import org.sysma.abc.core.topology.MessageReceiver;
-import org.sysma.abc.core.topology.PortHandler;
+import org.sysma.abc.core.topology.distributed.AbCPort;
+import org.sysma.abc.core.topology.distributed.MessageReceiver;
+import org.sysma.abc.core.topology.distributed.PortHandler;
 
 /**
  * @author Yehia Abd Alrahman, Michele Loreti

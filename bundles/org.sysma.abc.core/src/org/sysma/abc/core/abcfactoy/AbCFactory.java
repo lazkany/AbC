@@ -11,6 +11,7 @@ import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.Attribute;
 import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.NetworkMessages.AbCPacket;
+import org.sysma.abc.core.NetworkMessages.NetworkPacket;
 import org.sysma.abc.core.json.AttributeDeserializer;
 import org.sysma.abc.core.json.AttributeSerializer;
 import org.sysma.abc.core.json.ComponentDeserializer;
@@ -19,6 +20,8 @@ import org.sysma.abc.core.json.MessageDeserializer;
 import org.sysma.abc.core.json.MessageSerializer;
 import org.sysma.abc.core.json.MsgCenterDeserializer;
 import org.sysma.abc.core.json.MsgCenterSerializer;
+import org.sysma.abc.core.json.NetworkPacketDeserializer;
+import org.sysma.abc.core.json.NetworkPacketSerializer;
 import org.sysma.abc.core.json.PredicateDeserializer;
 import org.sysma.abc.core.json.PredicateSerializer;
 import org.sysma.abc.core.json.TupleDeserializer;
@@ -62,7 +65,7 @@ public class AbCFactory {
 		builder.registerTypeAdapter(AbCComponent.class, new ComponentDeserializer());
 		builder.registerTypeAdapter(AbCMessage.class, new MessageDeserializer());
 		 builder.registerTypeAdapter(AbCPacket.class, new MsgCenterDeserializer());
-		// builder.registerTypeAdapter(ServerSocket.class, new ServerSocketDeserializer());
+		 builder.registerTypeAdapter(NetworkPacket.class, new NetworkPacketDeserializer());
 		 builder.registerTypeHierarchyAdapter(AbCPredicate.class, new
 				 PredicateDeserializer());
 		 builder.registerTypeAdapter(Tuple.class, new TupleDeserializer());
@@ -75,8 +78,8 @@ public class AbCFactory {
 				 MsgCenterSerializer());
 		builder.registerTypeAdapter(Attribute.class, new AttributeSerializer());
 		builder.registerTypeAdapter(AbCComponent.class, new ComponentSerializer());
-		// builder.registerTypeAdapter(ServerSocket.class, new
-		//		 ServerSocketSerializer());
+		 builder.registerTypeAdapter(NetworkPacket.class, new
+				 NetworkPacketSerializer());
 		// builder.registerTypeHierarchyAdapter(Template.class, new
 		// TemplateSerializer());
 		// builder.registerTypeAdapter(Tuple.class, new TupleSerializer());

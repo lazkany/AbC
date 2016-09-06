@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.predicates.AbCPredicate;
-import org.sysma.abc.core.topology.PortHandler;
+import org.sysma.abc.core.topology.distributed.PortHandler;
 
 /**
  * @author Yehia Abd Alrahman
@@ -117,7 +117,10 @@ public abstract class AbCProcess implements Runnable {
 				wait();
 			}			
 		}
-		PortHandler handler = component.connect();
+		//ATOMIC!
+		//Check here if the guard is satisfied or not
+		PortHandler handler = component.connect();		
+		//ENDATOMIC
 		synchronized(this) {
 			handler.send(new AbCMessage(value, predicate));
 			readyToReceive = false;
@@ -270,7 +273,7 @@ public abstract class AbCProcess implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		this.isDelivering = false;
+		//this.isDelivering = false;
 		if (waitingList != null) {
 			int i = 0;
 			AbCEnvironment update = null;

@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.Tuple;
 import org.sysma.abc.core.NetworkMessages.AbCPacket;
+import org.sysma.abc.core.NetworkMessages.NetworkPacket;
 import org.sysma.abc.core.abcfactoy.AbCFactory;
 import org.sysma.abc.core.predicates.AbCPredicate;
 import org.sysma.abc.core.predicates.And;
@@ -130,7 +131,14 @@ public class TestJsonSerialization {
 		AbCPacket p2 =  gson.fromJson(data, AbCPacket.class);
 		assertEquals(p1, p2);
 	}
-
+	@Test
+	public void testNetworkPacket() {
+		Gson gson = AbCFactory.getGSon();
+		NetworkPacket p = new NetworkPacket(new AbCPacket(new AbCMessage("4",new TruePredicate()),"5"));
+		String data = gson.toJson(p);
+		NetworkPacket q =  gson.fromJson(data, NetworkPacket.class);
+		assertEquals(q.toString(), "");
+	}
 	@Test
 	public void testAbCMessageWithTuple() {
 		Gson gson = AbCFactory.getGSon();

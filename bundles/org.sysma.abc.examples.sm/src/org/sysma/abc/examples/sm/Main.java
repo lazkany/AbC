@@ -10,7 +10,7 @@ import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.exceptions.AbCPortException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
-import org.sysma.abc.core.topology.AbCPort;
+import org.sysma.abc.core.topology.distributed.AbCPort;
 import org.sysma.abc.core.topology.VirtualPort;
 
 /**

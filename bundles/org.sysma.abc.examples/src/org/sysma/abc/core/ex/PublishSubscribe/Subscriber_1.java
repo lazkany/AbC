@@ -23,7 +23,7 @@ import org.sysma.abc.core.predicates.FalsePredicate;
 import org.sysma.abc.core.predicates.HasValue;
 import org.sysma.abc.core.predicates.Or;
 import org.sysma.abc.core.predicates.TruePredicate;
-import org.sysma.abc.core.topology.AbCClient;
+import org.sysma.abc.core.topology.distributed.AbCClient;
 
 /**
  * @author Yehia Abd Alrahman
