@@ -68,16 +68,16 @@ public class SocketReceiver implements Runnable {
 				s.close();
 				switch (type) {
 				case CLIENT_RCV_SERVER:
-					System.out.println("client received packet "+packet.getId()+" is received");
+					System.out.println("client received packet " + packet.getId() + " is received");
 					receiver.receive(packet);
 					break;
 				case SERVER_RCV_CLIENT:
-					System.out.println("Server received from client packet "+packet.getId()+" is received");
+					System.out.println("Server received from client packet " + packet.getId() + " is received");
 					server_rcv_client((AbCServer) receiver, packet);
 					break;
 				case SERVER_RCV_SERVER:
-					//receiver.receive(packet);
-					System.out.println("Server received from server packet "+packet.getId()+" is received");
+					// receiver.receive(packet);
+					System.out.println("Server received from server packet " + packet.getId() + " is received");
 					server_rcv_server((AbCServer) receiver, packet);
 					break;
 				}
@@ -122,15 +122,30 @@ public class SocketReceiver implements Runnable {
 			} else {
 				packet.setId(String.valueOf(receiver.getCounter()));
 				receiver.RootReply(receiver, packet, MsgType.REPLY);
-				System.out.println("packet "+packet.getId()+" is received");
+				System.out.println("packet " + packet.getId() + " is received");
 				receiver.receive(packet);
 			}
 			break;
 		case REPLY:
-			
-			//receiver.getCincoming().removeIf(c->c.getPacket().getSenderId().equals(packet.getPacket().getSenderId()));
-		//	receiver.getCincoming().
-			
+			if (receiver.clients.containsKey(packet.getPacket().getSenderId())) {
+				int c=Integer.parseInt(packet.getId());
+				receiver.setCounter(c);
+				Signal(receiver, packet.getPacket().getSenderId());
+				packet.setType(MsgType.DATA);
+				receiver.receive(packet);
+				receiver.forward(packet, receiver.getPortId());
+				receiver.ForwardToParent(receiver, packet, MsgType.DATA);
+
+			}
+			// else if(receiver.getCincoming().contains(packet.getPacket())) {
+			else {
+				int c=Integer.parseInt(packet.getId());
+				receiver.setCounter(c);
+				receiver.forward(packet, receiver.getPortId());
+			}
+			// receiver.getCincoming().removeIf(c->c.getPacket().getSenderId().equals(packet.getPacket().getSenderId()));
+			// receiver.getCincoming().
+
 			break;
 		case DATA:
 

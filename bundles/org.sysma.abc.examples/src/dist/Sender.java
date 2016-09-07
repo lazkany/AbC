@@ -72,7 +72,7 @@ public class Sender {
 //		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
 //		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
 		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), 1235,1335);
-		cPortClient.register( InetAddress.getLoopbackAddress() , 9995 );
+		cPortClient.register( InetAddress.getLoopbackAddress() , 9987 );
 		AbCEnvironment store1 = new AbCEnvironment();
 		AbCComponent c1 = new AbCComponent("C1", store1);
 		Process_1 snd = new Process_1("snd_1");
