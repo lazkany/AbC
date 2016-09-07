@@ -49,7 +49,7 @@ public class Receiver_2 {
 		public AbCPredicate channel(Object msg) {
 			if (msg instanceof Tuple) {
 				Tuple t = (Tuple) msg;
-				if (t.get(0).equals("c")) {
+				if (t.get(0).equals("a")) {
 					return new TruePredicate();
 				}
 			}
@@ -72,16 +72,18 @@ public class Receiver_2 {
 		int sub_port=0;
 		try {
 			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-			port = Integer.parseInt(bufferRead.readLine());
-			System.out.println("Enter signal port number : ");
-			sig_port=Integer.parseInt(bufferRead.readLine());
+//			port = Integer.parseInt(bufferRead.readLine());
+//			System.out.println("Enter signal port number : ");
+//			sig_port=Integer.parseInt(bufferRead.readLine());
 			System.out.println("Enter subscribe port number : ");
 			sub_port=Integer.parseInt(bufferRead.readLine());
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
+//		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
+//		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
+		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), 1237,1337);
 		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
 		AbCEnvironment store1 = new AbCEnvironment();
 		AbCComponent c1 = new AbCComponent("C1", store1);

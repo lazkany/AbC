@@ -58,8 +58,8 @@ public class SocketReceiver implements Runnable {
 	public void run() {
 		while (isRunning) {
 			try {
-				System.out.println("Waiting for messages at " + ssocket.getInetAddress().getCanonicalHostName() + ":"
-						+ ssocket.getLocalPort());
+				//System.out.println("Waiting for messages at " + ssocket.getInetAddress().getCanonicalHostName() + ":"
+				//		+ ssocket.getLocalPort());
 				Socket s = ssocket.accept();
 				// PrintWriter writer = new PrintWriter(s.getOutputStream());
 				BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -68,16 +68,16 @@ public class SocketReceiver implements Runnable {
 				s.close();
 				switch (type) {
 				case CLIENT_RCV_SERVER:
-					System.out.println("client received packet " + packet.getId() + " is received");
+					
 					receiver.receive(packet);
 					break;
 				case SERVER_RCV_CLIENT:
-					System.out.println("Server received from client packet " + packet.getId() + " is received");
+					//System.out.println("Server received from client packet " + packet.getId() + " is received");
 					server_rcv_client((AbCServer) receiver, packet);
 					break;
 				case SERVER_RCV_SERVER:
 					// receiver.receive(packet);
-					System.out.println("Server received from server packet " + packet.getId() + " is received");
+					//System.out.println("Server received from server packet " + packet.getId() + " is received");
 					server_rcv_server((AbCServer) receiver, packet);
 					break;
 				}
@@ -106,6 +106,7 @@ public class SocketReceiver implements Runnable {
 			// System.out.println(receiver.getPortId());
 			Signal(receiver, packet.getPacket().getSenderId());
 			packet.setType(MsgType.DATA);
+			//System.out.println("client received packet " + packet.getId() + " is received");
 			receiver.receive(packet);
 			receiver.forward(packet, receiver.getPortId());
 
@@ -122,7 +123,7 @@ public class SocketReceiver implements Runnable {
 			} else {
 				packet.setId(String.valueOf(receiver.getCounter()));
 				receiver.RootReply(receiver, packet, MsgType.REPLY);
-				System.out.println("packet " + packet.getId() + " is received");
+				//System.out.println("packet " + packet.getId() + " is received");
 				receiver.receive(packet);
 			}
 			break;
@@ -131,8 +132,10 @@ public class SocketReceiver implements Runnable {
 				int c=Integer.parseInt(packet.getId());
 				receiver.setCounter(c);
 				Signal(receiver, packet.getPacket().getSenderId());
+				packet.setServerId(receiver.getPortId());
 				packet.setType(MsgType.DATA);
 				receiver.receive(packet);
+				
 				receiver.forward(packet, receiver.getPortId());
 				receiver.ForwardToParent(receiver, packet, MsgType.DATA);
 
@@ -141,6 +144,7 @@ public class SocketReceiver implements Runnable {
 			else {
 				int c=Integer.parseInt(packet.getId());
 				receiver.setCounter(c);
+				packet.setServerId(receiver.getPortId());
 				receiver.forward(packet, receiver.getPortId());
 			}
 			// receiver.getCincoming().removeIf(c->c.getPacket().getSenderId().equals(packet.getPacket().getSenderId()));
@@ -148,7 +152,13 @@ public class SocketReceiver implements Runnable {
 
 			break;
 		case DATA:
-
+			String name=packet.getServerId();
+			packet.setServerId(receiver.getPortId());
+			receiver.forward(packet, name);
+			receiver.receive(packet);
+			if(receiver.parent!=null &&!receiver.parent.getKey().equals(name))
+			receiver.ForwardToParent(receiver, packet, MsgType.DATA);
+			//System.out.println("client received packet " + packet.getId() + " is received");
 			break;
 		case EMPTY:
 

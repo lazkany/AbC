@@ -241,7 +241,7 @@ public class AbCServer implements NetworkPacketReceiver {
 			throw new DuplicateNameException();
 		}
 		clients.put(clientName, data_Address);
-		System.out.println(signaling_Address);
+		//System.out.println(signaling_Address);
 		signal_clients.put(clientName, signaling_Address);
 	}
 
@@ -304,8 +304,9 @@ public class AbCServer implements NetworkPacketReceiver {
 		socket.close();// }
 	}
 	public void ForwardToParent(AbCServer server, NetworkPacket message, MsgType type) throws IOException {
+		
 		Parent<String, InetSocketAddress> parent = server.getParent();
-		// if(parent!=null){
+		if(parent!=null){
 		InetSocketAddress address = parent.getValue();
 		NetworkPacket packet = message;
 		packet.setServerId(server.getPortId());
@@ -314,7 +315,7 @@ public class AbCServer implements NetworkPacketReceiver {
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
 		writer.println(gson.toJson(packet));
 		writer.close();
-		socket.close();// }
+		socket.close(); }
 	}
 
 	private synchronized void propagate(NetworkPacket pckt, HashMap<String, InetSocketAddress> receivers,
@@ -359,8 +360,8 @@ public class AbCServer implements NetworkPacketReceiver {
 			while (running) {
 				try {
 					// TODO: Correctly manage exceptions!
-					System.out.println("Waiting for subscriptions at " + svr.getInetAddress().getCanonicalHostName()
-							+ ":" + svr.getLocalPort());
+					//System.out.println("Waiting for subscriptions at " + svr.getInetAddress().getCanonicalHostName()
+					//		+ ":" + svr.getLocalPort());
 					Socket socket = svr.accept();
 
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -384,7 +385,7 @@ public class AbCServer implements NetworkPacketReceiver {
 								writer.println(ssData_socket.getLocalPort());
 								writer.println(portId);
 								writer.println(counter);
-								System.out.println("suscribed server: " + name);
+							//	System.out.println("suscribed server: " + name);
 								System.out.println("server last processed ID: " + counter);
 							}
 
