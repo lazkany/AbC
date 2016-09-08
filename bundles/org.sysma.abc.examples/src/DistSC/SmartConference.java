@@ -49,7 +49,7 @@ public class SmartConference extends JFrame {
 		this.inputPane = inputPane;
 	}
 
-	public SmartConference(AbCComponent c) throws HeadlessException, AbCAttributeTypeException {
+	public SmartConference() throws HeadlessException, AbCAttributeTypeException {
 		super("Smart Conference System");
 		// this.topic = room.getValue(Environment.sessionAttribute);
 		build();
@@ -219,7 +219,7 @@ public class SmartConference extends JFrame {
 	}
 
 	public static void main(String[] argv) throws HeadlessException, AbCAttributeTypeException, InterruptedException {
-		SmartConference rp = new SmartConference(new AbCComponent("test"));
+		SmartConference rp = new SmartConference();
 		rp.setLocationRelativeTo(null);
 		// rp.getInputPane().setBackground(Color.darkGray);
 		rp.setVisible(true);
