@@ -29,6 +29,7 @@ public class NetworkPacketDeserializer implements JsonDeserializer<NetworkPacket
 	public NetworkPacket deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
 		if (!json.isJsonObject()) {
+			System.out.print(json);
 			throw new JsonParseException("Unexpected JsonElement!");
 		}
 		

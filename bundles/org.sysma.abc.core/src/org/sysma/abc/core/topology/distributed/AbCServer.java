@@ -352,6 +352,7 @@ public class AbCServer implements NetworkPacketReceiver {
 		NetworkPacket packet = message;
 		// packet.setServerId(server.getPortId());
 		packet.setType(type);
+		System.out.println("RootReply to requester only"+server.getServers().get(message.getServerId()));
 		Socket socket = new Socket(address.getAddress(), address.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
 		writer.println(gson.toJson(packet));

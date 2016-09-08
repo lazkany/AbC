@@ -69,14 +69,17 @@ public class SocketReceiver implements Runnable {
 				s.close();
 				switch (type) {
 				case CLIENT_RCV_SERVER:
+					System.out.println(packet);
 					receiver.receive(packet);
 					break;
 				case SERVER_RCV_CLIENT:
+					System.out.println(packet);
 					// System.out.println("Server received from client packet "
 					// + packet.getId() + " is received");
 					server_rcv_client((AbCServer) receiver, packet);
 					break;
 				case SERVER_RCV_SERVER:
+					System.out.println(packet);
 					// receiver.receive(packet);
 					// System.out.println("Server received from server packet "
 					// + packet.getId() + " is received");
@@ -97,15 +100,19 @@ public class SocketReceiver implements Runnable {
 		if (receiver.getParent() != null) {
 			// receiver.getCincoming().add(packet);
 			// AbCServer other=(AbCServer)receiver;
+			System.out.println("ask for ID");
 			receiver.ForwardToParent(receiver, packet, MsgType.REQUEST);
 
 		} else if (receiver.getParent() == null && receiver.getServers().isEmpty()) {
+			System.out.println("Deliver to clients");
 			Signal(receiver, packet.getPacket().getSenderId());
 			receiver.receive(packet);
 		} else {
 			packet.setId(String.valueOf(receiver.getCounter()));
 			packet.setServerId(receiver.getPortId());
-			// System.out.println(receiver.getPortId());
+			System.out.println("ACK, Receiver and Forward");
+			System.out
+					.println("I AM ROOT and the message is originated from my clients, i also have connected servers");
 			Signal(receiver, packet.getPacket().getSenderId());
 			packet.setType(MsgType.DATA);
 			// System.out.println("client received packet " + packet.getId() + "
@@ -122,9 +129,11 @@ public class SocketReceiver implements Runnable {
 		case REQUEST:
 			if (receiver.getParent() != null) {
 				// receiver.getCincoming().add(packet);
+				System.out.println("Request: send to parent");
 				receiver.ForwardToParent(receiver, packet, MsgType.REQUEST);
 			} else {
 				packet.setId(String.valueOf(receiver.getCounter()));
+				System.out.println("Request=>REPLY ONLY TO REQUESTER: Root Reply to server and possibly receive");
 				receiver.RootReply(receiver, packet, MsgType.REPLY);
 				// System.out.println("packet " + packet.getId() + " is
 				// received");
@@ -133,8 +142,18 @@ public class SocketReceiver implements Runnable {
 			break;
 		case REPLY:
 			if (receiver.clients.containsKey(packet.getPacket().getSenderId())) {
-				int c = Integer.parseInt(packet.getId());
-				receiver.setCounter(c);
+				System.out.println("Reply=>DATA: The message is originated by my clients, Ack to client "
+						+ packet.getPacket().getSenderId()
+						+ " and if any Data receive and Data forward to parent and to connected servers");
+				if (receiver.parent != null) {
+					int c = Integer.parseInt(packet.getId());
+					receiver.setCounter(c);
+					System.out.println(
+							"REPLY=>DATA: I AM AN END-POINT SERVER and updated my counter=>" + receiver.Counter());
+
+				} else {
+					System.out.println("REPLY=>Data: I AM THE ROOT and i don't update=>" + receiver.Counter());
+				}
 				Signal(receiver, packet.getPacket().getSenderId());
 				packet.setServerId(receiver.getPortId());
 				packet.setType(MsgType.DATA);
@@ -145,8 +164,9 @@ public class SocketReceiver implements Runnable {
 			}
 			// else if(receiver.getCincoming().contains(packet.getPacket())) {
 			else {
-				int c = Integer.parseInt(packet.getId());
-				receiver.setCounter(c);
+				// int c = Integer.parseInt(packet.getId());
+				// receiver.setCounter(c);
+				System.out.println("Reply: forward reply because the msg is not originated from my clients");
 				packet.setServerId(receiver.getPortId());
 				receiver.forward(packet, receiver.getPortId());
 			}
@@ -155,15 +175,26 @@ public class SocketReceiver implements Runnable {
 			break;
 		case DATA:
 			if (receiver.parent != null && (Integer.parseInt(packet.getId()) - receiver.Counter()) > 1) {
+				System.out.println("my counter:" + receiver.Counter()
+						+ " Data: The message is delayed until processing previous messages");
 				receiver.getQueue().add(packet);
 			} else {
+				System.out.println("Data: message is ordered, update your counter unless you are the root");
+				if (receiver.parent == null)
+					System.out.println("Data: I AM THE ROOT and i don't update");
+				System.out.println("Data: Forward data");
 				String name = packet.getServerId();
 				packet.setServerId(receiver.getPortId());
 				receiver.forward(packet, name);
 				receiver.receive(packet);
-				if (receiver.parent != null && !receiver.parent.getKey().equals(name)) {
+				// if(receiver.parent != null)
+
+				if (receiver.parent != null) {
+					System.out.println("the sender is my parent=>" + receiver.parent.getKey().equals(name));
 					receiver.setCounter(Integer.parseInt(packet.getId()));
-					receiver.ForwardToParent(receiver, packet, MsgType.DATA);
+					System.out.println("Data: I AM A NORMAL SERVER and updated my counter=>" + receiver.Counter());
+					if (!receiver.parent.getKey().equals(name))
+						receiver.ForwardToParent(receiver, packet, MsgType.DATA);
 				}
 			}
 			// System.out.println("client received packet " + packet.getId() + "

@@ -83,7 +83,7 @@ public class Receiver_1 {
 //		}
 //		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port,sig_port);
 //		cPortClient.register( InetAddress.getLoopbackAddress() , sub_port );
-		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), 1234,1334);
+		AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), 1834,1934);
 		cPortClient.register( InetAddress.getLoopbackAddress() , 9979 );
 	
 		AbCEnvironment store1 = new AbCEnvironment();
