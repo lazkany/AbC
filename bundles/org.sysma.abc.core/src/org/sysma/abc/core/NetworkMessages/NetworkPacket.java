@@ -19,6 +19,9 @@ public class NetworkPacket {
 	public NetworkPacket(AbCPacket packet) {
 		this("","",MsgType.EMPTY,packet);
 	}
+	public NetworkPacket(String id) {
+		this.id=id;
+	}
 
 	public NetworkPacket(String serverId, String id, MsgType type, AbCPacket packet) {
 

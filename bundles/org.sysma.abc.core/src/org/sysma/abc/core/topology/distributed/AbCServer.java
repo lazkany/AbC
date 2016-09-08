@@ -10,8 +10,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 import org.sysma.abc.core.AbCMessage;
@@ -51,6 +53,7 @@ public class AbCServer implements NetworkPacketReceiver {
 	private SocketReceiver sReceiver;
 	private RegistrationHandler cHandler;
 	private RegistrationHandler sHandler;
+	private DataHandler dHandler;
 	// private int csData_port;
 	private int ssData_port;
 	private InetAddress parentAdress;
@@ -58,11 +61,13 @@ public class AbCServer implements NetworkPacketReceiver {
 	private boolean running;
 
 	/*-----------------------------------*/
-	private int counter = -1;
-	//private int lastId = -1;
+	private int counter = 0;
+	private int lastId = -1;
 	private Queue<NetworkPacket> cincoming;
 	private Queue<NetworkPacket> sincoming;
 	// protected AbCPort port;
+	private Comparator<NetworkPacket> comparator = new PacketComparator();
+	private PriorityQueue<NetworkPacket> queue = new PriorityQueue<NetworkPacket>(100000, comparator);
 
 	public AbCServer() throws IOException {
 		this(DEFAULT_cSub_PORT, DEFAULT_csData_PORT, DEFAULT_sSub_PORT, DEFAULT_ssData_PORT);
@@ -92,10 +97,26 @@ public class AbCServer implements NetworkPacketReceiver {
 		this.sReceiver = new SocketReceiver(ssData_socket, this, ReceiverType.SERVER_RCV_SERVER);
 		this.cHandler = new RegistrationHandler(cSubscribe_socket);
 		this.sHandler = new RegistrationHandler(sSubscribe_socket);
+		this.dHandler = new DataHandler();
 		// this.port = null;
 		this.portId = this.ssData_socket.getInetAddress().getHostAddress() + "@" + this.ssData_socket.getLocalPort();
 		this.cincoming = new LinkedList<>();
 		this.sincoming = new LinkedList<>();
+	}
+
+	/**
+	 * @return the queue
+	 */
+	public PriorityQueue<NetworkPacket> getQueue() {
+		return queue;
+	}
+
+	/**
+	 * @param queue
+	 *            the queue to set
+	 */
+	public void setQueue(PriorityQueue<NetworkPacket> queue) {
+		this.queue = queue;
 	}
 
 	/**
@@ -177,19 +198,49 @@ public class AbCServer implements NetworkPacketReceiver {
 	 * @return the counter
 	 */
 	public synchronized int getCounter() {
-		if (counter < 10000) {
-			return ++counter;
-		}
-		counter = 0;
+		// if (counter < 10000) {
+		return ++counter;
+		// }
+		// counter = 0;
+		// return counter;
+	}
+
+	public synchronized int Counter() {
+		// if (counter < 10000) {
 		return counter;
+		// }
+		// counter = 0;
+		// return counter;
+	}
+
+	public synchronized int _Counter() throws InterruptedException, IOException {
+		while (lastId == -1 || queue.isEmpty()
+				|| !queue.isEmpty() && (Integer.parseInt(queue.peek().getId()) - counter) > 1) {
+			wait();
+		}
+		NetworkPacket packet = queue.remove();
+		String name = packet.getServerId();
+		packet.setServerId(getPortId());
+		forward(packet, name);
+		receive(packet);
+		if (parent != null && !parent.getKey().equals(name)) {
+			setCounter(Integer.parseInt(packet.getId()));
+			ForwardToParent(this, packet, MsgType.DATA);
+		}
+		return counter;
+
 	}
 
 	/**
 	 * @param counter
 	 *            the counter to set
 	 */
-	public void setCounter(int counter) {
+	public synchronized void setCounter(int counter) {
 		this.counter = counter;
+		this.lastId = counter;
+		notifyAll();
+		lastId = -1;
+
 	}
 
 	/**
@@ -212,15 +263,19 @@ public class AbCServer implements NetworkPacketReceiver {
 		Thread t1 = new Thread(cReceiver);
 		// t1.setDaemon(true);
 		t1.start();
-		Thread t4 = new Thread(sReceiver);
-		// t1.setDaemon(true);
-		t4.start();
+
 		Thread t2 = new Thread(cHandler);
 		// t2.setDaemon(true);
 		t2.start();
 		Thread t3 = new Thread(sHandler);
 		// t2.setDaemon(true);
 		t3.start();
+		Thread t4 = new Thread(sReceiver);
+		// t1.setDaemon(true);
+		t4.start();
+		Thread t5 = new Thread(dHandler);
+		// t1.setDaemon(true);
+		t5.start();
 	}
 
 	public void registerServer(String sName, InetSocketAddress sAddress) throws DuplicateNameException {
@@ -241,7 +296,7 @@ public class AbCServer implements NetworkPacketReceiver {
 			throw new DuplicateNameException();
 		}
 		clients.put(clientName, data_Address);
-		//System.out.println(signaling_Address);
+		// System.out.println(signaling_Address);
 		signal_clients.put(clientName, signaling_Address);
 	}
 
@@ -283,8 +338,8 @@ public class AbCServer implements NetworkPacketReceiver {
 
 	}
 
-	private void dispatch(String Name, NetworkPacket message,InetSocketAddress Address) throws IOException {
-	//	InetSocketAddress Address = receivers.get(Name);
+	private void dispatch(String Name, NetworkPacket message, InetSocketAddress Address) throws IOException {
+		// InetSocketAddress Address = receivers.get(Name);
 		Socket socket = new Socket(Address.getAddress(), Address.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
 		writer.println(gson.toJson(message));
@@ -295,7 +350,7 @@ public class AbCServer implements NetworkPacketReceiver {
 	public void RootReply(AbCServer server, NetworkPacket message, MsgType type) throws IOException {
 		InetSocketAddress address = server.getServers().get(message.getServerId());
 		NetworkPacket packet = message;
-		//packet.setServerId(server.getPortId());
+		// packet.setServerId(server.getPortId());
 		packet.setType(type);
 		Socket socket = new Socket(address.getAddress(), address.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
@@ -303,19 +358,21 @@ public class AbCServer implements NetworkPacketReceiver {
 		writer.close();
 		socket.close();// }
 	}
+
 	public void ForwardToParent(AbCServer server, NetworkPacket message, MsgType type) throws IOException {
-		
+
 		Parent<String, InetSocketAddress> parent = server.getParent();
-		if(parent!=null){
-		InetSocketAddress address = parent.getValue();
-		NetworkPacket packet = message;
-		packet.setServerId(server.getPortId());
-		packet.setType(type);
-		Socket socket = new Socket(address.getAddress(), address.getPort());
-		PrintWriter writer = new PrintWriter(socket.getOutputStream());
-		writer.println(gson.toJson(packet));
-		writer.close();
-		socket.close(); }
+		if (parent != null) {
+			InetSocketAddress address = parent.getValue();
+			NetworkPacket packet = message;
+			packet.setServerId(server.getPortId());
+			packet.setType(type);
+			Socket socket = new Socket(address.getAddress(), address.getPort());
+			PrintWriter writer = new PrintWriter(socket.getOutputStream());
+			writer.println(gson.toJson(packet));
+			writer.close();
+			socket.close();
+		}
 	}
 
 	private synchronized void propagate(NetworkPacket pckt, HashMap<String, InetSocketAddress> receivers,
@@ -323,7 +380,7 @@ public class AbCServer implements NetworkPacketReceiver {
 		for (String Name : receivers.keySet()) {
 			if (!Name.equals(senderId)) {
 				try {
-					dispatch(Name, pckt,receivers.get(Name));
+					dispatch(Name, pckt, receivers.get(Name));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -360,8 +417,9 @@ public class AbCServer implements NetworkPacketReceiver {
 			while (running) {
 				try {
 					// TODO: Correctly manage exceptions!
-					//System.out.println("Waiting for subscriptions at " + svr.getInetAddress().getCanonicalHostName()
-					//		+ ":" + svr.getLocalPort());
+					// System.out.println("Waiting for subscriptions at " +
+					// svr.getInetAddress().getCanonicalHostName()
+					// + ":" + svr.getLocalPort());
 					Socket socket = svr.accept();
 
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -385,7 +443,8 @@ public class AbCServer implements NetworkPacketReceiver {
 								writer.println(ssData_socket.getLocalPort());
 								writer.println(portId);
 								writer.println(counter);
-							//	System.out.println("suscribed server: " + name);
+								// System.out.println("suscribed server: " +
+								// name);
 								System.out.println("server last processed ID: " + counter);
 							}
 
@@ -419,6 +478,22 @@ public class AbCServer implements NetworkPacketReceiver {
 
 	}
 
+	public class DataHandler implements Runnable {
+		@Override
+		public void run() {
+
+			while (running) {
+				try {
+					_Counter();
+				} catch (InterruptedException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+
 	public synchronized boolean isRunning() {
 		return running;
 	}
@@ -430,6 +505,22 @@ public class AbCServer implements NetworkPacketReceiver {
 			cSubscribe_socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public class PacketComparator implements Comparator<NetworkPacket> {
+		@Override
+		public int compare(NetworkPacket x, NetworkPacket y) {
+
+			int a = Integer.parseInt(x.getId());
+			int b = Integer.parseInt(y.getId());
+			if (a < b) {
+				return -1;
+			}
+			if (a > b) {
+				return 1;
+			}
+			return 0;
 		}
 	}
 
