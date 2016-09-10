@@ -69,17 +69,17 @@ public class SocketReceiver implements Runnable {
 				s.close();
 				switch (type) {
 				case CLIENT_RCV_SERVER:
-					System.out.println(packet);
+					System.out.println("packet type: "+packet.getType());
 					receiver.receive(packet);
 					break;
 				case SERVER_RCV_CLIENT:
-					System.out.println(packet);
+					System.out.println("packet type: "+packet.getType());
 					// System.out.println("Server received from client packet "
 					// + packet.getId() + " is received");
 					server_rcv_client((AbCServer) receiver, packet);
 					break;
 				case SERVER_RCV_SERVER:
-					System.out.println(packet);
+					System.out.println("packet type: "+packet.getType());
 					// receiver.receive(packet);
 					// System.out.println("Server received from server packet "
 					// + packet.getId() + " is received");
@@ -200,6 +200,8 @@ public class SocketReceiver implements Runnable {
 			// System.out.println("client received packet " + packet.getId() + "
 			// is received");
 			break;
+		case EMPTY:
+			System.out.println("This case is not possible");
 		}
 	}
 
