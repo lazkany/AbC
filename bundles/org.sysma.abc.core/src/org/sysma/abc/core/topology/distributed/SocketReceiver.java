@@ -69,17 +69,17 @@ public class SocketReceiver implements Runnable {
 				s.close();
 				switch (type) {
 				case CLIENT_RCV_SERVER:
-					System.out.println("packet type: "+packet.getType());
+				//	System.out.println("packet type: "+packet.getType());
 					receiver.receive(packet);
 					break;
 				case SERVER_RCV_CLIENT:
-					System.out.println("packet type: "+packet.getType());
+					//System.out.println("packet type: "+packet.getType());
 					// System.out.println("Server received from client packet "
 					// + packet.getId() + " is received");
 					server_rcv_client((AbCServer) receiver, packet);
 					break;
 				case SERVER_RCV_SERVER:
-					System.out.println("packet type: "+packet.getType());
+				//	System.out.println("packet type: "+packet.getType());
 					// receiver.receive(packet);
 					// System.out.println("Server received from server packet "
 					// + packet.getId() + " is received");
@@ -176,8 +176,9 @@ public class SocketReceiver implements Runnable {
 		case DATA:
 			if (receiver.parent != null && (Integer.parseInt(packet.getId()) - receiver.Counter()) > 1) {
 				System.out.println("my counter:" + receiver.Counter()
-						+ " Data: The message is delayed until processing previous messages");
+						+ "while msg id is"+packet.getId()+" Data: The message is delayed");
 				receiver.getQueue().add(packet);
+				System.out.println("The packet: "+packet.getId()+" is added to the queue");
 			} else {
 				System.out.println("Data: message is ordered, update your counter unless you are the root");
 				if (receiver.parent == null)

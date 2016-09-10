@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 
 import org.sysma.abc.core.AbCMessage;
 import org.sysma.abc.core.NetworkMessages.AbCPacket;
@@ -215,18 +216,21 @@ public class AbCServer implements NetworkPacketReceiver {
 
 	public synchronized int _Counter() throws InterruptedException, IOException {
 		while (lastId == -1 || queue.isEmpty()
-				|| !queue.isEmpty() && (Integer.parseInt(queue.peek().getId()) - counter) > 1) {
+				|| !(queue.isEmpty()) && (Integer.parseInt(queue.peek().getId()) - counter) > 1) {
 			wait();
 		}
+		lastId = -1;
 		NetworkPacket packet = queue.remove();
+		System.out.println("the packet: " + packet.getId() + " is freed");
 		String name = packet.getServerId();
 		packet.setServerId(getPortId());
-		forward(packet, name);
-		receive(packet);
-		if (parent != null && !parent.getKey().equals(name)) {
-			setCounter(Integer.parseInt(packet.getId()));
+		setCounter(Integer.parseInt(packet.getId()));
+		if (!parent.getKey().equals(name)) {
 			ForwardToParent(this, packet, MsgType.DATA);
 		}
+		forward(packet, name);
+		receive(packet);
+
 		return counter;
 
 	}
@@ -238,8 +242,8 @@ public class AbCServer implements NetworkPacketReceiver {
 	public synchronized void setCounter(int counter) {
 		this.counter = counter;
 		this.lastId = counter;
+		System.out.println("The size of the queue: " + queue.size());
 		notifyAll();
-		lastId = -1;
 
 	}
 
@@ -352,7 +356,7 @@ public class AbCServer implements NetworkPacketReceiver {
 		NetworkPacket packet = message;
 		// packet.setServerId(server.getPortId());
 		packet.setType(type);
-		System.out.println("RootReply to requester only"+server.getServers().get(message.getServerId()));
+		System.out.println("RootReply to requester only" + server.getServers().get(message.getServerId()));
 		Socket socket = new Socket(address.getAddress(), address.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
 		writer.println(gson.toJson(packet));
@@ -378,7 +382,9 @@ public class AbCServer implements NetworkPacketReceiver {
 
 	private synchronized void propagate(NetworkPacket pckt, HashMap<String, InetSocketAddress> receivers,
 			String senderId) {
-		for (String Name : receivers.keySet()) {
+		HashMap<String, InetSocketAddress> copyList = new HashMap<>(receivers);
+		// Set<String> names=receivers.keySet();
+		for (String Name : copyList.keySet()) {
 			if (!Name.equals(senderId)) {
 				try {
 					dispatch(Name, pckt, receivers.get(Name));

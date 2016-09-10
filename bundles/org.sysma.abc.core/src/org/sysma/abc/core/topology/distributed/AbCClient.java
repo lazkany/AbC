@@ -193,7 +193,7 @@ public class AbCClient extends AbCPort implements NetworkPacketReceiver {
 					Socket socket = svr.accept();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					String command = reader.readLine();
-					System.out.println(command);
+					//System.out.println(command);
 					if ("ACK".equals(command)) {
 						ack();
 					}

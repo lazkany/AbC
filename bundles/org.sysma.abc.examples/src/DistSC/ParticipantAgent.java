@@ -39,7 +39,7 @@ public class ParticipantAgent extends AbCProcess {
 					
 			)				
 		);
-		System.out.println(getComponent().getName()+"> registered for topic "+this.selectedTopic);
+		//System.out.println(getComponent().getName()+"> registered for topic "+this.selectedTopic);
 		Tuple value = (Tuple) receive( o -> isAnInterestReply( o ) );
 		setValue(Defs.destinationAttribute, (String) value.get(2));			
 		System.out.println(getComponent().getName()+"> moving to room "+getValue(Defs.destinationAttribute));
