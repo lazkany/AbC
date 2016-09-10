@@ -37,8 +37,8 @@ public class SmartConference extends JFrame {
 
 	private JTextField identity;
 	private JTextField number;
-	//private VirtualPort vp = new VirtualPort();
-	private int port=1221;
+	// private VirtualPort vp = new VirtualPort();
+	private int port = 1221;
 	JPanel inputPane = new JPanel();
 
 	public JPanel getInputPane() {
@@ -57,35 +57,41 @@ public class SmartConference extends JFrame {
 		this.setVisible(true);
 
 	}
-	public synchronized int getPort()
-	{
+
+	public synchronized int getPort() {
 		return ++port;
 	}
-	public AbCComponent createRoomComponent(int id, String topic, AbCClient port)
-			throws DuplicateNameException, AbCPortException, AbCAttributeTypeException {
+
+	public AbCComponent createRoomComponent(int id, String topic, int dataPort, int signalPort, int subPort)
+			throws DuplicateNameException, AbCPortException, AbCAttributeTypeException, IOException {
+		AbCClient Client = new AbCClient(InetAddress.getLoopbackAddress(),
+		dataPort,signalPort);
+		Client.register( InetAddress.getLoopbackAddress() , subPort );
 		AbCComponent c = new AbCComponent("Room " + id);
 		c.setValue(Defs.nameAttribute, "Room " + id);
 		c.setValue(Defs.relocateAttrivute, false);
 		c.setValue(Defs.sessionAttribute, topic);
 		c.setValue(Defs.roleAttribute, Defs.PROVIDER);
-		port.start();
-		c.setPort(port);
 		c.addProcess(new RoomAgent());
 		c.addProcess(new RelocationAgent());
 		c.addProcess(new UpdatingAgent());
+		c.setPort(Client);
+		Client.start();
 		RoomPanel rp = new RoomPanel(c);
 		rp.setLocation(0, (id - 1) * rp.getHeight() + 40 * (id - 1));
 		rp.setVisible(true);
 		return c;
 	}
 
-	public AbCComponent createParticipantComponent(int id, String topic, AbCClient port)
-			throws DuplicateNameException, AbCPortException, AbCAttributeTypeException {
+	public AbCComponent createParticipantComponent(int id, String topic, int data, int signal, int subscription)
+			throws DuplicateNameException, AbCPortException, AbCAttributeTypeException, IOException {
+		AbCClient Client = new AbCClient(InetAddress.getLoopbackAddress(), data, signal);
+		Client.register(InetAddress.getLoopbackAddress(), subscription);
 		AbCComponent c = new AbCComponent("Participant " + id);
 		c.setValue(Defs.idAttribute, id);
-		port.start();
-		c.setPort(port);
 		c.addProcess(new ParticipantAgent("Participant " + id, topic));
+		c.setPort(Client);
+		Client.start();
 		return c;
 	}
 
@@ -100,7 +106,9 @@ public class SmartConference extends JFrame {
 		JButton button1 = new JButton("Create Conference Venue");
 		button1.addActionListener(new ActionListener() {
 			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "J"));
-			private ArrayList<Integer> sub_ports = new ArrayList<Integer>(Arrays.asList(9975, 9979, 9983, 9987, 9991, 9995, 9999));
+			private ArrayList<Integer> sub_ports = new ArrayList<Integer>(
+					Arrays.asList(9975, 9979, 9983, 9987, 9991, 9995, 9999));
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int result = JOptionPane.showConfirmDialog(SmartConference.this, "Create Venue! ");
@@ -112,11 +120,9 @@ public class SmartConference extends JFrame {
 								int subscription = (this.sub_ports.get(new Random().nextInt(this.sub_ports.size())));
 								int data = getPort();
 								int signal = getPort();
-								AbCClient Client = new AbCClient(InetAddress.getLoopbackAddress(), data,signal);
-								Client.register( InetAddress.getLoopbackAddress() , subscription );
-								createRoomComponent(i, x, Client);
+								createRoomComponent(i, x, data, signal, subscription).start();
 								this.list.remove(x);
-							//	this.sub_ports.remove(subscription);
+								// this.sub_ports.remove(subscription);
 							}
 						}
 						button1.setEnabled(false);
@@ -143,29 +149,33 @@ public class SmartConference extends JFrame {
 		JButton button2 = new JButton("New Participants");
 		button2.addActionListener(new ActionListener() {
 			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "J"));
-			private ArrayList<Integer> sub_ports = new ArrayList<Integer>(Arrays.asList(9975, 9979, 9983, 9987, 9991, 9995, 9999));
-			private Random rnd=new Random();
+			private ArrayList<Integer> sub_ports = new ArrayList<Integer>(
+					Arrays.asList(9975, 9979, 9983, 9987, 9991, 9995, 9999));
+			private Random rnd = new Random();
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int result = JOptionPane.showConfirmDialog(SmartConference.this, "New participants arrival ");
 				if (result == JOptionPane.OK_OPTION) {
 					try {
-						
-						for (int i = Integer.parseInt(identity.getText()); i <= (Integer
-								.parseInt(number.getText())+Integer.parseInt(identity.getText())-1); i++) {
+
+						for (int i = Integer.parseInt(identity.getText()); i <= (Integer.parseInt(number.getText())
+								+ Integer.parseInt(identity.getText()) - 1); i++) {
 							String x = (this.list.get(this.rnd.nextInt(7)));
 							int data = getPort();
 							int signal = getPort();
 							int subscription = (this.sub_ports.get(new Random().nextInt(this.sub_ports.size())));
-							
+
 							Thread.sleep(20);
-							AbCClient Client = new AbCClient(InetAddress.getLoopbackAddress(), data,signal);
-							Client.register( InetAddress.getLoopbackAddress() , subscription );
-							createParticipantComponent(i, x, Client);
+							// AbCClient Client = new
+							// AbCClient(InetAddress.getLoopbackAddress(), data,
+							// signal);
+							// Client.register(InetAddress.getLoopbackAddress(),
+							// subscription);
+							createParticipantComponent(i, x, data, signal, subscription).start();
 
 						}
-						int n = Integer
-								.parseInt(number.getText())+Integer.parseInt(identity.getText());
+						int n = Integer.parseInt(number.getText()) + Integer.parseInt(identity.getText());
 						identity.setText(String.valueOf(n));
 						identity.setEnabled(false);
 						number.setText("");

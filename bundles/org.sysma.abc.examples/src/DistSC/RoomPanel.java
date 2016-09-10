@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.jar.JarOutputStream;
 
 import javax.swing.DefaultListModel;
@@ -22,33 +24,43 @@ import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import org.sysma.abc.core.AbCComponent;
 import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
+import org.sysma.abc.core.exceptions.AbCPortException;
+import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.predicates.HasValue;
 import org.sysma.abc.core.predicates.Not;
+import org.sysma.abc.core.topology.distributed.AbCClient;
 
 /**
  * @author loreti
  *
  */
 public class RoomPanel extends JFrame {
-	
+
 	private AbCComponent room;
-	private String topic;
+	private String topic="A";
 	private DefaultListModel<String> history;
 	private JTextField field;
+	//private int data;
+	//private int signal;
+	//private int sub;
 	private JPanel inputPane = new JPanel();
-	public RoomPanel( AbCComponent room ) throws HeadlessException, AbCAttributeTypeException {
-		super( room.getValue(Defs.nameAttribute) );
+	//private AbCClient Client;
+	public RoomPanel(AbCComponent room)
+			throws HeadlessException, AbCAttributeTypeException, IOException, DuplicateNameException, AbCPortException {
+		super(room.getValue(Defs.nameAttribute));
 		this.room = room;
 		this.topic = room.getValue(Defs.sessionAttribute);
 		build();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 		setClr();
+		
+		
 		Thread t = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				while( true ) {
+				while (true) {
 					try {
 						room.waitUntil(new Not(new HasValue(Defs.SESSION_ATTRIBUTE_NAME, topic)));
 						setClr();
@@ -67,30 +79,27 @@ public class RoomPanel extends JFrame {
 					}
 				}
 			}
-			
+
 		});
 		t.start();
+		
 	}
 
 	private void build() {
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new GridLayout(2, 1));
-		
-		
-//		contentPane.setLayout(new GridLayout(2, 2));
+
+		// contentPane.setLayout(new GridLayout(2, 2));
 		inputPane.add(new JLabel("Topic: "));
 		field = new JTextField(50);
-		inputPane.add( field );
+		inputPane.add(field);
 		JButton button = new JButton("Set");
-		button.addActionListener( new ActionListener() {
-			
+		button.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String topic = field.getText();
-				int result = JOptionPane.showConfirmDialog(
-					RoomPanel.this, 
-					"Set room topic to: "+field.getText()
-				);
+				int result = JOptionPane.showConfirmDialog(RoomPanel.this, "Set room topic to: " + field.getText());
 				if (result == JOptionPane.OK_OPTION) {
 					try {
 						RoomPanel.this.topic = topic;
@@ -108,20 +117,20 @@ public class RoomPanel extends JFrame {
 					}
 				}
 			}
-			
+
 		});
-		inputPane.add( button );
+		inputPane.add(button);
 		this.setContentPane(contentPane);
 		contentPane.add(inputPane);
-		history = new DefaultListModel<>();		
+		history = new DefaultListModel<>();
 		history.add(0, topic);
 		contentPane.add(new JList<>(history));
 		pack();
-		
+
 	}
-	
-	public void setClr() throws AbCAttributeTypeException{
-		switch(room.getValue(Defs.sessionAttribute)){
+
+	public void setClr() throws AbCAttributeTypeException {
+		switch (room.getValue(Defs.sessionAttribute)) {
 		case "A":
 			inputPane.setBackground(Color.red);
 			break;
@@ -143,11 +152,12 @@ public class RoomPanel extends JFrame {
 		case "J":
 			inputPane.setBackground(Color.pink);
 			break;
-			
+
 		}
 	}
-	public static void main(String[] argv) throws HeadlessException, AbCAttributeTypeException {
-		RoomPanel rp = new RoomPanel(new AbCComponent("test") );
+
+	public static void main(String[] argv) throws HeadlessException, AbCAttributeTypeException, IOException, DuplicateNameException, AbCPortException {
+		RoomPanel rp = new RoomPanel(new AbCComponent("test"));
 		rp.setVisible(true);
 	}
 
