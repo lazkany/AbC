@@ -75,7 +75,7 @@ public class AbCClient extends AbCPort implements NetworkPacketReceiver {
 					try {
 						NetworkPacket msg = new NetworkPacket(new AbCPacket(message, portId));
 						PrintWriter writer = new PrintWriter(socket.getOutputStream());
-						 System.out.println("want to send: "+msg);
+						 //System.out.println("want to send: "+msg);
 						writer.println(gson.toJson(msg));
 						writer.close();
 						socket.close();
