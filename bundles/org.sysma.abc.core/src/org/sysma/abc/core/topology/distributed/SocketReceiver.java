@@ -115,12 +115,12 @@ public class SocketReceiver implements Runnable {
 			packet.setType(MsgType.DATA);
 			receiver.receive(packet);
 			receiver.forward(packet, receiver.getPortId());
-			for(NetworkPacket p:receiver.getQueue())
-			{
-				System.out.print(p.getId()+" > ");
-			}
-			System.out.println("");
-			System.out.println("my counter is=> "+receiver.Counter());
+//			for(NetworkPacket p:receiver.getQueue())
+//			{
+//				System.out.print(p.getId()+" > ");
+//			}
+//			System.out.println("");
+			System.out.println("line123 "+"my counter is=> "+receiver.Counter());
 
 		}
 	}
@@ -136,12 +136,12 @@ public class SocketReceiver implements Runnable {
 				packet.setId(String.valueOf(receiver.getCounter()));
 				//System.out.println("Root=>REPLY ONLY TO REQUESTER a Reply packet: " + packet.getId());
 				receiver.RootReply(receiver, packet, MsgType.REPLY);
-				for(NetworkPacket p:receiver.getQueue())
-				{
-					System.out.print(p.getId()+" > ");
-				}
-				System.out.println("");
-				System.out.println("my counter is=> "+receiver.Counter());
+//				for(NetworkPacket p:receiver.getQueue())
+//				{
+//					System.out.print(p.getId()+" > ");
+//				}
+//				System.out.println("");
+				System.out.println("line144 "+"my counter is=> "+receiver.Counter());
 				// receiver.receive(packet);
 			}
 			break;
@@ -161,33 +161,34 @@ public class SocketReceiver implements Runnable {
 					receiver.receive(packet);
 					receiver.forward(packet, receiver.getPortId());
 					receiver.ForwardToParent(receiver, packet, MsgType.DATA);
-					for(NetworkPacket p:receiver.getQueue())
-					{
-						System.out.print(p.getId()+" > ");
-					}
-					System.out.println("");
-					System.out.println("my counter is=> "+receiver.Counter());
+//					for(NetworkPacket p:receiver.getQueue())
+//					{
+//						System.out.print(p.getId()+" > ");
+//					}
+//					System.out.println("");
+					System.out.println("line169 "+"my counter is=> "+receiver.Counter());
 				} else {
 					//System.out.println("The packet is mine and out of order=>delayed packet: " + packet);
 					receiver.delayPacket(packet);
-					for(NetworkPacket p:receiver.getQueue())
-					{
-						System.out.print(p.getId()+" > ");
-					}
-					System.out.println("");
-					System.out.println("my counter is=> "+receiver.Counter());
+					receiver.setCounter(-404);
+//					for(NetworkPacket p:receiver.getQueue())
+//					{
+//						System.out.print(p.getId()+" > ");
+//					}
+//					System.out.println("");
+					System.out.println("line178 "+"my counter is=> "+receiver.Counter());
 				}
 
 			} else {
 				//System.out.println("Reply: forward reply because the msg is not originated from my clients");
 				packet.setServerId(receiver.getPortId());
 				receiver.forward(packet, receiver.getPortId());
-				for(NetworkPacket p:receiver.getQueue())
-				{
-					System.out.print(p.getId()+" > ");
-				}
-				System.out.println("");
-				System.out.println("my counter is=> "+receiver.Counter());
+//				for(NetworkPacket p:receiver.getQueue())
+//				{
+//					System.out.print(p.getId()+" > ");
+//				}
+//				System.out.println("");
+				System.out.println("line190 "+"my counter is=> "+receiver.Counter());
 			}
 			break;
 		case DATA:
@@ -195,24 +196,25 @@ public class SocketReceiver implements Runnable {
 //				System.out.println("my counter: " + receiver.Counter() + " while msg id is " + packet.getId()
 //						+ " Data: The message is delayed");
 				receiver.delayPacket(packet);
-				for(NetworkPacket p:receiver.getQueue())
-				{
-					System.out.print(p.getId()+" > ");
-				}
-				System.out.println("");
-				System.out.println("my counter is=> "+receiver.Counter());
+				receiver.setCounter(-404);
+//				for(NetworkPacket p:receiver.getQueue())
+//				{
+//					System.out.print(p.getId()+" > ");
+//				}
+//				System.out.println("");
+				System.out.println("line203 "+"my counter is=> "+receiver.Counter());
 			} else {
 				//System.out.println("Data: message is ordered, update your counter unless you are the root");
 				if (receiver.parent == null) {
 //					System.out.println(
 //							"Data Forward: I AM THE ROOT and i don't update and my counter=" + receiver.Counter());
 //					System.out.println(packet);
-					for(NetworkPacket p:receiver.getQueue())
-					{
-						System.out.print(p.getId()+" > ");
-					}
-					System.out.println("");
-					System.out.println("my counter is=> "+receiver.Counter());
+//					for(NetworkPacket p:receiver.getQueue())
+//					{
+//						System.out.print(p.getId()+" > ");
+//					}
+//					System.out.println("");
+					System.out.println("line215 "+"my counter is=> "+receiver.Counter());
 				}
 				String name = packet.getServerId();
 				packet.setServerId(receiver.getPortId());
@@ -225,12 +227,12 @@ public class SocketReceiver implements Runnable {
 				}
 				receiver.forward(packet, name);
 				receiver.receive(packet);
-				for(NetworkPacket p:receiver.getQueue())
-				{
-					System.out.print(p.getId()+" > ");
-				}
-				System.out.println("");
-				System.out.println("my counter is=> "+receiver.Counter());
+//				for(NetworkPacket p:receiver.getQueue())
+//				{
+//					System.out.print(p.getId()+" > ");
+//				}
+//				System.out.println("");
+				System.out.println("line233 "+"my counter is=> "+receiver.Counter());
 			}
 			break;
 		case EMPTY:

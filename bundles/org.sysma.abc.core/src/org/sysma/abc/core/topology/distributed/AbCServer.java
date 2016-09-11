@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -217,39 +218,65 @@ public class AbCServer implements NetworkPacketReceiver {
 //			wait();
 //		}
 		flag=false;
-		//Queue<NetworkPacket> Copyqueue = new LinkedList<>(queue);
+		ArrayList<NetworkPacket> Copyqueue = new ArrayList<>();
+		for(NetworkPacket pckt:queue)
+		{
+			Copyqueue.add(pckt);
+		}
 		//Copyqueue=queue;
 		//int x=Integer.parseInt(Copyqueue.peek().getId())+1;
 	//	while((Integer.parseInt(queue.peek().getId()))<=counter+1)
-		for(NetworkPacket pckt:queue)
-		{
-			if((Integer.parseInt(pckt.getId())<=counter+1)){
-				queue.remove(pckt);
-				counter=Integer.parseInt(pckt.getId());
-				String name = pckt.getServerId();
+		for (int i=Copyqueue.size()-1; i> -1; i--) {
+		    if (Integer.parseInt(Copyqueue.get(i).getId())<= counter+1) {
+		    	queue.remove(Copyqueue.get(i));
+				counter=Integer.parseInt(Copyqueue.get(i).getId());
+				String name = Copyqueue.get(i).getServerId();
 				
-				counter=Integer.parseInt(pckt.getId());
-				System.out.println("the packet: " + pckt.getId() + " is freed AND MY COUNTER is "+counter);
+				counter=Integer.parseInt(Copyqueue.get(i).getId());
+				System.out.println("the packet: " + Copyqueue.get(i).getId() + " is freed AND MY COUNTER is "+counter);
 			//	notifyAll();
 				if (!parent.getKey().equals(name)) {
-					ForwardToParent(this, pckt, MsgType.DATA);
-					pckt.setServerId(getPortId());
+					ForwardToParent(this, Copyqueue.get(i), MsgType.DATA);
+					Copyqueue.get(i).setServerId(getPortId());
 				}
-				pckt.setServerId(getPortId());
-				forward(pckt, name);
-				if(clients.containsKey(pckt.getPacket().getSenderId()))
-				Signal(this, pckt.getPacket().getSenderId());
-				receive(pckt);
-			}
+				Copyqueue.get(i).setServerId(getPortId());
+				forward(Copyqueue.get(i), name);
+				if(clients.containsKey(Copyqueue.get(i).getPacket().getSenderId()))
+				Signal(this, Copyqueue.get(i).getPacket().getSenderId());
+				receive(Copyqueue.get(i));
+		    }
 		}
-		{
-			
-			//NetworkPacket packet = queue.remove();
-			
-			
-			
-			
-		}
+//		for(NetworkPacket pckt:Copyqueue)
+//		{
+//			if((Integer.parseInt(pckt.getId())<=counter+1)){
+//				//Thread.sleep(200);
+//				
+//				queue.remove(pckt);
+//				counter=Integer.parseInt(pckt.getId());
+//				String name = pckt.getServerId();
+//				
+//				counter=Integer.parseInt(pckt.getId());
+//				System.out.println("the packet: " + pckt.getId() + " is freed AND MY COUNTER is "+counter);
+//			//	notifyAll();
+//				if (!parent.getKey().equals(name)) {
+//					ForwardToParent(this, pckt, MsgType.DATA);
+//					pckt.setServerId(getPortId());
+//				}
+//				pckt.setServerId(getPortId());
+//				forward(pckt, name);
+//				if(clients.containsKey(pckt.getPacket().getSenderId()))
+//				Signal(this, pckt.getPacket().getSenderId());
+//				receive(pckt);
+//			}
+//		}
+//		{
+//			
+//			//NetworkPacket packet = queue.remove();
+//			
+//			
+//			
+//			
+//		}
 		System.out.println("the remaining are:");
 		for(NetworkPacket p:queue)
 		{
@@ -277,13 +304,16 @@ public class AbCServer implements NetworkPacketReceiver {
 	 * @throws InterruptedException 
 	 */
 	public synchronized void setCounter(int counter) throws InterruptedException {
+		if(counter!=-404){
 		while(!flag)
 		{
 			wait();
 		}
 		//flag=false;
 		this.counter = counter;
+		}
 		this.lastId = counter;
+		
 		//System.out.println("The size of the queue: " + queue.size());
 		notifyAll();
 
