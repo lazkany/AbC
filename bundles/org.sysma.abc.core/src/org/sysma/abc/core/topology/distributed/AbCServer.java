@@ -55,7 +55,8 @@ public class AbCServer implements NetworkPacketReceiver {
 	private RegistrationHandler cHandler;
 	private RegistrationHandler sHandler;
 	private DataHandler dHandler;
-	// private int csData_port;
+	private boolean flag=true;
+	private int csData_port;
 	private int ssData_port;
 	private InetAddress parentAdress;
 	private boolean registered;
@@ -66,7 +67,6 @@ public class AbCServer implements NetworkPacketReceiver {
 	private int lastId = -1;
 	private Queue<NetworkPacket> cincoming;
 	private Queue<NetworkPacket> sincoming;
-	// protected AbCPort port;
 	private Comparator<NetworkPacket> comparator = new PacketComparator();
 	private PriorityQueue<NetworkPacket> queue = new PriorityQueue<NetworkPacket>(100000, comparator);
 
@@ -99,7 +99,6 @@ public class AbCServer implements NetworkPacketReceiver {
 		this.cHandler = new RegistrationHandler(cSubscribe_socket);
 		this.sHandler = new RegistrationHandler(sSubscribe_socket);
 		this.dHandler = new DataHandler();
-		// this.port = null;
 		this.portId = this.ssData_socket.getInetAddress().getHostAddress() + "@" + this.ssData_socket.getLocalPort();
 		this.cincoming = new LinkedList<>();
 		this.sincoming = new LinkedList<>();
@@ -111,7 +110,10 @@ public class AbCServer implements NetworkPacketReceiver {
 	public PriorityQueue<NetworkPacket> getQueue() {
 		return queue;
 	}
-
+	public synchronized void delayPacket(NetworkPacket packet){
+		queue.add(packet);
+		notifyAll();
+	}
 	/**
 	 * @param queue
 	 *            the queue to set
@@ -199,50 +201,90 @@ public class AbCServer implements NetworkPacketReceiver {
 	 * @return the counter
 	 */
 	public synchronized int getCounter() {
-		// if (counter < 10000) {
 		return ++counter;
-		// }
-		// counter = 0;
-		// return counter;
 	}
 
 	public synchronized int Counter() {
-		// if (counter < 10000) {
 		return counter;
-		// }
-		// counter = 0;
-		// return counter;
 	}
 
 	public synchronized int _Counter() throws InterruptedException, IOException {
 		while (lastId == -1 || queue.isEmpty()
-				|| !(queue.isEmpty()) && (Integer.parseInt(queue.peek().getId()) - counter) > 1) {
+				|| !(queue.isEmpty()) && (Integer.parseInt(queue.peek().getId())>counter+1)) {
 			wait();
 		}
-		lastId = -1;
-		NetworkPacket packet = queue.remove();
-		System.out.println("the packet: " + packet.getId() + " is freed");
-		String name = packet.getServerId();
-		packet.setServerId(getPortId());
-		setCounter(Integer.parseInt(packet.getId()));
-		if (!parent.getKey().equals(name)) {
-			ForwardToParent(this, packet, MsgType.DATA);
+//		while (lastId == -1 || queue.isEmpty()) {
+//			wait();
+//		}
+		flag=false;
+		//Queue<NetworkPacket> Copyqueue = new LinkedList<>(queue);
+		//Copyqueue=queue;
+		//int x=Integer.parseInt(Copyqueue.peek().getId())+1;
+	//	while((Integer.parseInt(queue.peek().getId()))<=counter+1)
+		for(NetworkPacket pckt:queue)
+		{
+			if((Integer.parseInt(pckt.getId())<=counter+1)){
+				queue.remove(pckt);
+				counter=Integer.parseInt(pckt.getId());
+				String name = pckt.getServerId();
+				
+				counter=Integer.parseInt(pckt.getId());
+				System.out.println("the packet: " + pckt.getId() + " is freed AND MY COUNTER is "+counter);
+			//	notifyAll();
+				if (!parent.getKey().equals(name)) {
+					ForwardToParent(this, pckt, MsgType.DATA);
+					pckt.setServerId(getPortId());
+				}
+				pckt.setServerId(getPortId());
+				forward(pckt, name);
+				if(clients.containsKey(pckt.getPacket().getSenderId()))
+				Signal(this, pckt.getPacket().getSenderId());
+				receive(pckt);
+			}
 		}
-		forward(packet, name);
-		receive(packet);
-
+		{
+			
+			//NetworkPacket packet = queue.remove();
+			
+			
+			
+			
+		}
+		System.out.println("the remaining are:");
+		for(NetworkPacket p:queue)
+		{
+			System.out.print(p.getId()+" > ");
+		}
+		System.out.println("");
+		lastId = -1;
+		flag=true;
+		notifyAll();
 		return counter;
 
 	}
-
+	public void Signal(AbCServer server, String name) throws IOException {
+		// TODO: Correctly manage exceptions!
+		InetSocketAddress clientAddress = server.getSignal_clients().get(name);
+		Socket socket = new Socket(clientAddress.getAddress(), clientAddress.getPort());
+		PrintWriter writer = new PrintWriter(socket.getOutputStream());
+		writer.println("ACK");
+		writer.close();
+		socket.close();
+	}
 	/**
 	 * @param counter
 	 *            the counter to set
+	 * @throws InterruptedException 
 	 */
-	public synchronized void setCounter(int counter) {
+	public synchronized void setCounter(int counter) throws InterruptedException {
+		while(!flag)
+		{
+			wait();
+		}
+		//flag=false;
 		this.counter = counter;
 		this.lastId = counter;
-		System.out.println("The size of the queue: " + queue.size());
+		//System.out.println("The size of the queue: " + queue.size());
 		notifyAll();
 
 	}
@@ -292,7 +334,6 @@ public class AbCServer implements NetworkPacketReceiver {
 	public void unregisterServer(String sName) {
 		servers.remove(sName);
 	}
-	// --------------------------------------------
 
 	public void registerClient(String clientName, InetSocketAddress data_Address, InetSocketAddress signaling_Address)
 			throws DuplicateNameException {
@@ -300,7 +341,6 @@ public class AbCServer implements NetworkPacketReceiver {
 			throw new DuplicateNameException();
 		}
 		clients.put(clientName, data_Address);
-		// System.out.println(signaling_Address);
 		signal_clients.put(clientName, signaling_Address);
 	}
 
@@ -321,19 +361,15 @@ public class AbCServer implements NetworkPacketReceiver {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		writer.println("REGISTER\n" + this.portId + "\n" + socket.getLocalAddress().getCanonicalHostName() + "\n"
 				+ this.ssData_socket.getLocalPort());
-		// writer.println("REGISTER\n"+portId+"\n"+this.localAddress.getInetAddress().getHostAddress()+"\n"+this.localAddress.getLocalPort());
 		writer.flush();
 		String code = reader.readLine();
 		if (AbCServer.OK_MESSAGE.equals(code)) {
-			// this.commandPort = commandPort;
 			this.ssData_port = Integer.parseInt(reader.readLine());
 			this.parentAdress = serverAddress;
 			String parentName = reader.readLine();
 			this.counter = Integer.parseInt(reader.readLine());
 			setParent(new Parent<String, InetSocketAddress>(parentName,
 					new InetSocketAddress(this.parentAdress, this.ssData_port)));
-			System.out.println("parent: " + parentName);
-			System.out.println("last processed ID: " + counter);
 			this.registered = true;
 		}
 		reader.close();
@@ -343,7 +379,6 @@ public class AbCServer implements NetworkPacketReceiver {
 	}
 
 	private void dispatch(String Name, NetworkPacket message, InetSocketAddress Address) throws IOException {
-		// InetSocketAddress Address = receivers.get(Name);
 		Socket socket = new Socket(Address.getAddress(), Address.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
 		writer.println(gson.toJson(message));
@@ -353,19 +388,16 @@ public class AbCServer implements NetworkPacketReceiver {
 
 	public void RootReply(AbCServer server, NetworkPacket message, MsgType type) throws IOException {
 		InetSocketAddress address = server.getServers().get(message.getServerId());
-		NetworkPacket packet = message;
-		// packet.setServerId(server.getPortId());
-		packet.setType(type);
-		System.out.println("RootReply to requester only" + server.getServers().get(message.getServerId()));
+		message.setType(type);
+		//System.out.println("RootReply to requester only: " + server.getServers().get(message.getServerId()));
 		Socket socket = new Socket(address.getAddress(), address.getPort());
 		PrintWriter writer = new PrintWriter(socket.getOutputStream());
-		writer.println(gson.toJson(packet));
+		writer.println(gson.toJson(message));
 		writer.close();
-		socket.close();// }
+		socket.close();
 	}
 
 	public void ForwardToParent(AbCServer server, NetworkPacket message, MsgType type) throws IOException {
-
 		Parent<String, InetSocketAddress> parent = server.getParent();
 		if (parent != null) {
 			InetSocketAddress address = parent.getValue();
@@ -383,7 +415,6 @@ public class AbCServer implements NetworkPacketReceiver {
 	private synchronized void propagate(NetworkPacket pckt, HashMap<String, InetSocketAddress> receivers,
 			String senderId) {
 		HashMap<String, InetSocketAddress> copyList = new HashMap<>(receivers);
-		// Set<String> names=receivers.keySet();
 		for (String Name : copyList.keySet()) {
 			if (!Name.equals(senderId)) {
 				try {
@@ -397,19 +428,15 @@ public class AbCServer implements NetworkPacketReceiver {
 	}
 
 	public synchronized void forward(NetworkPacket packet, String serverId) {
-		// InetSocketAddress parentAddress=parent.getValue();
-		// if (port != null) {
-		// PortHandler handler = port.connect();
-		// handler.send(packet);
-		// }
+		if(!servers.isEmpty())
 		propagate(packet, servers, serverId);
 	}
 
 	@Override
 	public synchronized void receive(NetworkPacket packet) {
 		// TODO Auto-generated method stub
+		if(!clients.isEmpty())
 		propagate(packet, clients, packet.getPacket().getSenderId());
-		// forward(msg);
 	}
 
 	public class RegistrationHandler implements Runnable {
@@ -424,9 +451,6 @@ public class AbCServer implements NetworkPacketReceiver {
 			while (running) {
 				try {
 					// TODO: Correctly manage exceptions!
-					// System.out.println("Waiting for subscriptions at " +
-					// svr.getInetAddress().getCanonicalHostName()
-					// + ":" + svr.getLocalPort());
 					Socket socket = svr.accept();
 
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -450,13 +474,7 @@ public class AbCServer implements NetworkPacketReceiver {
 								writer.println(ssData_socket.getLocalPort());
 								writer.println(portId);
 								writer.println(counter);
-								// System.out.println("suscribed server: " +
-								// name);
-								System.out.println("server last processed ID: " + counter);
 							}
-
-							// writer.println(cSubscribe_socket.getLocalPort());
-							// writer.println(sSubscribe_socket.getLocalPort());
 							writer.flush();
 							System.out.println(name + " /" + host + ":" + port + " is registered");
 

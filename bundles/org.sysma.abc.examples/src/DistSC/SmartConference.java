@@ -64,9 +64,8 @@ public class SmartConference extends JFrame {
 
 	public AbCComponent createRoomComponent(int id, String topic, int dataPort, int signalPort, int subPort)
 			throws DuplicateNameException, AbCPortException, AbCAttributeTypeException, IOException {
-		AbCClient Client = new AbCClient(InetAddress.getLoopbackAddress(),
-		dataPort,signalPort);
-		Client.register( InetAddress.getLoopbackAddress() , subPort );
+		AbCClient Client = new AbCClient(InetAddress.getLoopbackAddress(), dataPort, signalPort);
+		Client.register(InetAddress.getLoopbackAddress(), subPort);
 		AbCComponent c = new AbCComponent("Room " + id);
 		c.setValue(Defs.nameAttribute, "Room " + id);
 		c.setValue(Defs.relocateAttrivute, false);
@@ -152,6 +151,7 @@ public class SmartConference extends JFrame {
 			private ArrayList<Integer> sub_ports = new ArrayList<Integer>(
 					Arrays.asList(9975, 9979, 9983, 9987, 9991, 9995, 9999));
 			private Random rnd = new Random();
+			private ArrayList<AbCComponent> comps = new ArrayList<AbCComponent>();
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -166,14 +166,18 @@ public class SmartConference extends JFrame {
 							int signal = getPort();
 							int subscription = (this.sub_ports.get(new Random().nextInt(this.sub_ports.size())));
 
-							Thread.sleep(20);
+							
 							// AbCClient Client = new
 							// AbCClient(InetAddress.getLoopbackAddress(), data,
 							// signal);
 							// Client.register(InetAddress.getLoopbackAddress(),
 							// subscription);
-							createParticipantComponent(i, x, data, signal, subscription).start();
+							comps.add(createParticipantComponent(i, x, data, signal, subscription));
 
+						}
+						//Thread.sleep(5000);
+						for (AbCComponent c : comps) {
+						    c.start();
 						}
 						int n = Integer.parseInt(number.getText()) + Integer.parseInt(identity.getText());
 						identity.setText(String.valueOf(n));
@@ -193,9 +197,6 @@ public class SmartConference extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (AbCAttributeTypeException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (IOException e1) {

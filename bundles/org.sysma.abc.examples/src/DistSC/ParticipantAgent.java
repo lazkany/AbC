@@ -26,6 +26,7 @@ public class ParticipantAgent extends AbCProcess {
 	
 	@Override
 	protected void doRun() throws Exception {
+		
 		setValue(Defs.interestAttribute, this.selectedTopic);
 		send( 
 			new HasValue(

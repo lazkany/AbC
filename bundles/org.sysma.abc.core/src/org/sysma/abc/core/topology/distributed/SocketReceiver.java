@@ -58,151 +58,184 @@ public class SocketReceiver implements Runnable {
 	public void run() {
 		while (isRunning) {
 			try {
-				// System.out.println("Waiting for messages at " +
-				// ssocket.getInetAddress().getCanonicalHostName() + ":"
-				// + ssocket.getLocalPort());
 				Socket s = ssocket.accept();
-				// PrintWriter writer = new PrintWriter(s.getOutputStream());
 				BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				NetworkPacket packet = gson.fromJson(reader, NetworkPacket.class);
 				reader.close();
 				s.close();
 				switch (type) {
 				case CLIENT_RCV_SERVER:
-				//	System.out.println("packet type: "+packet.getType());
+					//System.out.println(packet);
 					receiver.receive(packet);
 					break;
 				case SERVER_RCV_CLIENT:
-					//System.out.println("packet type: "+packet.getType());
-					// System.out.println("Server received from client packet "
-					// + packet.getId() + " is received");
+					
+					System.out.println(packet);
 					server_rcv_client((AbCServer) receiver, packet);
 					break;
 				case SERVER_RCV_SERVER:
-				//	System.out.println("packet type: "+packet.getType());
-					// receiver.receive(packet);
-					// System.out.println("Server received from server packet "
-					// + packet.getId() + " is received");
+					//if (packet.getType() == MsgType.DATA)
+						System.out.println(packet);
 					server_rcv_server((AbCServer) receiver, packet);
 					break;
 				}
 
-			} catch (IOException e) {
+			} catch (IOException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
-	// public void client_rcv_server(AbCServer receiver, NetworkPacket packet) {
-	// }
 	public void server_rcv_client(AbCServer receiver, NetworkPacket packet) throws IOException {
+		System.out.println("MY COUNTER IS "+receiver.Counter());
 		if (receiver.getParent() != null) {
 			// receiver.getCincoming().add(packet);
 			// AbCServer other=(AbCServer)receiver;
-			System.out.println("ask for ID");
+			//System.out.println("ask for ID");
 			receiver.ForwardToParent(receiver, packet, MsgType.REQUEST);
-
-		} else if (receiver.getParent() == null && receiver.getServers().isEmpty()) {
-			System.out.println("Deliver to clients");
-			Signal(receiver, packet.getPacket().getSenderId());
-			receiver.receive(packet);
-		} else {
+			//System.out.println(packet);
+		}
+		
+		// else if (receiver.getParent() == null &&
+		// receiver.getServers().isEmpty()) {
+		// System.out.println("Deliver to clients");
+		// Signal(receiver, packet.getPacket().getSenderId());
+		// receiver.receive(packet);
+		// }
+		else {
 			packet.setId(String.valueOf(receiver.getCounter()));
 			packet.setServerId(receiver.getPortId());
-			System.out.println("ACK, Receiver and Forward");
-			System.out
-					.println("I AM ROOT and the message is originated from my clients, i also have connected servers");
+			//System.out.println("ACK, Receiver and Forward");
+//			System.out.println(
+//					"I AM ROOT and the message is originated from my clients, i also have connected servers MY COUNTER="
+//							+ receiver.getCounter());
+//			System.out.println(packet);
 			Signal(receiver, packet.getPacket().getSenderId());
 			packet.setType(MsgType.DATA);
-			// System.out.println("client received packet " + packet.getId() + "
-			// is received");
 			receiver.receive(packet);
 			receiver.forward(packet, receiver.getPortId());
+			for(NetworkPacket p:receiver.getQueue())
+			{
+				System.out.print(p.getId()+" > ");
+			}
+			System.out.println("");
+			System.out.println("my counter is=> "+receiver.Counter());
 
 		}
 	}
 
-	public void server_rcv_server(AbCServer receiver, NetworkPacket packet) throws IOException {
-
+	public void server_rcv_server(AbCServer receiver, NetworkPacket packet) throws IOException, InterruptedException {
+		System.out.println("MY COUNTER IS "+receiver.Counter());
 		switch (packet.getType()) {
 		case REQUEST:
 			if (receiver.getParent() != null) {
-				// receiver.getCincoming().add(packet);
-				System.out.println("Request: send to parent");
+				//System.out.println("Request: send to parent");
 				receiver.ForwardToParent(receiver, packet, MsgType.REQUEST);
 			} else {
 				packet.setId(String.valueOf(receiver.getCounter()));
-				System.out.println("Request=>REPLY ONLY TO REQUESTER: Root Reply to server and possibly receive");
+				//System.out.println("Root=>REPLY ONLY TO REQUESTER a Reply packet: " + packet.getId());
 				receiver.RootReply(receiver, packet, MsgType.REPLY);
-				// System.out.println("packet " + packet.getId() + " is
-				// received");
-				receiver.receive(packet);
+				for(NetworkPacket p:receiver.getQueue())
+				{
+					System.out.print(p.getId()+" > ");
+				}
+				System.out.println("");
+				System.out.println("my counter is=> "+receiver.Counter());
+				// receiver.receive(packet);
 			}
 			break;
 		case REPLY:
 			if (receiver.clients.containsKey(packet.getPacket().getSenderId())) {
-				System.out.println("Reply=>DATA: The message is originated by my clients, Ack to client "
-						+ packet.getPacket().getSenderId()
-						+ " and if any Data receive and Data forward to parent and to connected servers");
-				if (receiver.parent != null) {
-					int c = Integer.parseInt(packet.getId());
-					receiver.setCounter(c);
-					System.out.println(
-							"REPLY=>DATA: I AM AN END-POINT SERVER and updated my counter=>" + receiver.Counter());
-
-				} else {
-					System.out.println("REPLY=>Data: I AM THE ROOT and i don't update=>" + receiver.Counter());
-				}
-				Signal(receiver, packet.getPacket().getSenderId());
+//				System.out.println("Reply=>DATA: The message is originated by my clients,but I only receive it if"
+//						+ (Integer.parseInt(packet.getId()) == receiver.Counter() + 1));
 				packet.setServerId(receiver.getPortId());
 				packet.setType(MsgType.DATA);
-				receiver.receive(packet);
-				receiver.forward(packet, receiver.getPortId());
-				receiver.ForwardToParent(receiver, packet, MsgType.DATA);
+				if (Integer.parseInt(packet.getId()) == receiver.Counter() + 1) {
+					int c = Integer.parseInt(packet.getId());
+					receiver.setCounter(c);
+//					System.out.println(
+//							"REPLY=>DATA: I AM AN END-POINT SERVER and updated my counter=>" + receiver.Counter());
+					Signal(receiver, packet.getPacket().getSenderId());
+					
+					receiver.receive(packet);
+					receiver.forward(packet, receiver.getPortId());
+					receiver.ForwardToParent(receiver, packet, MsgType.DATA);
+					for(NetworkPacket p:receiver.getQueue())
+					{
+						System.out.print(p.getId()+" > ");
+					}
+					System.out.println("");
+					System.out.println("my counter is=> "+receiver.Counter());
+				} else {
+					//System.out.println("The packet is mine and out of order=>delayed packet: " + packet);
+					receiver.delayPacket(packet);
+					for(NetworkPacket p:receiver.getQueue())
+					{
+						System.out.print(p.getId()+" > ");
+					}
+					System.out.println("");
+					System.out.println("my counter is=> "+receiver.Counter());
+				}
 
-			}
-			// else if(receiver.getCincoming().contains(packet.getPacket())) {
-			else {
-				// int c = Integer.parseInt(packet.getId());
-				// receiver.setCounter(c);
-				System.out.println("Reply: forward reply because the msg is not originated from my clients");
+			} else {
+				//System.out.println("Reply: forward reply because the msg is not originated from my clients");
 				packet.setServerId(receiver.getPortId());
 				receiver.forward(packet, receiver.getPortId());
+				for(NetworkPacket p:receiver.getQueue())
+				{
+					System.out.print(p.getId()+" > ");
+				}
+				System.out.println("");
+				System.out.println("my counter is=> "+receiver.Counter());
 			}
-			// receiver.getCincoming().removeIf(c->c.getPacket().getSenderId().equals(packet.getPacket().getSenderId()));
-			// receiver.getCincoming().
 			break;
 		case DATA:
-			if (receiver.parent != null && (Integer.parseInt(packet.getId()) - receiver.Counter()) > 1) {
-				System.out.println("my counter:" + receiver.Counter()
-						+ "while msg id is"+packet.getId()+" Data: The message is delayed");
-				receiver.getQueue().add(packet);
-				System.out.println("The packet: "+packet.getId()+" is added to the queue");
+			if (Integer.parseInt(packet.getId()) > (receiver.Counter() + 1)) {
+//				System.out.println("my counter: " + receiver.Counter() + " while msg id is " + packet.getId()
+//						+ " Data: The message is delayed");
+				receiver.delayPacket(packet);
+				for(NetworkPacket p:receiver.getQueue())
+				{
+					System.out.print(p.getId()+" > ");
+				}
+				System.out.println("");
+				System.out.println("my counter is=> "+receiver.Counter());
 			} else {
-				System.out.println("Data: message is ordered, update your counter unless you are the root");
-				if (receiver.parent == null)
-					System.out.println("Data: I AM THE ROOT and i don't update");
-				System.out.println("Data: Forward data");
+				//System.out.println("Data: message is ordered, update your counter unless you are the root");
+				if (receiver.parent == null) {
+//					System.out.println(
+//							"Data Forward: I AM THE ROOT and i don't update and my counter=" + receiver.Counter());
+//					System.out.println(packet);
+					for(NetworkPacket p:receiver.getQueue())
+					{
+						System.out.print(p.getId()+" > ");
+					}
+					System.out.println("");
+					System.out.println("my counter is=> "+receiver.Counter());
+				}
 				String name = packet.getServerId();
 				packet.setServerId(receiver.getPortId());
-				receiver.forward(packet, name);
-				receiver.receive(packet);
-				// if(receiver.parent != null)
-
 				if (receiver.parent != null) {
-					System.out.println("the sender is my parent=>" + receiver.parent.getKey().equals(name));
+					//System.out.println("the sender is my parent=>" + receiver.parent.getKey().equals(name));
 					receiver.setCounter(Integer.parseInt(packet.getId()));
-					System.out.println("Data: I AM A NORMAL SERVER and updated my counter=>" + receiver.Counter());
+					//System.out.println("Data: I AM A NORMAL SERVER and updated my counter=>" + receiver.Counter());
 					if (!receiver.parent.getKey().equals(name))
 						receiver.ForwardToParent(receiver, packet, MsgType.DATA);
 				}
+				receiver.forward(packet, name);
+				receiver.receive(packet);
+				for(NetworkPacket p:receiver.getQueue())
+				{
+					System.out.print(p.getId()+" > ");
+				}
+				System.out.println("");
+				System.out.println("my counter is=> "+receiver.Counter());
 			}
-			// System.out.println("client received packet " + packet.getId() + "
-			// is received");
 			break;
 		case EMPTY:
 			System.out.println("This case is not possible");
+			break;
 		}
 	}
 
