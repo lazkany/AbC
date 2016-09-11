@@ -175,7 +175,7 @@ public class SmartConference extends JFrame {
 							comps.add(createParticipantComponent(i, x, data, signal, subscription));
 
 						}
-						//Thread.sleep(5000);
+						Thread.sleep(5000);
 						for (AbCComponent c : comps) {
 						    c.start();
 						}
@@ -200,6 +200,9 @@ public class SmartConference extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}

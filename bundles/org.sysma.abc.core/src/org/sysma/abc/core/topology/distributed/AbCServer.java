@@ -65,6 +65,7 @@ public class AbCServer implements NetworkPacketReceiver {
 
 	/*-----------------------------------*/
 	private int counter = 0;
+	private int processed=0;
 	private int lastId = -1;
 	private Queue<NetworkPacket> cincoming;
 	private Queue<NetworkPacket> sincoming;
@@ -111,8 +112,13 @@ public class AbCServer implements NetworkPacketReceiver {
 	public PriorityQueue<NetworkPacket> getQueue() {
 		return queue;
 	}
-	public synchronized void delayPacket(NetworkPacket packet){
+	public synchronized void delayPacket(NetworkPacket packet) throws InterruptedException{
+		while(!flag)
+		{
+			wait();
+		}
 		queue.add(packet);
+		this.lastId=processed;
 		notifyAll();
 	}
 	/**
@@ -205,20 +211,21 @@ public class AbCServer implements NetworkPacketReceiver {
 		return ++counter;
 	}
 
-	public synchronized int Counter() {
-		return counter;
+	public synchronized int Processed() {
+		return processed;
 	}
 
-	public synchronized int _Counter() throws InterruptedException, IOException {
-		while (lastId == -1 || queue.isEmpty()
-				|| !(queue.isEmpty()) && (Integer.parseInt(queue.peek().getId())>counter+1)) {
-			wait();
-		}
-//		while (lastId == -1 || queue.isEmpty()) {
+	public synchronized void getProcessed() throws InterruptedException, IOException {
+//		while (lastId == -1 || queue.isEmpty()
+//				|| !(queue.isEmpty()) && (Integer.parseInt(queue.peek().getId())>counter+1)) {
 //			wait();
 //		}
+		while (lastId == -1 || queue.isEmpty()) {
+			wait();
+		}
 		flag=false;
-		ArrayList<NetworkPacket> Copyqueue = new ArrayList<>();
+		PriorityQueue<NetworkPacket> Copyqueue = new PriorityQueue<NetworkPacket>(100000, comparator);
+		//Queue<NetworkPacket> Copyqueue = new LinkedList<>();
 		for(NetworkPacket pckt:queue)
 		{
 			Copyqueue.add(pckt);
@@ -226,57 +233,28 @@ public class AbCServer implements NetworkPacketReceiver {
 		//Copyqueue=queue;
 		//int x=Integer.parseInt(Copyqueue.peek().getId())+1;
 	//	while((Integer.parseInt(queue.peek().getId()))<=counter+1)
-		for (int i=Copyqueue.size()-1; i> -1; i--) {
-		    if (Integer.parseInt(Copyqueue.get(i).getId())<= counter+1) {
-		    	queue.remove(Copyqueue.get(i));
-				counter=Integer.parseInt(Copyqueue.get(i).getId());
-				String name = Copyqueue.get(i).getServerId();
+		for (NetworkPacket pckt:Copyqueue) {
+		    if (Integer.parseInt(pckt.getId())== processed+1) {
+		    	    queue.remove(pckt);
+				processed=Integer.parseInt(pckt.getId());
+				String name = pckt.getServerId();
 				
-				counter=Integer.parseInt(Copyqueue.get(i).getId());
-				System.out.println("the packet: " + Copyqueue.get(i).getId() + " is freed AND MY COUNTER is "+counter);
+				//counter=Integer.parseInt(pckt.getId());
+				System.out.println("the packet: " + pckt.getId() + " is freed AND MY processed is "+processed);
 			//	notifyAll();
 				if (!parent.getKey().equals(name)) {
-					ForwardToParent(this, Copyqueue.get(i), MsgType.DATA);
-					Copyqueue.get(i).setServerId(getPortId());
+					pckt.setServerId(getPortId());
+					ForwardToParent(this, pckt, MsgType.DATA);
+					
 				}
-				Copyqueue.get(i).setServerId(getPortId());
-				forward(Copyqueue.get(i), name);
-				if(clients.containsKey(Copyqueue.get(i).getPacket().getSenderId()))
-				Signal(this, Copyqueue.get(i).getPacket().getSenderId());
-				receive(Copyqueue.get(i));
+				pckt.setServerId(getPortId());
+				forward(pckt, name);
+				if(clients.containsKey(pckt.getPacket().getSenderId()))
+				Signal(this, pckt.getPacket().getSenderId());
+				receive(pckt);
 		    }
 		}
-//		for(NetworkPacket pckt:Copyqueue)
-//		{
-//			if((Integer.parseInt(pckt.getId())<=counter+1)){
-//				//Thread.sleep(200);
-//				
-//				queue.remove(pckt);
-//				counter=Integer.parseInt(pckt.getId());
-//				String name = pckt.getServerId();
-//				
-//				counter=Integer.parseInt(pckt.getId());
-//				System.out.println("the packet: " + pckt.getId() + " is freed AND MY COUNTER is "+counter);
-//			//	notifyAll();
-//				if (!parent.getKey().equals(name)) {
-//					ForwardToParent(this, pckt, MsgType.DATA);
-//					pckt.setServerId(getPortId());
-//				}
-//				pckt.setServerId(getPortId());
-//				forward(pckt, name);
-//				if(clients.containsKey(pckt.getPacket().getSenderId()))
-//				Signal(this, pckt.getPacket().getSenderId());
-//				receive(pckt);
-//			}
-//		}
-//		{
-//			
-//			//NetworkPacket packet = queue.remove();
-//			
-//			
-//			
-//			
-//		}
+		
 		System.out.println("the remaining are:");
 		for(NetworkPacket p:queue)
 		{
@@ -286,7 +264,7 @@ public class AbCServer implements NetworkPacketReceiver {
 		lastId = -1;
 		flag=true;
 		notifyAll();
-		return counter;
+		//return counter;
 
 	}
 	public void Signal(AbCServer server, String name) throws IOException {
@@ -303,15 +281,15 @@ public class AbCServer implements NetworkPacketReceiver {
 	 *            the counter to set
 	 * @throws InterruptedException 
 	 */
-	public synchronized void setCounter(int counter) throws InterruptedException {
-		if(counter!=-404){
+	public synchronized void setProcessed(int counter) throws InterruptedException {
+		//if(counter!=-404){
 		while(!flag)
 		{
 			wait();
 		}
 		//flag=false;
-		this.counter = counter;
-		}
+		this.processed = counter;
+		//}
 		this.lastId = counter;
 		
 		//System.out.println("The size of the queue: " + queue.size());
@@ -539,7 +517,7 @@ public class AbCServer implements NetworkPacketReceiver {
 
 			while (running) {
 				try {
-					_Counter();
+					getProcessed();
 				} catch (InterruptedException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -577,6 +555,11 @@ public class AbCServer implements NetworkPacketReceiver {
 			}
 			return 0;
 		}
+	}
+
+	public synchronized int Counter() {
+		// TODO Auto-generated method stub
+		return counter;
 	}
 
 }

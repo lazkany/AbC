@@ -120,7 +120,7 @@ public class SocketReceiver implements Runnable {
 //				System.out.print(p.getId()+" > ");
 //			}
 //			System.out.println("");
-			System.out.println("line123 "+"my counter is=> "+receiver.Counter());
+			System.out.println("my counter is=> "+receiver.Counter());
 
 		}
 	}
@@ -141,7 +141,7 @@ public class SocketReceiver implements Runnable {
 //					System.out.print(p.getId()+" > ");
 //				}
 //				System.out.println("");
-				System.out.println("line144 "+"my counter is=> "+receiver.Counter());
+				System.out.println("my counter is=> "+receiver.Counter());
 				// receiver.receive(packet);
 			}
 			break;
@@ -153,7 +153,7 @@ public class SocketReceiver implements Runnable {
 				packet.setType(MsgType.DATA);
 				if (Integer.parseInt(packet.getId()) == receiver.Counter() + 1) {
 					int c = Integer.parseInt(packet.getId());
-					receiver.setCounter(c);
+					receiver.setProcessed(c);
 //					System.out.println(
 //							"REPLY=>DATA: I AM AN END-POINT SERVER and updated my counter=>" + receiver.Counter());
 					Signal(receiver, packet.getPacket().getSenderId());
@@ -166,17 +166,16 @@ public class SocketReceiver implements Runnable {
 //						System.out.print(p.getId()+" > ");
 //					}
 //					System.out.println("");
-					System.out.println("line169 "+"my counter is=> "+receiver.Counter());
+					System.out.println("my counter is=> "+receiver.Counter());
 				} else {
 					//System.out.println("The packet is mine and out of order=>delayed packet: " + packet);
 					receiver.delayPacket(packet);
-					receiver.setCounter(-404);
 //					for(NetworkPacket p:receiver.getQueue())
 //					{
 //						System.out.print(p.getId()+" > ");
 //					}
 //					System.out.println("");
-					System.out.println("line178 "+"my counter is=> "+receiver.Counter());
+					System.out.println("my counter is=> "+receiver.Counter());
 				}
 
 			} else {
@@ -188,7 +187,7 @@ public class SocketReceiver implements Runnable {
 //					System.out.print(p.getId()+" > ");
 //				}
 //				System.out.println("");
-				System.out.println("line190 "+"my counter is=> "+receiver.Counter());
+				System.out.println("my counter is=> "+receiver.Counter());
 			}
 			break;
 		case DATA:
@@ -196,13 +195,12 @@ public class SocketReceiver implements Runnable {
 //				System.out.println("my counter: " + receiver.Counter() + " while msg id is " + packet.getId()
 //						+ " Data: The message is delayed");
 				receiver.delayPacket(packet);
-				receiver.setCounter(-404);
 //				for(NetworkPacket p:receiver.getQueue())
 //				{
 //					System.out.print(p.getId()+" > ");
 //				}
 //				System.out.println("");
-				System.out.println("line203 "+"my counter is=> "+receiver.Counter());
+				System.out.println("my counter is=> "+receiver.Counter());
 			} else {
 				//System.out.println("Data: message is ordered, update your counter unless you are the root");
 				if (receiver.parent == null) {
@@ -214,13 +212,13 @@ public class SocketReceiver implements Runnable {
 //						System.out.print(p.getId()+" > ");
 //					}
 //					System.out.println("");
-					System.out.println("line215 "+"my counter is=> "+receiver.Counter());
+					System.out.println("my counter is=> "+receiver.Counter());
 				}
 				String name = packet.getServerId();
 				packet.setServerId(receiver.getPortId());
 				if (receiver.parent != null) {
 					//System.out.println("the sender is my parent=>" + receiver.parent.getKey().equals(name));
-					receiver.setCounter(Integer.parseInt(packet.getId()));
+					receiver.setProcessed(Integer.parseInt(packet.getId()));
 					//System.out.println("Data: I AM A NORMAL SERVER and updated my counter=>" + receiver.Counter());
 					if (!receiver.parent.getKey().equals(name))
 						receiver.ForwardToParent(receiver, packet, MsgType.DATA);
@@ -232,7 +230,7 @@ public class SocketReceiver implements Runnable {
 //					System.out.print(p.getId()+" > ");
 //				}
 //				System.out.println("");
-				System.out.println("line233 "+"my counter is=> "+receiver.Counter());
+				System.out.println("my counter is=> "+receiver.Counter());
 			}
 			break;
 		case EMPTY:
