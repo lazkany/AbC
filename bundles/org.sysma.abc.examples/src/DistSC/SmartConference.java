@@ -104,7 +104,7 @@ public class SmartConference extends JFrame {
 		// contentPane.add(inputPane);
 		JButton button1 = new JButton("Create Conference Venue");
 		button1.addActionListener(new ActionListener() {
-			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "J"));
+			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("Expressiveness", "Session types", "Verification", "Testing", "Distributed Coordination", "Model Checking", "Process Algebra"));
 			private ArrayList<Integer> sub_ports = new ArrayList<Integer>(
 					Arrays.asList(9975, 9979, 9983, 9987, 9991, 9995, 9999));
 
@@ -147,7 +147,7 @@ public class SmartConference extends JFrame {
 		});
 		JButton button2 = new JButton("New Participants");
 		button2.addActionListener(new ActionListener() {
-			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "J"));
+			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("Expressiveness", "Session types", "Verification", "Testing", "Distributed Coordination", "Model Checking", "Process Algebra"));
 			private ArrayList<Integer> sub_ports = new ArrayList<Integer>(
 					Arrays.asList(9975, 9979, 9983, 9987, 9991, 9995, 9999));
 			private Random rnd = new Random();

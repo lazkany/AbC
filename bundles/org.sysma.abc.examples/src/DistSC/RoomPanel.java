@@ -131,25 +131,25 @@ public class RoomPanel extends JFrame {
 
 	public void setClr() throws AbCAttributeTypeException {
 		switch (room.getValue(Defs.sessionAttribute)) {
-		case "A":
+		case "Expressiveness":
 			inputPane.setBackground(Color.red);
 			break;
-		case "B":
+		case "Session types":
 			inputPane.setBackground(Color.blue);
 			break;
-		case "C":
+		case "Verification":
 			inputPane.setBackground(Color.GRAY);
 			break;
-		case "D":
+		case "Testing":
 			inputPane.setBackground(Color.GREEN);
 			break;
-		case "E":
+		case "Distributed Coordination":
 			inputPane.setBackground(Color.cyan);
 			break;
-		case "F":
+		case "Model Checking":
 			inputPane.setBackground(Color.magenta);
 			break;
-		case "J":
+		case "Process Algebra":
 			inputPane.setBackground(Color.pink);
 			break;
 
