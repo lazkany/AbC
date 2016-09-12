@@ -37,7 +37,7 @@ import org.sysma.abc.core.topology.distributed.AbCClient;
 public class RoomPanel extends JFrame {
 
 	private AbCComponent room;
-	private String topic="A";
+	private String topic;
 	private DefaultListModel<String> history;
 	private JTextField field;
 	//private int data;

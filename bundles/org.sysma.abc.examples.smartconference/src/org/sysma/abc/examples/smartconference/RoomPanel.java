@@ -25,6 +25,8 @@ import org.sysma.abc.core.exceptions.AbCAttributeTypeException;
 import org.sysma.abc.core.predicates.HasValue;
 import org.sysma.abc.core.predicates.Not;
 
+
+
 /**
  * @author loreti
  *
@@ -121,34 +123,34 @@ public class RoomPanel extends JFrame {
 	}
 	
 	public void setClr() throws AbCAttributeTypeException{
-		switch(room.getValue(Defs.sessionAttribute)){
-		case "A":
+		switch (room.getValue(Defs.sessionAttribute)) {
+		case "Expressiveness":
 			inputPane.setBackground(Color.red);
 			break;
-		case "B":
+		case "Session types":
 			inputPane.setBackground(Color.blue);
 			break;
-		case "C":
+		case "Verification":
 			inputPane.setBackground(Color.GRAY);
 			break;
-		case "D":
+		case "Testing":
 			inputPane.setBackground(Color.GREEN);
 			break;
-		case "E":
+		case "Distributed Coordination":
 			inputPane.setBackground(Color.cyan);
 			break;
-		case "F":
+		case "Model Checking":
 			inputPane.setBackground(Color.magenta);
 			break;
-		case "J":
+		case "Process Algebra":
 			inputPane.setBackground(Color.pink);
 			break;
-			
+
 		}
 	}
-	public static void main(String[] argv) throws HeadlessException, AbCAttributeTypeException {
-		RoomPanel rp = new RoomPanel(new AbCComponent("test") );
-		rp.setVisible(true);
-	}
+//	public static void main(String[] argv) throws HeadlessException, AbCAttributeTypeException {
+//		RoomPanel rp = new RoomPanel(new AbCComponent("test") );
+//		rp.setVisible(true);
+//	}
 
 }
