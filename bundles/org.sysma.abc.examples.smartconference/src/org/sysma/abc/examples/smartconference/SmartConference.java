@@ -92,7 +92,7 @@ public class SmartConference extends JFrame {
 		// contentPane.add(inputPane);
 		JButton button1 = new JButton("Create Conference Venue");
 		button1.addActionListener(new ActionListener() {
-			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "J"));
+			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("Expressiveness", "Session types", "Verification", "Testing", "Distributed Coordination", "Model Checking", "Process Algebra"));
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -127,7 +127,7 @@ public class SmartConference extends JFrame {
 		});
 		JButton button2 = new JButton("New Participants");
 		button2.addActionListener(new ActionListener() {
-			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "J"));
+			private ArrayList<String> list = new ArrayList<String>(Arrays.asList("Expressiveness", "Session types", "Verification", "Testing", "Distributed Coordination", "Model Checking", "Process Algebra"));
 			private Random rnd=new Random();
 			@Override
 			public void actionPerformed(ActionEvent e) {
