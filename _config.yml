@@ -1,0 +1,8 @@
+title: AbaCuS
+description: A Run-time Environment for the AbC Calculus
+google_analytics: UA-73372050-1
+show_downloads: true
+theme: jekyll-theme-midnight
+
+gems:
+  - jekyll-mentions
