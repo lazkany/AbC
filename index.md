@@ -337,7 +337,6 @@ In our implementation we assume that the man initiates the interaction. This is 
 
 
 
-<pre><code>
 public class ManAgent extends AbCProcess {
 	public LinkedList<Integer> preferences;	
 	public ManAgent( LinkedList<Integer> preferences ) {
@@ -368,7 +367,6 @@ public class ManAgent extends AbCProcess {
 		return new FalsePredicate();
 	}
 }
-</code></pre>
 
 
 
