@@ -141,6 +141,7 @@ Putting it all together
 
 [Source Code](https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/AttributeBased)            
 [Video Demo](https://www.youtube.com/watch?v=QfbCYoRgE3s&feature=youtu.be)
+
 ### Modelling group-based Interaction
 In this section, we show how to model group-based framework in AbC in an easy way. We consider a scenario where we have three groups: groupA, groupB, and groupC. We defines two members of groupB, one member of groupA, and one member of groupC. The groupC member stays for a certain amount of time in groupC and then leaves to join groupB. The groupB members are always ready to receive messages from groupA members. On the other hand, groupA members are always sending messages only to groupB. The figure below shows the conceptual scenario.   
 
