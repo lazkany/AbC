@@ -298,7 +298,7 @@ public class Sender {
 
 as you see, the send action is encoded as a send method in AbC, where the predicate any corresponds to a true predicate in AbC (i.e., satisfied by all). The sent values is a pair, the first element is the name of the channel and the second element is the actual communicated value. As shown below, the receiver decides whether to accept the message or not.  
 
-
+<pre><code>
 public class Receiver_1 {
 	public static class Process_1 extends AbCProcess {
 		public Process_1(String name) {
@@ -318,7 +318,7 @@ public class Receiver_1 {
 			return new FalsePredicate();
 		}
 	}
-
+</code></pre>
 
 Basically, the receiver accept only the message that satisfies the predicate "channel". This predicate checks the first element in the message and returns true if it is equal to "a" otherwise the message is discarded. As shown in the figure below, we model a scenario, where there are two receiver waiting to receive messages on channel "a" , one receiver is waiting to receive message on channel "c", and one sender that wants to send a message "v" on channel "a".
 
@@ -334,8 +334,7 @@ We consider the classical stable marriage problem (SMP), a problem of finding a 
 
 In our example, we consider n men and n women, where each person has ranked all members of the opposite sex in order of preferences, we have to engage the men and women together such that there are no two people of opposite sex who would both rather have each other than their current partners. When there are no such pairs of people, the set of marriages is deemed stable. For convenience we assume there are no ties; thus, if a person is indifferent between two or more possible partners he/she is nevertheless required to rank them in some order. 
 In our implementation we assume that the man initiates the interaction. This is done by removing his first best from his list of preferences and assuming it to be his partner. The man proposes to this possible partner and waits for any invalidation messages from this woman. If this message is received, the man starts over again and removes the next item from his preferences and soon. The behaviour of a man can be implemented in AbaCuS as follows:
-
-
+<pre><code>
 public class ManAgent extends AbCProcess {
 	public LinkedList<Integer> preferences;	
 	public ManAgent( LinkedList<Integer> preferences ) {
@@ -366,9 +365,7 @@ public class ManAgent extends AbCProcess {
 		return new FalsePredicate();
 	}
 }
-
-
-
+</code></pre>
 On the other hand, a woman waits for proposals all the time. In the beginning, when she is not engaged, she accepts any proposal. Once she is engaged and another man proposes, she looks at her list of preferences and compare her current man with the new man and decides if she will be better off with the new man or not. If yes, she says sorry to her current man and get engaged to the new one, otherwise she just says sorry to the new proposed man. 
 The full implementation can be found below.
 
