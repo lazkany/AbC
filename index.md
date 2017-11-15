@@ -336,7 +336,7 @@ In our example, we consider n men and n women, where each person has ranked all 
 In our implementation we assume that the man initiates the interaction. This is done by removing his first best from his list of preferences and assuming it to be his partner. The man proposes to this possible partner and waits for any invalidation messages from this woman. If this message is received, the man starts over again and removes the next item from his preferences and soon. The behaviour of a man can be implemented in AbaCuS as follows:
 
 
-<code>
+<pre>
 public class ManAgent extends AbCProcess {
 	public LinkedList<Integer> preferences;	
 	public ManAgent( LinkedList<Integer> preferences ) {
@@ -367,7 +367,7 @@ public class ManAgent extends AbCProcess {
 		return new FalsePredicate();
 	}
 }
-</code>
+</pre>
 
 
 
