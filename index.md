@@ -276,8 +276,7 @@ public class Subscriber_1 {
 
 The full source code for the whole scenario can be found below.
 
-[Source Code]
-(https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/PublishSubscribe)                 
+[Source Code](https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples/src/org/sysma/abc/core/ex/PublishSubscribe)                 
 [Video Demo](https://www.youtube.com/watch?v=Eiil8DkPoqM&feature=youtu.be)
 
 ### Encoding Channel-based Interaction
@@ -335,6 +334,7 @@ We consider the classical stable marriage problem (SMP), a problem of finding a 
 
 In our example, we consider $n$ men and $n$ women, where each person has ranked all members of the opposite sex in order of preferences, we have to engage the men and women together such that there are no two people of opposite sex who would both rather have each other than their current partners. When there are no such pairs of people, the set of marriages is deemed stable. For convenience we assume there are no ties; thus, if a person is indifferent between two or more possible partners he/she is nevertheless required to rank them in some order. 
 In our implementation we assume that the man initiates the interaction. This is done by removing his first best from his list of preferences and assuming it to be his partner. The man proposes to this possible partner and waits for any invalidation messages from this woman. If this message is received, the man starts over again and removes the next item from his preferences and soon. The behaviour of a man can be implemented in AbaCuS as follows:
+
 <pre><code>
 public class ManAgent extends AbCProcess {
 	public LinkedList<Integer> preferences;	
@@ -366,15 +366,18 @@ public class ManAgent extends AbCProcess {
 		return new FalsePredicate();
 	}
 }
-</pre></code>
+</code></pre>
 
 On the other hand, a woman waits for proposals all the time. In the beginning, when she is not engaged, she accepts any proposal. Once she is engaged and another man proposes, she looks at her list of preferences and compare her current man with the new man and decides if she will be better off with the new man or not. If yes, she says sorry to her current man and get engaged to the new one, otherwise she just says sorry to the new proposed man. 
 The full implementation can be found below.
+
 [Source Code](https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples.sm/src/org/sysma/abc/examples/sm)
 
 ### The Smart Conference Case study 
-Please refer to this paper [ISOLA](https://dl.dropboxusercontent.com/s/bfbp31mzl57i190/ISOLA.pdf?dl=0) for problem statement and formal specification. You only need to execute the file SmartConference.Java, this file provide a GUI that can be used to generate a random conference venue where each room is assigned a random topic. Then you can add participants to the system. You have to initially provide the identity for the first participant and the number of participants that you want to add to the system. The system will randomly assign topic to these participant and the model is ready for execution. at anytime you can change the schedule of any room and you will see how this affect other participants or rooms where a swap should happen. At any point of time you can still add participants and this will not affect the overall behaviour. The source code can be found here
+Please refer to this paper [ISOLA](https://dl.dropboxusercontent.com/s/bfbp31mzl57i190/ISOLA.pdf?dl=0) for problem statement and formal specification. You only need to execute the file SmartConference.Java, this file provide a GUI that can be used to generate a random conference venue where each room is assigned a random topic. Then you can add participants to the system. You have to initially provide the identity for the first participant and the number of participants that you want to add to the system. The system will randomly assign topic to these participant and the model is ready for execution. at anytime you can change the schedule of any room and you will see how this affect other participants or rooms where a swap should happen. At any point of time you can still add participants and this will not affect the overall behaviour. The source code can be found here:
+
 [Source Code](https://github.com/lazkany/AbC/tree/master/bundles/org.sysma.abc.examples.smartconference/src/org/sysma/abc/examples/smartconference)
+
 ### Contributors to the Implementation
 Yehia Abd Alrahman                                                                                                     
 yehia.abdalrahman@imtlucca.it                                                                                            
@@ -387,7 +390,8 @@ IMT Lucca for Advanced Studies
 
 Michele Loreti                                                                                                              
 michele.loreti@unifi.it                                                                                                   
-Universita degli Studi di Firenze                                                                                      
+Universita degli Studi di Firenze                                                                                      
 @michele-loreti
+
 ### Support or Contact
 Having trouble with with installation or programming? Please contact either @lazkany or @michele-loreti
