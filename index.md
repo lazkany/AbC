@@ -96,11 +96,14 @@ The Send method takes two parameters (predicate,values), the filter predicate an
 </code></pre>
 
 
+
+
 As we mentioned in the previous section, here we define the component, its environment, and its attributes. we attach the process we defined to the component and start its execution. 
 
 The behaviour of processes (i.e., Helper, Rescuer, and Charger) is specified in the same way. The only differences are those regarding their attributes, attribute values and their predicate. They also use the other construct for communication which is the receive method. The receive method passes the received message to a function (msg->Function(msg)), This function checks if the received message satisfies the receiving predicate.
 
 Below we only show the behaviour of the Helper robot. Processes Rescuer and charger follow in a similar way. The source code for the whole example can be found be the end of this section and we also include a video to show how to run AbC programs.
+
 
 <pre><code>
 public class Helper {
@@ -125,6 +128,8 @@ public class Helper {
 		}
 	}
 </code></pre>
+
+
 
 Putting it all together 
 
