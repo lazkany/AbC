@@ -79,7 +79,7 @@ public class Explorer {
 
 The Send method takes two parameters (predicate,values), the filter predicate and the tuple of values. Below you see the the definitions in the main method. 
 
-<pre><code>
+
     AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
 		cPortClient.register(InetAddress.getLoopbackAddress(), 9999);
 		Process_1 explorer = new Process_1("explorer_1");
@@ -93,7 +93,7 @@ The Send method takes two parameters (predicate,values), the filter predicate an
 		c1.setPort(cPortClient);
 		cPortClient.start();
 		c1.start();
-</code></pre>
+
 
 
 
