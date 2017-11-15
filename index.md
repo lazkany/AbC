@@ -396,6 +396,7 @@ public class ManAgent extends AbCProcess {
 	}
 }
 </code></pre>
+''
 
 On the other hand, a woman waits for proposals all the time. In the beginning, when she is not engaged, she accepts any proposal. Once she is engaged and another man proposes, she looks at her list of preferences and compare her current man with the new man and decides if she will be better off with the new man or not. If yes, she says sorry to her current man and get engaged to the new one, otherwise she just says sorry to the new proposed man. 
 The full implementation can be found below.
