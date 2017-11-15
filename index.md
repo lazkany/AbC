@@ -76,6 +76,7 @@ public class Explorer {
 	}
 </code></pre>
 
+
 The Send method takes two parameters (predicate,values), the filter predicate and the tuple of values. Below you see the the definitions in the main method. 
 
 <pre><code>
