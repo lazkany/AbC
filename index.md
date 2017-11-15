@@ -202,7 +202,7 @@ public class GroupB {
 
 So, both of groupB and groupC members have a process that is waiting to receive a message with a predicate "FromgrpA". This predicate inspects the second element of the received values and checks its equality with "A" where "A" denotes groupA. if this predicate holds true then the message can be received otherwise it will be discarded. In addition to this behaviour, the groupC members contain another process running in parallel with previous process (Remember: putting two processes in parallel is done using the method "addProcess()"). This process waits for a while and then leaves groupC to join groupB as shown below.
 
-
+<pre><code>
 public static class Process_2 extends AbCProcess {
 		public Process_2(String name) throws AbCAttributeTypeException {
 			super(name);
@@ -215,7 +215,7 @@ public static class Process_2 extends AbCProcess {
 			System.out.println("joined group B");
 		}
 	}
-
+</code></pre>
 
 We model the group name as an attribute and leaving/joining the group by an attribute update. The attribute update can be achieved by updating the attribute followed with a silent move (i.e., send on a false predicate ()@ff ). This action is not observable and indicates a silent move. The above code corresponds to the AbC code `[this.group := B]()@ff`. 
 
