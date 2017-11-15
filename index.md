@@ -244,7 +244,7 @@ public class Publisher {
 			send( new TruePredicate() , new Tuple( "msg" , this.getComponent().getStore().getValue("topic_1"), this.getComponent().getStore().getValue("topic_2")));
 		}
 	}
-<code></pre>
+</code></pre>
 
 Simply, the publisher attaches its attributes "topic_1" and "topic_2" into the message and sends it to all possible subscribers. Note that the following code corresponds to the AbC attribute reference "this.topic_1"
 
