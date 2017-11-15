@@ -13,7 +13,7 @@ To facilitate interoperability with other tools and programming frameworks, AbaC
 
 To do network programming with AbaCuS you always have to start a forwarding server/message broker so that your program functions in the expected way. This task is very easy, all you need to do is to create an instance of the class "AbCServer". This class is responsible for forwarding messages. By default, It accepts messages at port number 9998 and it accepts registration at port number 9999. In the code snippet below we show how to instantiate this class and the required classes to be imported.   
 
-<pre><code>
+
 import java.io.IOException;
 import org.sysma.abc.core.exceptions.DuplicateNameException;
 import org.sysma.abc.core.topology.AbCServer;
@@ -23,11 +23,11 @@ public class MainServer {
 		srvr.start();
 	}
 }
-</code></pre>
+
 
 In this way, every AbC component should communicate only with the message broker/main server, this server is responsible for forwarding the messages to the other components. This means that every component should provide a mean of communication and in our implementation this can be done by instantiating the class "AbCClient" and specify the local address and the server address. Every node should also register itself to the message broker to be considered for future incoming messages. All addresses are socket addresses (i.e., IP address + port number). As mentioned above, the message broker with default settings accepts messages at port 9998 and registration at port 9999. In our tutorial here, we let the user to enter the port address at run time and because we run the examples on one machine, we consider the IP address as a wildcard as shown below.
 
-<pre><code>
+
     System.out.println("Enter port number : ");
 	int port = 0;
 	try {
@@ -39,7 +39,7 @@ In this way, every AbC component should communicate only with the message broker
 	}
 	AbCClient cPortClient = new AbCClient(InetAddress.getLoopbackAddress(), port);
 	cPortClient.RemoteRegister(InetAddress.getLoopbackAddress(), 9999);
-</code></pre>
+
 
 Now everything is in place to start programming with AbC linguistic primitives as we will see in the following examples. Now we list the basic steps to write an AbC program:
 
